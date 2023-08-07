@@ -3,25 +3,10 @@ import {
   Grid,
   Typography,
   Avatar,
-  Badge,
-  Tooltip,
-  useTheme,
   LinearProgress,
   styled
 } from '@mui/material';
-import { formatDistance, subDays, subMinutes, subHours } from 'date-fns';
 import Text from 'src/components/Text';
-
-const DotLegend = styled('span')(
-  ({ theme }) => `
-    border-radius: 22px;
-    width: ${theme.spacing(1.5)};
-    height: ${theme.spacing(1.5)};
-    display: inline-block;
-    margin-right: ${theme.spacing(0.5)};
-    border: ${theme.colors.alpha.white[100]} solid 2px;
-`
-);
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -46,8 +31,6 @@ const LinearProgressWrapper = styled(LinearProgress)(
 );
 
 function TeamOverview() {
-  const theme = useTheme();
-
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} md={4}>
