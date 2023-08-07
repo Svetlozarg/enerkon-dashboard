@@ -8,7 +8,7 @@ import {
   styled
 } from '@mui/material';
 import DocumentScannerTwoToneIcon from '@mui/icons-material/DocumentScannerTwoTone';
-import AddAlertTwoToneIcon from '@mui/icons-material/AddAlertTwoTone';
+import HomeIcon from '@mui/icons-material/Home';
 
 const AvatarPageTitle = styled(Avatar)(
   ({ theme }) => `
@@ -36,7 +36,7 @@ const AvatarPageTitle = styled(Avatar)(
 
 function PageHeader() {
   const user = {
-    name: 'Catherine Pike',
+    name: 'Име Фамилия',
     avatar: '/static/images/avatars/1.jpg'
   };
 
@@ -49,21 +49,21 @@ function PageHeader() {
     >
       <Box display="flex" alignItems="center">
         <AvatarPageTitle variant="rounded">
-          <AddAlertTwoToneIcon fontSize="large" />
+          <HomeIcon fontSize="large" />
         </AvatarPageTitle>
         <Box>
           <Typography variant="h3" component="h3" gutterBottom>
-            Welcome, {user.name}!
+            Добре дошли, {user.name}!
           </Typography>
           <Typography variant="subtitle2">
-            Manage your day to day tasks with style! Enjoy a well built UI
-            system.
+            Управлявайте ежедневните си задачи със стил! Всички проекти и
+            документи на едно място!
           </Typography>
         </Box>
       </Box>
       <Box mt={{ xs: 3, md: 0 }}>
         <Button variant="contained" startIcon={<DocumentScannerTwoToneIcon />}>
-          Export
+          Експорт
         </Button>
       </Box>
     </Box>

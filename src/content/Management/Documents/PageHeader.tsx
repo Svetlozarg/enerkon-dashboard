@@ -3,18 +3,14 @@ import { Typography, Button, Grid } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 
 function PageHeader() {
-  const user = {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
-  };
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          Transactions
+          Документи
         </Typography>
         <Typography variant="subtitle2">
-          {user.name}, these are your recent transactions
+          Всички документи на едно място
         </Typography>
       </Grid>
       <Grid item>
@@ -23,7 +19,7 @@ function PageHeader() {
           variant="contained"
           startIcon={<AddTwoToneIcon fontSize="small" />}
         >
-          Create transaction
+          Добави документ
         </Button>
       </Grid>
     </Grid>

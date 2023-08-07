@@ -53,51 +53,24 @@ function TeamOverview() {
       <Grid item xs={12} md={4}>
         <Box>
           <Box display="flex" alignItems="center" pb={3}>
-            <Badge
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-              overlap="circular"
-              badgeContent={
-                <Tooltip
-                  arrow
-                  placement="top"
-                  title={
-                    'Offline since ' +
-                    formatDistance(subDays(new Date(), 14), new Date(), {
-                      addSuffix: true
-                    })
-                  }
-                >
-                  <DotLegend
-                    style={{ background: `${theme.colors.error.main}` }}
-                  />
-                </Tooltip>
-              }
-            >
-              <AvatarWrapper
-                alt="Remy Sharp"
-                src="/static/images/avatars/4.jpg"
-              />
-            </Badge>
+            <AvatarWrapper alt="Enerkon" src="с" />
             <Box
               sx={{
                 ml: 1.5
               }}
             >
               <Typography variant="h4" noWrap gutterBottom>
-                Hanna Siphron
+                Име проект
               </Typography>
               <Typography variant="subtitle2" noWrap>
-                Web Dev Support Team
+                Подзаглавие
               </Typography>
             </Box>
           </Box>
 
           <Typography variant="subtitle2" gutterBottom>
-            <Text color="black">4</Text> out of <Text color="black">6</Text>{' '}
-            tasks completed
+            <Text color="black">4</Text> ot <Text color="black">6</Text> файла
+            приключени
           </Typography>
           <LinearProgressWrapper
             value={65}
@@ -106,113 +79,61 @@ function TeamOverview() {
           />
         </Box>
       </Grid>
+
       <Grid item xs={12} md={4}>
         <Box>
           <Box display="flex" alignItems="center" pb={3}>
-            <Badge
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-              overlap="circular"
-              badgeContent={
-                <Tooltip
-                  arrow
-                  placement="top"
-                  title={
-                    'Online since ' +
-                    formatDistance(subMinutes(new Date(), 6), new Date(), {
-                      addSuffix: true
-                    })
-                  }
-                >
-                  <DotLegend
-                    style={{ background: `${theme.colors.success.main}` }}
-                  />
-                </Tooltip>
-              }
-            >
-              <AvatarWrapper
-                alt="Ann Saris"
-                src="/static/images/avatars/3.jpg"
-              />
-            </Badge>
+            <AvatarWrapper alt="Enerkon" src="с" />
             <Box
               sx={{
                 ml: 1.5
               }}
             >
               <Typography variant="h4" noWrap gutterBottom>
-                Ann Saris
+                Име проект
               </Typography>
               <Typography variant="subtitle2" noWrap>
-                Senior Book Keeper
+                Подзаглавие
               </Typography>
             </Box>
           </Box>
 
           <Typography variant="subtitle2" gutterBottom>
-            <Text color="black">2</Text> out of <Text color="black">8</Text>{' '}
-            tasks completed
+            <Text color="black">54</Text> ot <Text color="black">90</Text> файла
+            приключени
           </Typography>
           <LinearProgressWrapper
-            value={25}
+            value={45}
             color="primary"
             variant="determinate"
           />
         </Box>
       </Grid>
+
       <Grid item xs={12} md={4}>
         <Box>
           <Box display="flex" alignItems="center" pb={3}>
-            <Badge
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-              overlap="circular"
-              badgeContent={
-                <Tooltip
-                  arrow
-                  placement="top"
-                  title={
-                    'Offline since ' +
-                    formatDistance(subHours(new Date(), 7), new Date(), {
-                      addSuffix: true
-                    })
-                  }
-                >
-                  <DotLegend
-                    style={{ background: `${theme.colors.error.main}` }}
-                  />
-                </Tooltip>
-              }
-            >
-              <AvatarWrapper
-                alt="James Stanton"
-                src="/static/images/avatars/5.jpg"
-              />
-            </Badge>
+            <AvatarWrapper alt="Enerkon" src="с" />
             <Box
               sx={{
                 ml: 1.5
               }}
             >
               <Typography variant="h4" noWrap gutterBottom>
-                James Stanton
+                Име проект
               </Typography>
               <Typography variant="subtitle2" noWrap>
-                Phone Pre-Sales Assistant
+                Подзаглавие
               </Typography>
             </Box>
           </Box>
 
           <Typography variant="subtitle2" gutterBottom>
-            <Text color="black">10</Text> out of <Text color="black">20</Text>{' '}
-            tasks completed
+            <Text color="black">22</Text> ot <Text color="black">60</Text> файла
+            приключени
           </Typography>
           <LinearProgressWrapper
-            value={50}
+            value={35}
             color="primary"
             variant="determinate"
           />

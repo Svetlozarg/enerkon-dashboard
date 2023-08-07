@@ -75,18 +75,18 @@ function TasksAnalytics() {
       show: false
     },
     labels: [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
+      'Яну',
+      'Фев',
+      'Мар',
+      'Апр',
+      'Май',
+      'Юни',
+      'Юли',
+      'Авг',
+      'Сеп',
+      'Окт',
+      'Ное',
+      'Дек'
     ],
     grid: {
       strokeDashArray: 5,
@@ -137,11 +137,11 @@ function TasksAnalytics() {
 
   const chartData = [
     {
-      name: 'Income',
+      name: 'Общо проекти',
       data: [28, 47, 41, 34, 69, 91, 49, 82, 52, 72, 32, 99]
     },
     {
-      name: 'Expenses',
+      name: 'Общо файлове',
       data: [38, 85, 64, 40, 97, 82, 58, 42, 55, 46, 57, 70]
     }
   ];
@@ -149,19 +149,19 @@ function TasksAnalytics() {
   const periods = [
     {
       value: 'today',
-      text: 'Today'
+      text: 'Днес'
     },
     {
       value: 'yesterday',
-      text: 'Yesterday'
+      text: 'Вчера'
     },
     {
       value: 'last_month',
-      text: 'Last month'
+      text: 'Последният месец'
     },
     {
       value: 'last_year',
-      text: 'Last year'
+      text: 'Последната година'
     }
   ];
 
@@ -177,7 +177,7 @@ function TasksAnalytics() {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography variant="h4">Tasks Analytics</Typography>
+        <Typography variant="h4">Общ Анализ</Typography>
         <Button
           size="small"
           variant="contained"
@@ -226,7 +226,7 @@ function TasksAnalytics() {
           }}
         >
           <DotPrimary />
-          tasks created
+          Общо проекти
         </Typography>
         <Typography
           variant="body2"
@@ -237,7 +237,7 @@ function TasksAnalytics() {
           }}
         >
           <DotPrimaryLight />
-          tasks completed
+          Общо файлове
         </Typography>
       </Box>
       <Chart

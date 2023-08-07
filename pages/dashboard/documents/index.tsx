@@ -1,17 +1,17 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import PageHeader from '@/content/Management/Transactions/PageHeader';
+import PageHeader from '@/content/Management/Documents/PageHeader';
 import PageTitleWrapper from '@/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from '@/components/Footer';
 
-import RecentOrders from '@/content/Management/Transactions/RecentOrders';
+import Documents from '@/content/Management/Documents/Documents';
 
 function DashboardProjects() {
   return (
     <>
       <Head>
-        <title>Transactions - Applications</title>
+        <title>Документи</title>
       </Head>
       <PageTitleWrapper>
         <PageHeader />
@@ -25,7 +25,7 @@ function DashboardProjects() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <RecentOrders />
+            <Documents />
           </Grid>
         </Grid>
       </Container>

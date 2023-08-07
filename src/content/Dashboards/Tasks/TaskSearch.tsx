@@ -7,13 +7,8 @@ import {
   FormControl,
   CardActions,
   Typography,
-  Avatar,
   Divider,
-  Rating,
   OutlinedInput,
-  Chip,
-  Tooltip,
-  AvatarGroup,
   Pagination,
   InputAdornment,
   Menu,
@@ -21,12 +16,13 @@ import {
   styled,
   useTheme
 } from '@mui/material';
-import { formatDistance, subMonths, subDays } from 'date-fns';
+import { formatDistance, subDays } from 'date-fns';
 import TodayTwoToneIcon from '@mui/icons-material/TodayTwoTone';
 import Link from 'src/components/Link';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import Text from 'src/components/Text';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
+import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 
 const OutlinedInputWrapper = styled(OutlinedInput)(
   ({ theme }) => `
@@ -38,26 +34,22 @@ const OutlinedInputWrapper = styled(OutlinedInput)(
 function TaskSearch() {
   const theme = useTheme();
 
-  const handleDelete = () => {};
-
-  const handleClick = () => {};
-
   const periods = [
     {
       value: 'popular',
-      text: 'Most popular'
+      text: 'Популярност'
     },
     {
       value: 'recent',
-      text: 'Recent tasks'
+      text: 'Най-нови'
     },
     {
       value: 'updated',
-      text: 'Latest updated tasks'
+      text: 'Последно прегледани'
     },
     {
       value: 'oldest',
-      text: 'Oldest tasks first'
+      text: 'Най-стари'
     }
   ];
 
@@ -70,11 +62,11 @@ function TaskSearch() {
       <FormControl variant="outlined" fullWidth>
         <OutlinedInputWrapper
           type="text"
-          placeholder="Search terms here..."
+          placeholder="Търси по заглавие на проект..."
           endAdornment={
             <InputAdornment position="end">
               <Button variant="contained" size="small">
-                Search
+                Търси
               </Button>
             </InputAdornment>
           }
@@ -93,9 +85,9 @@ function TaskSearch() {
       >
         <Box>
           <Typography variant="subtitle2">
-            Showing{' '}
+            Налични{' '}
             <Text color="black">
-              <b>57 tasks</b>
+              <b>57 проекти</b>
             </Text>
           </Typography>
         </Box>
@@ -106,7 +98,7 @@ function TaskSearch() {
               pr: 1
             }}
           >
-            Sort by:
+            Филтър:
           </Typography>
           <Button
             size="small"
@@ -145,6 +137,8 @@ function TaskSearch() {
           </Menu>
         </Box>
       </Box>
+
+      {/* Porjects */}
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
           <Card
@@ -154,38 +148,25 @@ function TaskSearch() {
               background: `${theme.colors.alpha.black[5]}`
             }}
           >
-            <Box>
-              <Rating value={4} defaultValue={5} precision={1} readOnly />
-            </Box>
             <Link href="#" variant="h3" color="text.primary">
-              Migrate hosting to a more performant web server datacenter
+              Име на проект
             </Link>
+
             <Box
               sx={{
-                py: 2
+                width: '100%',
+                height: '200px',
+                bgcolor: 'gray',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: '10px',
+                my: '.5rem'
               }}
             >
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Website"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Integrations"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
+              <ImageNotSupportedIcon sx={{ fontSize: '10rem' }} />
             </Box>
+
             <Typography
               sx={{
                 pb: 2
@@ -197,7 +178,7 @@ function TaskSearch() {
               vitae dicta sunt explicabo.
             </Typography>
             <Button size="small" variant="contained">
-              View task
+              Прегледай проект
             </Button>
             <Divider
               sx={{
@@ -225,32 +206,13 @@ function TaskSearch() {
                   addSuffix: true
                 })}
               </Typography>
-              <AvatarGroup>
-                <Tooltip arrow title={`$"View profile for')} Remy Sharp`}>
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Remy Sharp"
-                    src="/static/images/avatars/3.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Trevor Henderson">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Trevor Henderson"
-                    src="/static/images/avatars/4.jpg"
-                  />
-                </Tooltip>
-              </AvatarGroup>
+              <Typography
+                display="flex"
+                alignItems="center"
+                variant="subtitle2"
+              >
+                24 файла
+              </Typography>
             </CardActions>
           </Card>
         </Grid>
@@ -262,50 +224,37 @@ function TaskSearch() {
               background: `${theme.colors.alpha.black[5]}`
             }}
           >
-            <Box>
-              <Rating value={4} defaultValue={5} precision={1} readOnly />
-            </Box>
             <Link href="#" variant="h3" color="text.primary">
-              Improve conversion rated by integrating new analytics tools
+              Име на проект
             </Link>
+
             <Box
               sx={{
-                py: 2
+                width: '100%',
+                height: '200px',
+                bgcolor: 'gray',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: '10px',
+                my: '.5rem'
               }}
             >
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Website"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Integrations"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
+              <ImageNotSupportedIcon sx={{ fontSize: '10rem' }} />
             </Box>
+
             <Typography
               sx={{
                 pb: 2
               }}
               color="text.secondary"
             >
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-              accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-              quae ab illo.
+              It is a long established fact that a reader will be distracted by
+              the readable content of a page when looking at its layout beatae
+              vitae dicta sunt explicabo.
             </Typography>
             <Button size="small" variant="contained">
-              View task
+              Прегледай проект
             </Button>
             <Divider
               sx={{
@@ -329,48 +278,17 @@ function TaskSearch() {
                     mr: 1
                   }}
                 />
-                {formatDistance(subMonths(new Date(), 2), new Date(), {
+                {formatDistance(subDays(new Date(), 24), new Date(), {
                   addSuffix: true
                 })}
               </Typography>
-              <AvatarGroup>
-                <Tooltip arrow title="View profile for Remy Sharp">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Remy Sharp"
-                    src="/static/images/avatars/2.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Travis Howard">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Travis Howard"
-                    src="/static/images/avatars/3.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Trevor Henderson">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Trevor Henderson"
-                    src="/static/images/avatars/4.jpg"
-                  />
-                </Tooltip>
-              </AvatarGroup>
+              <Typography
+                display="flex"
+                alignItems="center"
+                variant="subtitle2"
+              >
+                24 файла
+              </Typography>
             </CardActions>
           </Card>
         </Grid>
@@ -382,50 +300,37 @@ function TaskSearch() {
               background: `${theme.colors.alpha.black[5]}`
             }}
           >
-            <Box>
-              <Rating value={4} defaultValue={5} precision={1} readOnly />
-            </Box>
             <Link href="#" variant="h3" color="text.primary">
-              Increase the website speed on mobile and tablet devices
+              Име на проект
             </Link>
+
             <Box
               sx={{
-                py: 2
+                width: '100%',
+                height: '200px',
+                bgcolor: 'gray',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: '10px',
+                my: '.5rem'
               }}
             >
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Website"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Integrations"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
+              <ImageNotSupportedIcon sx={{ fontSize: '10rem' }} />
             </Box>
+
             <Typography
               sx={{
                 pb: 2
               }}
               color="text.secondary"
             >
-              Nemo enim ipsam voluptatem quia accusantium doloremque laudantium
-              voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur
-              magni dolores eos qui ratione.
+              It is a long established fact that a reader will be distracted by
+              the readable content of a page when looking at its layout beatae
+              vitae dicta sunt explicabo.
             </Typography>
             <Button size="small" variant="contained">
-              View task
+              Прегледай проект
             </Button>
             <Divider
               sx={{
@@ -449,52 +354,23 @@ function TaskSearch() {
                     mr: 1
                   }}
                 />
-                {formatDistance(subDays(new Date(), 31), new Date(), {
+                {formatDistance(subDays(new Date(), 24), new Date(), {
                   addSuffix: true
                 })}
               </Typography>
-              <AvatarGroup>
-                <Tooltip arrow title="View profile for Remy Sharp">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Remy Sharp"
-                    src="/static/images/avatars/1.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Travis Howard">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Travis Howard"
-                    src="/static/images/avatars/2.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Trevor Henderson">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Trevor Henderson"
-                    src="/static/images/avatars/5.jpg"
-                  />
-                </Tooltip>
-              </AvatarGroup>
+              <Typography
+                display="flex"
+                alignItems="center"
+                variant="subtitle2"
+              >
+                24 файла
+              </Typography>
             </CardActions>
           </Card>
         </Grid>
       </Grid>
+
+      {/* Pagination */}
       <Box
         sx={{
           pt: 4

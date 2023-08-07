@@ -170,7 +170,7 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              Dashboard
+              Табло за управление
             </ListSubheader>
           }
         >
@@ -185,7 +185,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<HomeIcon />}
                   >
-                    Home
+                    Начало
                   </Button>
                 </NextLink>
               </ListItem>
@@ -200,7 +200,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<ApartmentIcon />}
                   >
-                    Projects
+                    Проекти
                   </Button>
                 </NextLink>
               </ListItem>
@@ -215,7 +215,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<FolderIcon />}
                   >
-                    Documents
+                    Документи
                   </Button>
                 </NextLink>
               </ListItem>
@@ -232,7 +232,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<BrightnessLowTwoToneIcon />}
                   >
-                    Settings
+                    Настройки
                   </Button>
                 </NextLink>
               </ListItem>

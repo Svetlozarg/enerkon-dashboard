@@ -14,7 +14,6 @@ import {
   useTheme
 } from '@mui/material';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
-import Link from 'src/components/Link';
 import Text from 'src/components/Text';
 import CalendarTodayTwoToneIcon from '@mui/icons-material/CalendarTodayTwoTone';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
@@ -67,10 +66,10 @@ function Projects() {
           pb: 3
         }}
       >
-        <Typography variant="h3">Projects</Typography>
+        <Typography variant="h3">Проекти</Typography>
         <Box>
           <Button size="small" variant="outlined">
-            View all projects
+            Виж всички проекти
           </Button>
         </Box>
       </Box>
@@ -92,7 +91,7 @@ function Projects() {
                   <MoreVertTwoToneIcon />
                 </IconButton>
               }
-              title="Fix Urgent Mobile App Bugs"
+              title="Име на проект"
               titleTypographyProps={{
                 variant: 'h5',
                 color: 'textPrimary'
@@ -100,7 +99,7 @@ function Projects() {
             />
             <Box>
               <Typography variant="subtitle2" gutterBottom>
-                Tasks done:{' '}
+                Файлове:{' '}
                 <Text color="black">
                   <b>25</b>
                 </Text>
@@ -119,68 +118,7 @@ function Projects() {
                 justifyContent: 'space-between'
               }}
             >
-              <AvatarGroup>
-                <Tooltip arrow title="View profile for Remy Sharp">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Remy Sharp"
-                    src="/static/images/avatars/1.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Travis Howard">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Travis Howard"
-                    src="/static/images/avatars/2.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Cindy Baker">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Cindy Baker"
-                    src="/static/images/avatars/3.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Agnes Walker">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Agnes Walker"
-                    src="/static/images/avatars/4.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Trevor Henderson">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Trevor Henderson"
-                    src="/static/images/avatars/5.jpg"
-                  />
-                </Tooltip>
-              </AvatarGroup>
+              <AvatarGroup></AvatarGroup>
               <Box>
                 <Tooltip arrow title="View project calendar" placement="top">
                   <IconButton
@@ -212,6 +150,7 @@ function Projects() {
             </Box>
           </Box>
         </Grid>
+
         <Grid item xs={12} md={4}>
           <Box>
             <CardHeader
@@ -233,7 +172,7 @@ function Projects() {
                   <MoreVertTwoToneIcon />
                 </IconButton>
               }
-              title="Replace Placeholder Images"
+              title="Име на проект"
               titleTypographyProps={{
                 variant: 'h5',
                 color: 'textPrimary'
@@ -241,7 +180,7 @@ function Projects() {
             />
             <Box>
               <Typography variant="subtitle2" gutterBottom>
-                Tasks done:{' '}
+                Файлове:{' '}
                 <Text color="black">
                   <b>80</b>
                 </Text>
@@ -260,44 +199,7 @@ function Projects() {
                 justifyContent: 'space-between'
               }}
             >
-              <AvatarGroup>
-                <Tooltip arrow title="View profile for Remy Sharp">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Remy Sharp"
-                    src="/static/images/avatars/4.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Travis Howard">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Travis Howard"
-                    src="/static/images/avatars/3.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Trevor Henderson">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Trevor Henderson"
-                    src="/static/images/avatars/1.jpg"
-                  />
-                </Tooltip>
-              </AvatarGroup>
+              <AvatarGroup></AvatarGroup>
               <Box>
                 <Tooltip arrow title="View project calendar" placement="top">
                   <IconButton
@@ -329,6 +231,7 @@ function Projects() {
             </Box>
           </Box>
         </Grid>
+
         <Grid item xs={12} md={4}>
           <Box>
             <CardHeader
@@ -359,7 +262,7 @@ function Projects() {
                   <MoreVertTwoToneIcon />
                 </IconButton>
               }
-              title="BloomUI Redesign Project"
+              title="Име на проект"
               titleTypographyProps={{
                 variant: 'h5',
                 color: 'textPrimary'
@@ -367,7 +270,7 @@ function Projects() {
             />
             <Box>
               <Typography variant="subtitle2" gutterBottom>
-                Tasks done:{' '}
+                Файлове:{' '}
                 <Text color="black">
                   <b>87</b>
                 </Text>
@@ -386,56 +289,7 @@ function Projects() {
                 justifyContent: 'space-between'
               }}
             >
-              <AvatarGroup>
-                <Tooltip arrow title="View profile for Remy Sharp">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Remy Sharp"
-                    src="/static/images/avatars/1.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Cindy Baker">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Cindy Baker"
-                    src="/static/images/avatars/3.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Agnes Walker">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Agnes Walker"
-                    src="/static/images/avatars/2.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Trevor Henderson">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Trevor Henderson"
-                    src="/static/images/avatars/4.jpg"
-                  />
-                </Tooltip>
-              </AvatarGroup>
+              <AvatarGroup></AvatarGroup>
               <Box>
                 <Tooltip arrow title="View project calendar" placement="top">
                   <IconButton

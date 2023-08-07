@@ -1,7 +1,5 @@
 import { useRef, useState } from 'react';
-
 import NextLink from 'next/link';
-
 import {
   Avatar,
   Box,
@@ -13,15 +11,14 @@ import {
   ListItem,
   ListItemText,
   Popover,
+  Tooltip,
   Typography
 } from '@mui/material';
-
-import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
 import { styled } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
-import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
-import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
-import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -117,30 +114,30 @@ function HeaderUserbox() {
         <Divider sx={{ mb: 0 }} />
         <List sx={{ p: 1 }} component="nav">
           <NextLink href="/management/profile" passHref>
-            <ListItem button>
-              <AccountBoxTwoToneIcon fontSize="small" />
-              <ListItemText primary="My Profile" />
-            </ListItem>
-          </NextLink>
-          <NextLink href="/applications/messenger" passHref>
-            <ListItem button>
-              <InboxTwoToneIcon fontSize="small" />
-              <ListItemText primary="Messenger" />
-            </ListItem>
+            <Tooltip title="Вашият профил">
+              <ListItem button>
+                <AccountBoxIcon fontSize="small" />
+                <ListItemText primary="Профил" />
+              </ListItem>
+            </Tooltip>
           </NextLink>
           <NextLink href="/management/profile/settings" passHref>
-            <ListItem button>
-              <AccountTreeTwoToneIcon fontSize="small" />
-              <ListItemText primary="Account Settings" />
-            </ListItem>
+            <Tooltip title="Настройки на вашия профил">
+              <ListItem button>
+                <SettingsIcon fontSize="small" />
+                <ListItemText primary="Настройки" />
+              </ListItem>
+            </Tooltip>
           </NextLink>
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
-            <LockOpenTwoToneIcon sx={{ mr: 1 }} />
-            Sign out
-          </Button>
+          <Tooltip title="Излезте от профила">
+            <Button color="primary" fullWidth>
+              <LogoutIcon sx={{ mr: 1 }} />
+              Излез
+            </Button>
+          </Tooltip>
         </Box>
       </Popover>
     </>

@@ -1,6 +1,5 @@
 import { FC, ChangeEvent, useState } from 'react';
 import { format } from 'date-fns';
-import numeral from 'numeral';
 import PropTypes from 'prop-types';
 import {
   Tooltip,
@@ -22,16 +21,18 @@ import {
   MenuItem,
   Typography,
   useTheme,
-  CardHeader
+  CardHeader,
+  TextField,
+  InputAdornment
 } from '@mui/material';
-
-import Label from '@/components/Label';
 import { CryptoOrder, CryptoOrderStatus } from '@/models/crypto_order';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
+import ProjectDocumentsModal from './ProjectDocumentsModal';
+import SearchIcon from '@mui/icons-material/Search';
 
-interface RecentOrdersTableProps {
+interface ProjectsTableProps {
   className?: string;
   cryptoOrders: CryptoOrder[];
 }
@@ -39,27 +40,6 @@ interface RecentOrdersTableProps {
 interface Filters {
   status?: CryptoOrderStatus;
 }
-
-const getStatusLabel = (cryptoOrderStatus: CryptoOrderStatus): JSX.Element => {
-  const map = {
-    failed: {
-      text: 'Failed',
-      color: 'error'
-    },
-    completed: {
-      text: 'Completed',
-      color: 'success'
-    },
-    pending: {
-      text: 'Pending',
-      color: 'warning'
-    }
-  };
-
-  const { text, color }: any = map[cryptoOrderStatus];
-
-  return <Label color={color}>{text}</Label>;
-};
 
 const applyFilters = (
   cryptoOrders: CryptoOrder[],
@@ -84,7 +64,7 @@ const applyPagination = (
   return cryptoOrders.slice(page * limit, page * limit + limit);
 };
 
-const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
+const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
   const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
     []
   );
@@ -98,19 +78,19 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
   const statusOptions = [
     {
       id: 'all',
-      name: 'All'
+      name: 'Всички'
     },
     {
       id: 'completed',
-      name: 'Completed'
+      name: 'Завършени'
     },
     {
       id: 'pending',
-      name: 'Pending'
+      name: 'В процес на разработка'
     },
     {
       id: 'failed',
-      name: 'Failed'
+      name: 'Отменени'
     }
   ];
 
@@ -176,6 +156,32 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
 
   return (
     <Card>
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '10px'
+        }}
+      >
+        <TextField
+          style={{ width: '100%' }}
+          variant="outlined"
+          placeholder="Търси проект по име..."
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <IconButton edge="start">
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
+        />
+      </div>
+
+      {/* Bulk Actions */}
       {selectedBulkActions && (
         <Box flex={1} p={2}>
           <BulkActions />
@@ -186,7 +192,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
           action={
             <Box width={150}>
               <FormControl fullWidth variant="outlined">
-                <InputLabel>Status</InputLabel>
+                <InputLabel>Филтър</InputLabel>
                 <Select
                   value={filters.status || 'all'}
                   onChange={handleStatusChange}
@@ -202,12 +208,13 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
               </FormControl>
             </Box>
           }
-          title="Recent Orders"
+          title="Таблица с проекти"
         />
       )}
       <Divider />
       <TableContainer>
         <Table>
+          {/* Table Head */}
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox">
@@ -218,14 +225,15 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                   onChange={handleSelectAllCryptoOrders}
                 />
               </TableCell>
-              <TableCell>Order Details</TableCell>
-              <TableCell>Order ID</TableCell>
-              <TableCell>Source</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>Снимка</TableCell>
+              <TableCell>Проект</TableCell>
+              <TableCell>Дата на създаване</TableCell>
+              <TableCell align="right">Документи към проекта</TableCell>
+              <TableCell align="right">Действия</TableCell>
             </TableRow>
           </TableHead>
+
+          {/* Table Body */}
           <TableBody>
             {paginatedCryptoOrders.map((cryptoOrder) => {
               const isCryptoOrderSelected = selectedCryptoOrders.includes(
@@ -255,20 +263,6 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.orderDetails}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {format(cryptoOrder.orderDate, 'MMMM dd yyyy')}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
                       {cryptoOrder.orderID}
                     </Typography>
                   </TableCell>
@@ -280,10 +274,18 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.sourceName}
+                      {cryptoOrder.orderDetails}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {cryptoOrder.sourceDesc}
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {format(cryptoOrder.orderDate, 'MMMM dd yyyy')}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -294,20 +296,11 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.amountCrypto}
-                      {cryptoOrder.cryptoCurrency}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {numeral(cryptoOrder.amount).format(
-                        `${cryptoOrder.currency}0,0.00`
-                      )}
+                      <ProjectDocumentsModal />
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
-                    {getStatusLabel(cryptoOrder.status)}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edit Order" arrow>
+                    <Tooltip title="Промени" arrow>
                       <IconButton
                         sx={{
                           '&:hover': {
@@ -321,7 +314,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                         <EditTwoToneIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Delete Order" arrow>
+                    <Tooltip title="Изтрий" arrow>
                       <IconButton
                         sx={{
                           '&:hover': { background: theme.colors.error.lighter },
@@ -340,6 +333,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
           </TableBody>
         </Table>
       </TableContainer>
+      {/* Pagination */}
       <Box p={2}>
         <TablePagination
           component="div"
@@ -349,18 +343,19 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
           page={page}
           rowsPerPage={limit}
           rowsPerPageOptions={[5, 10, 25, 30]}
+          labelRowsPerPage="Редове на страница:"
         />
       </Box>
     </Card>
   );
 };
 
-RecentOrdersTable.propTypes = {
+ProjectsTable.propTypes = {
   cryptoOrders: PropTypes.array.isRequired
 };
 
-RecentOrdersTable.defaultProps = {
+ProjectsTable.defaultProps = {
   cryptoOrders: []
 };
 
-export default RecentOrdersTable;
+export default ProjectsTable;

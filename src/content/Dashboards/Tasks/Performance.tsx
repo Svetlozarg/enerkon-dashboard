@@ -78,7 +78,7 @@ function Performance() {
           color: `${theme.colors.alpha.white[100]}`
         }}
       >
-        Performance
+        Ефективност
       </Typography>
       <CardContent>
         <Box
@@ -100,7 +100,7 @@ function Performance() {
           <Box>
             <Typography variant="h1">23</Typography>
             <TypographySecondary variant="subtitle2" noWrap>
-              tasks created
+              проекта започнати
             </TypographySecondary>
           </Box>
         </Box>
@@ -123,7 +123,7 @@ function Performance() {
           <Box>
             <Typography variant="h1">5</Typography>
             <TypographySecondary variant="subtitle2" noWrap>
-              tasks closed
+              проекта завършени
             </TypographySecondary>
           </Box>
         </Box>

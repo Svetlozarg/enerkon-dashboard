@@ -16,7 +16,6 @@ import {
 } from '@mui/material';
 import PageTitleWrapper from '@/components/PageTitleWrapper';
 
-import TeamOverview from '@/content/Dashboards/Tasks/TeamOverview';
 import TasksAnalytics from '@/content/Dashboards/Tasks/TasksAnalytics';
 import Performance from '@/content/Dashboards/Tasks/Performance';
 import Projects from '@/content/Dashboards/Tasks/Projects';
@@ -112,8 +111,8 @@ function DashboardTasks() {
   const [currentTab, setCurrentTab] = useState<string>('analytics');
 
   const tabs = [
-    { value: 'analytics', label: 'Analytics Overview' },
-    { value: 'taskSearch', label: 'Task Search' }
+    { value: 'analytics', label: 'Общ преглед' },
+    { value: 'taskSearch', label: 'Търси проект' }
   ];
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -123,11 +122,13 @@ function DashboardTasks() {
   return (
     <>
       <Head>
-        <title>Tasks Dashboard</title>
+        <title>Enerkon - Табло за управление</title>
       </Head>
+
       <PageTitleWrapper>
         <PageHeader />
       </PageTitleWrapper>
+
       <Container maxWidth="lg">
         <TabsContainerWrapper>
           <Tabs
@@ -155,8 +156,9 @@ function DashboardTasks() {
               <>
                 <Grid item xs={12}>
                   <Box p={4}>
-                    <TeamOverview />
+                    <Projects />
                   </Box>
+                  <Divider />
                 </Grid>
                 <Grid item xs={12}>
                   <Divider />
@@ -174,12 +176,6 @@ function DashboardTasks() {
                         <Performance />
                       </Grid>
                     </Grid>
-                  </Box>
-                  <Divider />
-                </Grid>
-                <Grid item xs={12}>
-                  <Box p={4}>
-                    <Projects />
                   </Box>
                   <Divider />
                 </Grid>

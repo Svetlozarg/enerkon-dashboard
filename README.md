@@ -9,8 +9,6 @@
 
 </div>
 
-<a href="https://bloomui.com/product/tokyo-free-black-nextjs-typescript-material-ui-admin-dashboard/"><h3>Enerkon Building Company Dashboard</h3></a>
-
 ---
 
 <h2>

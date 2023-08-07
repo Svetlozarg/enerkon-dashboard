@@ -1,5 +1,4 @@
 import type { ReactElement, ReactNode } from 'react';
-
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -20,12 +19,12 @@ type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-interface TokyoAppProps extends AppProps {
+interface EnerkonAppProps extends AppProps {
   emotionCache?: EmotionCache;
   Component: NextPageWithLayout;
 }
 
-function TokyoApp(props: TokyoAppProps) {
+function EnerkonApp(props: EnerkonAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -36,7 +35,7 @@ function TokyoApp(props: TokyoAppProps) {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>Tokyo Free Black NextJS Typescript Admin Dashboard</title>
+        <title>Enerkon</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
@@ -54,4 +53,4 @@ function TokyoApp(props: TokyoAppProps) {
   );
 }
 
-export default TokyoApp;
+export default EnerkonApp;
