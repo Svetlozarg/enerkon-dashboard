@@ -154,6 +154,23 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
     selectedCryptoOrders.length === cryptoOrders.length;
   const theme = useTheme();
 
+  //Search bar functionality
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(cryptoOrders); 
+
+  function handleSearchInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const newSearchTerm = event.target.value;
+    setSearchTerm(newSearchTerm);
+
+
+    const filteredResults = cryptoOrders.filter(item =>
+      item.orderDetails.includes(newSearchTerm)
+    );
+
+    setFilteredData(filteredResults);
+  }
+
   return (
     <Card>
       <div
@@ -178,6 +195,8 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
               </InputAdornment>
             )
           }}
+          value={searchTerm}
+          onChange={handleSearchInputChange}
         />
       </div>
 
@@ -235,7 +254,7 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
 
           {/* Table Body */}
           <TableBody>
-            {paginatedCryptoOrders.map((cryptoOrder) => {
+            {filteredData.map((cryptoOrder) => {
               const isCryptoOrderSelected = selectedCryptoOrders.includes(
                 cryptoOrder.id
               );
