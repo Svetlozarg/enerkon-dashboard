@@ -56,13 +56,13 @@ const applyFilters = (
   });
 };
 
-const applyPagination = (
-  cryptoOrders: CryptoOrder[],
-  page: number,
-  limit: number
-): CryptoOrder[] => {
-  return cryptoOrders.slice(page * limit, page * limit + limit);
-};
+// const applyPagination = (
+//   cryptoOrders: CryptoOrder[],
+//   page: number,
+//   limit: number
+// ): CryptoOrder[] => {
+//   return cryptoOrders.slice(page * limit, page * limit + limit);
+// };
 
 const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
   const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
@@ -142,11 +142,11 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
   };
 
   const filteredCryptoOrders = applyFilters(cryptoOrders, filters);
-  const paginatedCryptoOrders = applyPagination(
-    filteredCryptoOrders,
-    page,
-    limit
-  );
+  // const paginatedCryptoOrders = applyPagination(
+  //   filteredCryptoOrders,
+  //   page,
+  //   limit
+  // );
   const selectedSomeCryptoOrders =
     selectedCryptoOrders.length > 0 &&
     selectedCryptoOrders.length < cryptoOrders.length;
