@@ -77,13 +77,13 @@ const applyFilters = (
   });
 };
 
-const applyPagination = (
-  cryptoOrders: CryptoOrder[],
-  page: number,
-  limit: number
-): CryptoOrder[] => {
-  return cryptoOrders.slice(page * limit, page * limit + limit);
-};
+// const applyPagination = (
+//   cryptoOrders: CryptoOrder[],
+//   page: number,
+//   limit: number
+// ): CryptoOrder[] => {
+//   return cryptoOrders.slice(page * limit, page * limit + limit);
+// };
 
 const DocumentsTable: FC<DocumentsTableProps> = ({ cryptoOrders }) => {
   const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
@@ -163,17 +163,34 @@ const DocumentsTable: FC<DocumentsTableProps> = ({ cryptoOrders }) => {
   };
 
   const filteredCryptoOrders = applyFilters(cryptoOrders, filters);
-  const paginatedCryptoOrders = applyPagination(
-    filteredCryptoOrders,
-    page,
-    limit
-  );
+  // const paginatedCryptoOrders = applyPagination(
+  //   filteredCryptoOrders,
+  //   page,
+  //   limit
+  // );
   const selectedSomeCryptoOrders =
     selectedCryptoOrders.length > 0 &&
     selectedCryptoOrders.length < cryptoOrders.length;
   const selectedAllCryptoOrders =
     selectedCryptoOrders.length === cryptoOrders.length;
   const theme = useTheme();
+
+  //Search bar functionality
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(cryptoOrders); 
+
+  function handleSearchInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const newSearchTerm = event.target.value;
+    setSearchTerm(newSearchTerm);
+
+
+    const filteredResults = cryptoOrders.filter(item =>
+      item.orderDetails.includes(newSearchTerm)
+    );
+
+    setFilteredData(filteredResults);
+  }
 
   return (
     <Card>
@@ -199,6 +216,8 @@ const DocumentsTable: FC<DocumentsTableProps> = ({ cryptoOrders }) => {
               </InputAdornment>
             )
           }}
+          value={searchTerm}
+          onChange={handleSearchInputChange}
         />
       </div>
 
@@ -259,7 +278,7 @@ const DocumentsTable: FC<DocumentsTableProps> = ({ cryptoOrders }) => {
 
           {/* Table Body */}
           <TableBody>
-            {paginatedCryptoOrders.map((cryptoOrder) => {
+            {filteredData.map((cryptoOrder) => {
               const isCryptoOrderSelected = selectedCryptoOrders.includes(
                 cryptoOrder.id
               );
