@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { Button, Container, Paper, TextField, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { signInUser } from '@/store/slices/auth/authSlice';
+// import { signInUser} from '@/store/slices/auth/authSlice';
 
-const Login = () => {
+const Register = () => {
   const dispatch = useDispatch();
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+  };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -17,7 +22,7 @@ const Login = () => {
   };
 
   const handleSubmit = async () => {
-    dispatch(signInUser(email, password) as any);
+    // dispatch(signInUser(name, email, password) as any);
   };
 
   return (
@@ -33,8 +38,17 @@ const Login = () => {
     >
       <Paper elevation={3} style={{ padding: '20px' }}>
         <Typography variant="h3" align="center" gutterBottom>
-          Login
+          Register
         </Typography>
+        <TextField
+          label="Username"
+          type="username"
+          fullWidth
+          required
+          value={username}
+          onChange={handleUsernameChange}
+          margin="normal"
+        />
         <TextField
           label="Email"
           type="email"
@@ -53,6 +67,15 @@ const Login = () => {
           onChange={handlePasswordChange}
           margin="normal"
         />
+        <TextField
+          label="Confirm Password"
+          type="password"
+          fullWidth
+          required
+          value={password}
+          onChange={handlePasswordChange}
+          margin="normal"
+        />
         <Button
           variant="contained"
           color="primary"
@@ -61,11 +84,11 @@ const Login = () => {
           style={{ marginTop: '20px' }}
           onClick={handleSubmit}
         >
-          Login
+          Register
         </Button>
       </Paper>
     </Container>
   );
 };
 
-export default Login;
+export default Register;
