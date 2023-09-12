@@ -25,15 +25,14 @@ import {
   TextField,
   InputAdornment
 } from '@mui/material';
+import Label from '@/components/Label';
 import { CryptoOrder, CryptoOrderStatus } from '@/models/crypto_order';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
-import ProjectDocumentsModal from './ProjectDocumentsModal';
 import SearchIcon from '@mui/icons-material/Search';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 
-interface ProjectsTableProps {
+interface DocumentsTableProps {
   className?: string;
   cryptoOrders: CryptoOrder[];
 }
@@ -41,6 +40,27 @@ interface ProjectsTableProps {
 interface Filters {
   status?: CryptoOrderStatus;
 }
+
+const getStatusLabel = (cryptoOrderStatus: CryptoOrderStatus): JSX.Element => {
+  const map = {
+    failed: {
+      text: 'Отменен',
+      color: 'error'
+    },
+    completed: {
+      text: 'Завършен',
+      color: 'success'
+    },
+    pending: {
+      text: 'В процес',
+      color: 'warning'
+    }
+  };
+
+  const { text, color }: any = map[cryptoOrderStatus];
+
+  return <Label color={color}>{text}</Label>;
+};
 
 const applyFilters = (
   cryptoOrders: CryptoOrder[],
@@ -57,15 +77,7 @@ const applyFilters = (
   });
 };
 
-// const applyPagination = (
-//   cryptoOrders: CryptoOrder[],
-//   page: number,
-//   limit: number
-// ): CryptoOrder[] => {
-//   return cryptoOrders.slice(page * limit, page * limit + limit);
-// };
-
-const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
+const DocumentsTable: FC<DocumentsTableProps> = ({ cryptoOrders }) => {
   const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
     []
   );
@@ -186,7 +198,7 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
         <TextField
           style={{ width: '100%' }}
           variant="outlined"
-          placeholder="Търси проект по име..."
+          placeholder="Търси файл по име..."
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -228,10 +240,12 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
               </FormControl>
             </Box>
           }
-          title="Таблица с проекти"
+          title="Таблица с документи"
         />
       )}
+
       <Divider />
+
       <TableContainer>
         <Table>
           {/* Table Head */}
@@ -245,10 +259,11 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
                   onChange={handleSelectAllCryptoOrders}
                 />
               </TableCell>
-              <TableCell>Снимка</TableCell>
+              <TableCell>Заглавие</TableCell>
               <TableCell>Проект</TableCell>
               <TableCell>Дата на създаване</TableCell>
-              <TableCell align="right">Документи към проекта</TableCell>
+              <TableCell align="right">Тип</TableCell>
+              <TableCell align="right">Статус</TableCell>
               <TableCell align="right">Действия</TableCell>
             </TableRow>
           </TableHead>
@@ -283,7 +298,7 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.orderID}
+                      {cryptoOrder.orderDetails}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -294,7 +309,7 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.orderDetails}
+                      {cryptoOrder.orderID}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -316,24 +331,13 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      <ProjectDocumentsModal />
+                      {cryptoOrder.amountCrypto.toUpperCase()}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
-                  <Tooltip title="Виж подробно" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <VisibilityIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
+                    {getStatusLabel(cryptoOrder.status)}
+                  </TableCell>
+                  <TableCell align="right">
                     <Tooltip title="Промени" arrow>
                       <IconButton
                         sx={{
@@ -367,6 +371,7 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
           </TableBody>
         </Table>
       </TableContainer>
+
       {/* Pagination */}
       <Box p={2}>
         <TablePagination
@@ -384,12 +389,12 @@ const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
   );
 };
 
-ProjectsTable.propTypes = {
+DocumentsTable.propTypes = {
   cryptoOrders: PropTypes.array.isRequired
 };
 
-ProjectsTable.defaultProps = {
+DocumentsTable.defaultProps = {
   cryptoOrders: []
 };
 
-export default ProjectsTable;
+export default DocumentsTable;
