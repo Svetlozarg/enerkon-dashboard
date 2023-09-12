@@ -19,6 +19,8 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { useDispatch } from 'react-redux';
+import { signOutUser } from '@/store/slices/auth/authSlice';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -56,6 +58,8 @@ const UserBoxDescription = styled(Typography)(
 );
 
 function HeaderUserbox() {
+  const dispatch = useDispatch();
+
   const user = {
     name: 'Catherine Pike',
     avatar: '/static/images/avatars/1.jpg',
@@ -71,6 +75,10 @@ function HeaderUserbox() {
 
   const handleClose = (): void => {
     setOpen(false);
+  };
+
+  const handleSignOut = () => {
+    dispatch(signOutUser());
   };
 
   return (
@@ -133,7 +141,7 @@ function HeaderUserbox() {
         <Divider />
         <Box sx={{ m: 1 }}>
           <Tooltip title="Излезте от профила">
-            <Button color="primary" fullWidth>
+            <Button color="primary" fullWidth onClick={handleSignOut}>
               <LogoutIcon sx={{ mr: 1 }} />
               Излез
             </Button>
