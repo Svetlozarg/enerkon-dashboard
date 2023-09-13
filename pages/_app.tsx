@@ -40,7 +40,10 @@ export default function EnerkonApp(props: EnerkonAppProps) {
     const cookies = parse(document.cookie);
 
     if (!cookies.accessToken) {
-      router.push('/auth/login');
+      if (router.pathname !== '/auth/register' && router.pathname !== '/auth/login' ){
+        router.push('/auth/login');
+      }
+      
     }
 
     if (cookies.accessToken) {

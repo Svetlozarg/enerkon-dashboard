@@ -7,6 +7,11 @@ const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  const passwordRegex = /^(?=.*[A-Z])(?=.*[._-])[A-Za-z0-9._-]{6,}$/;
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -17,6 +22,18 @@ const Login = () => {
   };
 
   const handleSubmit = async () => {
+    setEmailError('');
+    setPasswordError('');
+
+    if (!emailRegex.test(email)) {
+      setEmailError('Invalid email address');
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
+      setPasswordError('Password must be at least 6 characters with one uppercase letter and one special character (. _ -)');
+      return;
+    }
     dispatch(signInUser(email, password) as any);
   };
 
@@ -43,6 +60,8 @@ const Login = () => {
           value={email}
           onChange={handleEmailChange}
           margin="normal"
+          error={Boolean(emailError)}
+          helperText={emailError}
         />
         <TextField
           label="Password"
@@ -52,6 +71,8 @@ const Login = () => {
           value={password}
           onChange={handlePasswordChange}
           margin="normal"
+          error={Boolean(passwordError)}
+          helperText={passwordError}
         />
         <Button
           variant="contained"

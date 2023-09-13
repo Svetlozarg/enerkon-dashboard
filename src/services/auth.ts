@@ -36,3 +36,27 @@ export function signOut() {
 
   window.location.assign('/auth/login');
 }
+
+export async function signUp(userName: string, email: string, password: string) {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+
+  const res = await fetch(process.env.NEXT_PUBLIC_API_LINK + '/register', {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify({
+      username: userName,
+      email: email,
+      password: password
+    })
+  });
+
+  const user = await res.json();
+
+  if (res.ok && user) {
+    
+    window.location.assign('/auth/login');
+
+    return user;
+  } else return null;
+}
