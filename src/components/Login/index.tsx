@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Container, Paper, TextField, Typography } from '@mui/material';
+import { Button, Container, Paper, TextField, Typography, Link } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { signInUser } from '@/store/slices/auth/authSlice';
 
@@ -79,11 +79,14 @@ const Login = () => {
           color="primary"
           fullWidth
           type="submit"
-          style={{ marginTop: '20px' }}
+          style={{ marginTop: '20px', marginBottom: '15px' }}
           onClick={handleSubmit}
         >
           Login
         </Button>
+        <Link href="/auth/register" underline="none">
+          Register
+        </Link>
       </Paper>
     </Container>
   );
