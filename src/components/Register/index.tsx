@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Container, Paper, TextField, Typography } from '@mui/material';
-import { useDispatch } from 'react-redux';
 import { signUp } from '@/services/auth';
 
 
 const Register = () => {
-  const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

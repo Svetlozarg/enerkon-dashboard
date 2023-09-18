@@ -78,7 +78,7 @@ function HeaderUserbox() {
   };
 
   const handleSignOut = () => {
-    dispatch(signOutUser());
+    dispatch(signOutUser() as any);
   };
 
   return (
