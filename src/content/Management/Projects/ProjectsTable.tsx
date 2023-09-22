@@ -59,7 +59,8 @@ const columns: GridColDef[] = [
           <IconButton>
             <VisibilityIcon sx={{ color: '#0096FF' }} />
           </IconButton>
-          <IconButton>
+          <IconButton
+          >
             <EditIcon sx={{ color: '#FFBF00' }} />
           </IconButton>
           <IconButton>
@@ -102,6 +103,7 @@ export default function DataTable(props: Props) {
           '&.MuiDataGrid-root .MuiDataGrid-columnHeader:focus': {
             outline: 'none !important'
           }
+          
         }}
       />
     </div>

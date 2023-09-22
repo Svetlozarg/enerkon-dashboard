@@ -13,6 +13,7 @@ import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import { createProject } from '@/services/project';
 
 const style = {
   display: 'flex',
@@ -60,11 +61,17 @@ function PageHeader() {
   };
   const [projectName, setProjectName] = useState<string>('');
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     if (projectName) {
       console.log(projectName);
       console.log(selectedFile);
+
+      const body = {
+        title: projectName,
+        documents: []
+      }
+
+      createProject(body) 
       
     } else {
       setError(true);
@@ -113,7 +120,7 @@ function PageHeader() {
               <IconButton onClick={handleClose} sx={styles.iconButton}>
                 <CloseIcon sx={styles.closeButton} />
               </IconButton>
-              <form onSubmit={handleSubmit} style={{height: '350px'}}>
+              
                 <Box
                   sx={{
                     display: 'flex',
@@ -161,18 +168,18 @@ function PageHeader() {
                     </Box>
                     </Tooltip>
                   </Box>}
-                </Box>
-              </form>
-              <Box sx={{ display: 'flex', justifyContent: 'center', width:'100%'}}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', width:'100%'}}>
               <Button
                     type="submit"
                     variant="contained"
                     color="primary"
+                    onClick={handleSubmit}
                     sx={{ mt: 8 }} // Added margin top
                   >
                     Добави проект
                   </Button>
                   </Box>
+                </Box>
             </Box>
           </Box>
         </Modal>
