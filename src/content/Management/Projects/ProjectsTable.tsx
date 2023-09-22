@@ -1,395 +1,109 @@
-import { FC, ChangeEvent, useState } from 'react';
-import { format } from 'date-fns';
-import PropTypes from 'prop-types';
-import {
-  Tooltip,
-  Divider,
-  Box,
-  FormControl,
-  InputLabel,
-  Card,
-  Checkbox,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableContainer,
-  Select,
-  MenuItem,
-  Typography,
-  useTheme,
-  CardHeader,
-  TextField,
-  InputAdornment
-} from '@mui/material';
-import { CryptoOrder, CryptoOrderStatus } from '@/models/crypto_order';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import BulkActions from './BulkActions';
-import ProjectDocumentsModal from './ProjectDocumentsModal';
-import SearchIcon from '@mui/icons-material/Search';
+import * as React from 'react';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Project } from '@/store/slices/project/projectSlice';
+import { IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import LinearProgress from '@mui/material/LinearProgress';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-interface ProjectsTableProps {
-  className?: string;
-  cryptoOrders: CryptoOrder[];
+interface Props {
+  projects: Project[];
+  loading: boolean;
 }
 
-interface Filters {
-  status?: CryptoOrderStatus;
-}
+const columns: GridColDef[] = [
+  { field: '_id', headerName: 'ID', width: 100 },
+  { field: 'title', headerName: 'Title', width: 400 },
+  {
+    field: 'updatedAt',
+    width: 200,
+    valueGetter: (params) => {
+      if (!params.value) {
+        return params.value;
+      }
 
-const applyFilters = (
-  cryptoOrders: CryptoOrder[],
-  filters: Filters
-): CryptoOrder[] => {
-  return cryptoOrders.filter((cryptoOrder) => {
-    let matches = true;
-
-    if (filters.status && cryptoOrder.status !== filters.status) {
-      matches = false;
+      const dateString = params.value;
+      const dateObject = new Date(dateString);
+      const year = dateObject.getFullYear();
+      const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
+      const day = dateObject.getDate().toString().padStart(2, '0');
+      const formattedDate = `${day}.${month}.${year}`;
+      return formattedDate;
     }
+  },
+  {
+    field: 'createdAt',
+    width: 200,
+    valueGetter: (params) => {
+      if (!params.value) {
+        return params.value;
+      }
 
-    return matches;
-  });
-};
-
-// const applyPagination = (
-//   cryptoOrders: CryptoOrder[],
-//   page: number,
-//   limit: number
-// ): CryptoOrder[] => {
-//   return cryptoOrders.slice(page * limit, page * limit + limit);
-// };
-
-const ProjectsTable: FC<ProjectsTableProps> = ({ cryptoOrders }) => {
-  const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
-    []
-  );
-  const selectedBulkActions = selectedCryptoOrders.length > 0;
-  const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(5);
-  const [filters, setFilters] = useState<Filters>({
-    status: null
-  });
-
-  const statusOptions = [
-    {
-      id: 'all',
-      name: 'Всички'
-    },
-    {
-      id: 'completed',
-      name: 'Завършени'
-    },
-    {
-      id: 'pending',
-      name: 'В процес на разработка'
-    },
-    {
-      id: 'failed',
-      name: 'Отменени'
+      const dateString = params.value;
+      const dateObject = new Date(dateString);
+      const year = dateObject.getFullYear();
+      const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
+      const day = dateObject.getDate().toString().padStart(2, '0');
+      const formattedDate = `${day}.${month}.${year}`;
+      return formattedDate;
     }
-  ];
-
-  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    let value = null;
-
-    if (e.target.value !== 'all') {
-      value = e.target.value;
-    }
-
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      status: value
-    }));
-  };
-
-  const handleSelectAllCryptoOrders = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    setSelectedCryptoOrders(
-      event.target.checked
-        ? cryptoOrders.map((cryptoOrder) => cryptoOrder.id)
-        : []
-    );
-  };
-
-  const handleSelectOneCryptoOrder = (
-    _event: ChangeEvent<HTMLInputElement>,
-    cryptoOrderId: string
-  ): void => {
-    if (!selectedCryptoOrders.includes(cryptoOrderId)) {
-      setSelectedCryptoOrders((prevSelected) => [
-        ...prevSelected,
-        cryptoOrderId
-      ]);
-    } else {
-      setSelectedCryptoOrders((prevSelected) =>
-        prevSelected.filter((id) => id !== cryptoOrderId)
+  },
+  {
+    field: 'actions',
+    headerName: 'Actions',
+    width: 200,
+    renderCell: () => {
+      return (
+        <>
+          <IconButton>
+            <VisibilityIcon sx={{ color: '#0096FF' }} />
+          </IconButton>
+          <IconButton>
+            <EditIcon sx={{ color: '#FFBF00' }} />
+          </IconButton>
+          <IconButton>
+            <DeleteIcon sx={{ color: '#dc143c' }} />
+          </IconButton>
+        </>
       );
     }
-  };
-
-  const handlePageChange = (_event: any, newPage: number): void => {
-    setPage(newPage);
-  };
-
-  const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setLimit(parseInt(event.target.value));
-  };
-
-  const filteredCryptoOrders = applyFilters(cryptoOrders, filters);
-  // const paginatedCryptoOrders = applyPagination(
-  //   filteredCryptoOrders,
-  //   page,
-  //   limit
-  // );
-  const selectedSomeCryptoOrders =
-    selectedCryptoOrders.length > 0 &&
-    selectedCryptoOrders.length < cryptoOrders.length;
-  const selectedAllCryptoOrders =
-    selectedCryptoOrders.length === cryptoOrders.length;
-  const theme = useTheme();
-
-  //Search bar functionality
-
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredData, setFilteredData] = useState(cryptoOrders); 
-
-  function handleSearchInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const newSearchTerm = event.target.value;
-    setSearchTerm(newSearchTerm);
-
-
-    const filteredResults = cryptoOrders.filter(item =>
-      item.orderDetails.includes(newSearchTerm)
-    );
-
-    setFilteredData(filteredResults);
   }
+];
+
+export default function DataTable(props: Props) {
+  const { projects, loading } = props;
 
   return (
-    <Card>
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '10px'
-        }}
-      >
-        <TextField
-          style={{ width: '100%' }}
-          variant="outlined"
-          placeholder="Търси проект по име..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <IconButton edge="start">
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-          value={searchTerm}
-          onChange={handleSearchInputChange}
-        />
-      </div>
-
-      {/* Bulk Actions */}
-      {selectedBulkActions && (
-        <Box flex={1} p={2}>
-          <BulkActions />
-        </Box>
-      )}
-      {!selectedBulkActions && (
-        <CardHeader
-          action={
-            <Box width={150}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Филтър</InputLabel>
-                <Select
-                  value={filters.status || 'all'}
-                  onChange={handleStatusChange}
-                  label="Status"
-                  autoWidth
-                >
-                  {statusOptions.map((statusOption) => (
-                    <MenuItem key={statusOption.id} value={statusOption.id}>
-                      {statusOption.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
+    <div style={{ height: 500, width: '100%' }}>
+      <DataGrid
+        getRowId={(row) => row._id}
+        rows={projects}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 10 }
           }
-          title="Таблица с проекти"
-        />
-      )}
-      <Divider />
-      <TableContainer>
-        <Table>
-          {/* Table Head */}
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  color="primary"
-                  checked={selectedAllCryptoOrders}
-                  indeterminate={selectedSomeCryptoOrders}
-                  onChange={handleSelectAllCryptoOrders}
-                />
-              </TableCell>
-              <TableCell>Снимка</TableCell>
-              <TableCell>Проект</TableCell>
-              <TableCell>Дата на създаване</TableCell>
-              <TableCell align="right">Документи към проекта</TableCell>
-              <TableCell align="right">Действия</TableCell>
-            </TableRow>
-          </TableHead>
-
-          {/* Table Body */}
-          <TableBody>
-            {filteredData.map((cryptoOrder) => {
-              const isCryptoOrderSelected = selectedCryptoOrders.includes(
-                cryptoOrder.id
-              );
-              return (
-                <TableRow
-                  hover
-                  key={cryptoOrder.id}
-                  selected={isCryptoOrderSelected}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      color="primary"
-                      checked={isCryptoOrderSelected}
-                      onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneCryptoOrder(event, cryptoOrder.id)
-                      }
-                      value={isCryptoOrderSelected}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {cryptoOrder.orderID}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {cryptoOrder.orderDetails}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {format(cryptoOrder.orderDate, 'MMMM dd yyyy')}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      <ProjectDocumentsModal />
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                  <Tooltip title="Виж подробно" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <VisibilityIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Промени" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <EditTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Изтрий" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': { background: theme.colors.error.lighter },
-                          color: theme.palette.error.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <DeleteTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {/* Pagination */}
-      <Box p={2}>
-        <TablePagination
-          component="div"
-          count={filteredCryptoOrders.length}
-          onPageChange={handlePageChange}
-          onRowsPerPageChange={handleLimitChange}
-          page={page}
-          rowsPerPage={limit}
-          rowsPerPageOptions={[5, 10, 25, 30]}
-          labelRowsPerPage="Редове на страница:"
-        />
-      </Box>
-    </Card>
+        }}
+        pageSizeOptions={[10, 20]}
+        checkboxSelection
+        loading={loading}
+        disableRowSelectionOnClick
+        slots={{
+          loadingOverlay: LinearProgress
+        }}
+        sx={{
+          '& .MuiDataGrid-row:hover': {
+            backgroundColor: 'divider'
+          },
+          '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
+            outline: 'none !important'
+          },
+          '&.MuiDataGrid-root .MuiDataGrid-columnHeader:focus': {
+            outline: 'none !important'
+          }
+        }}
+      />
+    </div>
   );
-};
-
-ProjectsTable.propTypes = {
-  cryptoOrders: PropTypes.array.isRequired
-};
-
-ProjectsTable.defaultProps = {
-  cryptoOrders: []
-};
-
-export default ProjectsTable;
+}

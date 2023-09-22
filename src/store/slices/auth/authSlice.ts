@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk } from '@/store/store';
 import { RootState } from '@/store/store';
 import signIn, { signOut } from '@/services/auth';
+import { openNotification } from '../notifications/notificationSlice';
 
 interface AuthState {
   id: string | null;
@@ -11,7 +12,7 @@ interface AuthState {
 }
 
 interface AuthResponse {
-  _id: string;
+  id: string;
   email: string;
   accessToken: string;
 }
@@ -27,7 +28,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     userSignInSuccess: (state, action: PayloadAction<AuthResponse>) => {
-      state.id = action.payload._id;
+      state.id = action.payload.id;
       state.email = action.payload.email;
       state.accessToken = action.payload.accessToken;
     },
@@ -42,14 +43,30 @@ const authSlice = createSlice({
 export const { userSignInSuccess, userSignOut } = authSlice.actions;
 
 export const signInUser =
-  (email: string, password: string): AppThunk =>
+  (userEmail: string, password: string): AppThunk =>
   async (dispatch: any) => {
     try {
-      const response: AuthResponse = await signIn(email, password);
+      const response: AuthResponse = await signIn(userEmail, password);
+      const { id, email, accessToken } = response;
 
-      dispatch(userSignInSuccess(response));
+      dispatch(userSignInSuccess({ id, email, accessToken }));
+
+      dispatch(
+        openNotification({
+          isOpen: true,
+          text: 'Successfull sign in',
+          severity: 'success'
+        })
+      );
     } catch (error) {
       console.error(error);
+      dispatch(
+        openNotification({
+          isOpen: true,
+          text: error,
+          severity: 'warning'
+        })
+      );
     }
   };
 
