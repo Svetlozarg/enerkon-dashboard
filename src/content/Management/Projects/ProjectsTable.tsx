@@ -2,10 +2,12 @@ import * as React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Project } from '@/store/slices/project/projectSlice';
 import { IconButton } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LinearProgress from '@mui/material/LinearProgress';
 import DeleteIcon from '@mui/icons-material/Delete';
+
+import UpdateProjectModal from './UpdateProjectModal';
 
 interface Props {
   projects: Project[];
@@ -54,16 +56,15 @@ const columns: GridColDef[] = [
     headerName: 'Actions',
     width: 200,
     renderCell: () => {
+      
+
       return (
         <>
           <IconButton>
             <VisibilityIcon sx={{ color: '#0096FF' }} />
           </IconButton>
-          <IconButton
-          >
-            <EditIcon sx={{ color: '#FFBF00' }} />
-          </IconButton>
-          <IconButton>
+          <UpdateProjectModal id="650c3fed74e096de7e3cb753" />
+          <IconButton >
             <DeleteIcon sx={{ color: '#dc143c' }} />
           </IconButton>
         </>
@@ -74,7 +75,6 @@ const columns: GridColDef[] = [
 
 export default function DataTable(props: Props) {
   const { projects, loading } = props;
-
   return (
     <div style={{ height: 500, width: '100%' }}>
       <DataGrid
