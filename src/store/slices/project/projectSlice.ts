@@ -49,8 +49,6 @@ export const fetchProjects = (): AppThunk => async (dispatch) => {
 
     const projectsData: Project[] = await response;
 
-    console.log(projectsData);
-
     dispatch(setProjects((projectsData as any).data));
   } catch (error) {
     dispatch(setError(error.message || 'An error occurred'));

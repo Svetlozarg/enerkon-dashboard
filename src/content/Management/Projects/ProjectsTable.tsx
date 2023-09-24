@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { Project } from '@/store/slices/project/projectSlice';
 import { IconButton } from '@mui/material';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LinearProgress from '@mui/material/LinearProgress';
-import DeleteIcon from '@mui/icons-material/Delete';
 
-import UpdateProjectModal from './UpdateProjectModal';
+import UpdateProjectModal from './modals/UpdateProjectModal';
+import DeleteProjectModal from './modals/DeleteProjectModal';
 
 interface Props {
   projects: Project[];
@@ -15,11 +15,12 @@ interface Props {
 }
 
 const columns: GridColDef[] = [
-  { field: '_id', headerName: 'ID', width: 100 },
-  { field: 'title', headerName: 'Title', width: 400 },
+  { field: '_id', headerName: 'ИД', width: 100 },
+  { field: 'title', headerName: 'Заглавие', width: 400 },
   {
     field: 'updatedAt',
-    width: 200,
+    headerName: 'Дата на промяна',
+    width: 220,
     valueGetter: (params) => {
       if (!params.value) {
         return params.value;
@@ -36,7 +37,8 @@ const columns: GridColDef[] = [
   },
   {
     field: 'createdAt',
-    width: 200,
+    headerName: 'Дата на създаване',
+    width: 220,
     valueGetter: (params) => {
       if (!params.value) {
         return params.value;
@@ -53,20 +55,16 @@ const columns: GridColDef[] = [
   },
   {
     field: 'actions',
-    headerName: 'Actions',
+    headerName: 'Действия',
     width: 200,
-    renderCell: () => {
-      
-
+    renderCell: (params) => {
       return (
         <>
           <IconButton>
             <VisibilityIcon sx={{ color: '#0096FF' }} />
           </IconButton>
-          <UpdateProjectModal id="650c3fed74e096de7e3cb753" />
-          <IconButton >
-            <DeleteIcon sx={{ color: '#dc143c' }} />
-          </IconButton>
+          <UpdateProjectModal id={params.row._id} title={params.row.title} />
+          <DeleteProjectModal id={params.row._id} title={params.row.title} />
         </>
       );
     }
@@ -91,7 +89,15 @@ export default function DataTable(props: Props) {
         loading={loading}
         disableRowSelectionOnClick
         slots={{
-          loadingOverlay: LinearProgress
+          loadingOverlay: LinearProgress,
+          toolbar: GridToolbar
+        }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: true,
+            printOptions: { disableToolbarButton: true },
+            csvOptions: { disableToolbarButton: true }
+          }
         }}
         sx={{
           '& .MuiDataGrid-row:hover': {
@@ -103,8 +109,8 @@ export default function DataTable(props: Props) {
           '&.MuiDataGrid-root .MuiDataGrid-columnHeader:focus': {
             outline: 'none !important'
           }
-          
         }}
+        disableDensitySelector
       />
     </div>
   );

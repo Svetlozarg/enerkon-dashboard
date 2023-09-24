@@ -37,7 +37,10 @@ export const getProjectId = async (id: string) => {
 // Update Project
 export const updateProject = async (body: Object, id: string) => {
   try {
-    const response = await customeAxios.put(`${api}/project/update/${id}`, body);
+    const response = await customeAxios.put(
+      `${api}/project/update/${id}`,
+      body
+    );
 
     return response.data;
   } catch (error) {
@@ -48,7 +51,9 @@ export const updateProject = async (body: Object, id: string) => {
 // Delete Project
 export const deleteProject = async (body: Object) => {
   try {
-    const response = await customeAxios.delete(`${api}/project/delete`, body);
+    const response = await customeAxios.delete(`${api}/project/delete`, {
+      data: body
+    });
 
     return response.data;
   } catch (error) {
