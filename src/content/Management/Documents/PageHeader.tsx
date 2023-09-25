@@ -13,6 +13,7 @@ import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import AddDocumentModal from './modals/AddDocumentModal';
 
 const style = {
   display: 'flex',
@@ -96,135 +97,7 @@ function PageHeader() {
         </Typography>
       </Grid>
       <Grid item>
-        <Button
-          sx={{ mt: { xs: 2, md: 0 } }}
-          variant="contained"
-          startIcon={<AddTwoToneIcon fontSize="small" />}
-          onClick={handleOpen}
-        >
-          Добави документ
-        </Button>
-        <Modal open={open} onClose={handleClose}>
-          <Box sx={style}>
-            <Box sx={styles.root}>
-              <Typography
-                variant="h3"
-                sx={{
-                  mt: '25px',
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center'
-                }}
-              >
-                Добави Документ
-              </Typography>
-              <IconButton onClick={handleClose} sx={styles.iconButton}>
-                <CloseIcon sx={styles.closeButton} />
-              </IconButton>
-              <form onSubmit={handleSubmit} style={{ height: '350px' }}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    height: '100%',
-                    mt: '3rem',
-                    gap: '2rem'
-                  }}
-                >
-                  <TextField
-                    error={error}
-                    label="Заглавие"
-                    helperText={
-                      error
-                        ? 'Не сте въвели заглавие'
-                        : 'Моля въведете заглавие'
-                    }
-                    onChange={handleProjectNameChange}
-                    value={projectName}
-                  />
-                  <TextField
-                    error={error}
-                    label="Име на проекта"
-                    helperText={
-                      error
-                        ? 'Не сте въвели име на проекта'
-                        : 'Моля въведете име на проекта'
-                    }
-                    onChange={handleProjectNameChange}
-                    value={projectName}
-                  />
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    spacing={2}
-                    sx={{}}
-                  >
-                    <Button
-                      sx={{ border: '1px solid #8C7CF0' }}
-                      component="label"
-                      disabled={selectedFile}
-                    >
-                      Добави документ
-                      <input
-                        hidden
-                        accept="application/xml,text/xml,application/pdf,image/png"
-                        type="file"
-                        onChange={handleFileChange}
-                      />
-                    </Button>
-                  </Stack>
-                  {selectedFile && (
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Tooltip
-                        title="Delete"
-                        sx={{ cursor: 'pointer' }}
-                        onClick={() => setSelectedFile(null)}
-                      >
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            flexDirection: 'column',
-                            gap: '5px',
-                            border: 'solid 1px',
-                            p: '10px',
-                            borderRadius: '20px',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          <InsertDriveFileIcon sx={{ fontSize: '32px' }} />
-                          <Typography>{selectedFile?.name}</Typography>
-                          <Typography>
-                            {(selectedFile?.size / 1048576).toFixed(2) +
-                              ' ' +
-                              'MB'}
-                          </Typography>
-                        </Box>
-                      </Tooltip>
-                    </Box>
-                  )}
-                </Box>
-              </form>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  width: '100%'
-                }}
-              >
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  sx={{ mt: 8 }} // Added margin top
-                >
-                  Добави документ
-                </Button>
-              </Box>
-            </Box>
-          </Box>
-        </Modal>
+        <AddDocumentModal/>
       </Grid>
     </Grid>
   );
