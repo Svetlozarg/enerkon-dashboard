@@ -70,9 +70,9 @@ const columns: GridColDef[] = [
       if (params.value === 'In process')
         return <p style={{ color: 'yellow' }}>В процес</p>;
       if (params.value === 'Canceled')
-        return <p style={{ color: 'yellow' }}>В процес</p>;
+        return <p style={{ color: 'red' }}>В процес</p>;
       if (params.value === 'Finished')
-        return <p style={{ color: 'yellow' }}>В процес</p>;
+        return <p style={{ color: 'green' }}>В процес</p>;
     }
   },
   {
