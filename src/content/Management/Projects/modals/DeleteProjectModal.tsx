@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteProject } from '@/services/project';
 import { fetchProjects } from '@/store/slices/project/projectSlice';
 import { useDispatch } from 'react-redux';
+import { openNotification } from '@/store/slices/notifications/notificationSlice';
 
 interface Props {
   id: string;
@@ -47,6 +48,13 @@ export default function DeleteProjectModal(props: Props) {
       .then((res) => {
         if (res.success) {
           dispatch(fetchProjects() as any);
+          dispatch(
+            openNotification({
+              isOpen: true,
+              text: 'Проекта е успешно изтрит',
+              severity: 'success'
+            })
+          );
           handleClose();
         } else if (!res.success) {
           console.log('Problem');

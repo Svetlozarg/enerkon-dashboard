@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import Sidebar from './Sidebar';
 import Header from './Header';
+import Notification from '@/components/Alert';
 
 interface SidebarLayoutProps {
   children?: ReactNode;
@@ -58,6 +59,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
           <Box display="block">{children}</Box>
         </Box>
       </Box>
+      <Notification />
     </>
   );
 };

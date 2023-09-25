@@ -7,6 +7,7 @@ import { updateProject } from '@/services/project';
 import ClearIcon from '@mui/icons-material/Clear';
 import { fetchProjects } from '@/store/slices/project/projectSlice';
 import { useDispatch } from 'react-redux';
+import { openNotification } from '@/store/slices/notifications/notificationSlice';
 
 const styles = {
   root: {
@@ -48,6 +49,7 @@ export default function UpdateProjectModal(props: Props) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [newProjectTitle, setNewProjectTitle] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   const handleNewProjectTitleChange = (event) => {
     setNewProjectTitle(event.target.value);
@@ -66,14 +68,23 @@ export default function UpdateProjectModal(props: Props) {
         updateProject(body, id).then((res) => {
           if (res.success) {
             dispatch(fetchProjects() as any);
+            dispatch(
+              openNotification({
+                isOpen: true,
+                text: 'Проекта е успешно променен',
+                severity: 'success'
+              })
+            );
             handleClose();
           } else if (!res.success) {
             console.log('Problem');
           }
         });
       } else {
-        console.log('String contains other characters.');
+        setError('Заглавието може да съдържа само букви и цифри');
       }
+    } else {
+      setError('Моля въведете заглавие на проекта');
     }
   };
 
@@ -100,7 +111,9 @@ export default function UpdateProjectModal(props: Props) {
             </Typography>
 
             <TextField
+              error={error ? true : false}
               label="Въведете ново заглавие..."
+              helperText={error ? error : ''}
               fullWidth
               value={newProjectTitle}
               onChange={handleNewProjectTitleChange}

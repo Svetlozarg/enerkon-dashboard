@@ -8,6 +8,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 import UpdateProjectModal from './modals/UpdateProjectModal';
 import DeleteProjectModal from './modals/DeleteProjectModal';
+import { DataGridLocale } from '@/helpers/DataGridLocale';
 
 interface Props {
   projects: Project[];
@@ -71,7 +72,7 @@ const columns: GridColDef[] = [
   }
 ];
 
-export default function DataTable(props: Props) {
+export default function ProjectsTable(props: Props) {
   const { projects, loading } = props;
   return (
     <div style={{ height: 500, width: '100%' }}>
@@ -99,6 +100,7 @@ export default function DataTable(props: Props) {
             csvOptions: { disableToolbarButton: true }
           }
         }}
+        localeText={DataGridLocale}
         sx={{
           '& .MuiDataGrid-row:hover': {
             backgroundColor: 'divider'

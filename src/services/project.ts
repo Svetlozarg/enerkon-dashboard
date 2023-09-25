@@ -15,7 +15,11 @@ export const getProjects = async () => {
 // Create Create Project
 export const createProject = async (body: Object) => {
   try {
-    const response = await customeAxios.post(`${api}/project/create`, body);
+    const response = await customeAxios.post(`${api}/project/create`, body, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
 
     return response.data;
   } catch (error) {

@@ -21,6 +21,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useDispatch } from 'react-redux';
 import { signOutUser } from '@/store/slices/auth/authSlice';
+import { userEmail } from '@/helpers/GetUser';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -61,9 +62,9 @@ function HeaderUserbox() {
   const dispatch = useDispatch();
 
   const user = {
-    name: 'Catherine Pike',
+    name: userEmail,
     avatar: '/static/images/avatars/1.jpg',
-    jobtitle: 'Project Manager'
+    role: 'Owner'
   };
 
   const ref = useRef<any>(null);
@@ -88,9 +89,7 @@ function HeaderUserbox() {
         <Hidden mdDown>
           <UserBoxText>
             <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
-            <UserBoxDescription variant="body2">
-              {user.jobtitle}
-            </UserBoxDescription>
+            <UserBoxDescription variant="body2">{user.role}</UserBoxDescription>
           </UserBoxText>
         </Hidden>
         <Hidden smDown>
@@ -114,9 +113,7 @@ function HeaderUserbox() {
           <Avatar variant="rounded" alt={user.name} src={user.avatar} />
           <UserBoxText>
             <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
-            <UserBoxDescription variant="body2">
-              {user.jobtitle}
-            </UserBoxDescription>
+            <UserBoxDescription variant="body2">{user.role}</UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>
         <Divider sx={{ mb: 0 }} />
