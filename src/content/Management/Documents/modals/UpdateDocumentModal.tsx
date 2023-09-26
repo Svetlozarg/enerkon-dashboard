@@ -3,11 +3,13 @@ import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
 import Modal from '@mui/material/Modal';
 import { Button, IconButton, TextField, Typography } from '@mui/material';
-import { updateProject } from '@/services/project';
+
 import ClearIcon from '@mui/icons-material/Clear';
-import { fetchProjects } from '@/store/slices/project/projectSlice';
+
 import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
+import { fetchDocuments } from '@/store/slices/document/documentSlice';
+import { updateDocument } from '@/services/document';
 
 const styles = {
   root: {
@@ -48,26 +50,26 @@ export default function UpdateDocumentModal(props: Props) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [newProjectTitle, setNewProjectTitle] = useState<string>('');
+  const [newDocumentTitle, setDocumentTitle] = useState<string>('');
   const [error, setError] = useState<string>('');
 
-  const handleNewProjectTitleChange = (event) => {
-    setNewProjectTitle(event.target.value);
+  const handleNewDocumentTitleChange = (event) => {
+    setDocumentTitle(event.target.value);
   };
 
-  const handleProjectUpdate = () => {
-    if (newProjectTitle !== '') {
+  const handleDocumentUpdate = () => {
+    if (newDocumentTitle !== '') {
       const regex = /^[A-Za-zА-Яа-я0-9\s]+$/;
 
-      if (regex.test(newProjectTitle)) {
+      if (regex.test(newDocumentTitle)) {
         const body: Object = {
-          title: newProjectTitle,
+          title: newDocumentTitle,
           documents: [] // TODO: Add documents when backend ready
         };
 
-        updateProject(body, id).then((res) => {
+        updateDocument(body, id).then((res) => {
           if (res.success) {
-            dispatch(fetchProjects() as any);
+            dispatch(fetchDocuments() as any);
             dispatch(
               openNotification({
                 isOpen: true,
@@ -97,7 +99,7 @@ export default function UpdateDocumentModal(props: Props) {
         <Box sx={styles.root}>
           <Box sx={styles.header}>
             <Typography sx={{ fontSize: '1.5rem' }}>
-              Променете проект: {title}
+              Променете документ: {title}
             </Typography>
 
             <IconButton onClick={handleClose}>
@@ -115,15 +117,15 @@ export default function UpdateDocumentModal(props: Props) {
               label="Въведете ново заглавие..."
               helperText={error ? error : ''}
               fullWidth
-              value={newProjectTitle}
-              onChange={handleNewProjectTitleChange}
+              value={newDocumentTitle}
+              onChange={handleNewDocumentTitleChange}
             />
           </Box>
 
           <Button
             variant="contained"
             color="primary"
-            onClick={handleProjectUpdate}
+            onClick={handleDocumentUpdate}
           >
             Запази
           </Button>

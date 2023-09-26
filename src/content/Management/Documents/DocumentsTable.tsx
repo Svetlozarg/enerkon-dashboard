@@ -16,8 +16,8 @@ interface Props {
 
 const columns: GridColDef[] = [
   { field: '_id', headerName: 'ИД', width: 20 },
-  { field: 'title', headerName: 'Заглавие', width: 150 },
-  { field: 'document', headerName: 'Документ', width: 150 },
+  { field: 'document', headerName: 'Заглавие', width: 150 },
+  { field: 'title', headerName: 'Документ', width: 150 },
   { field: 'type', headerName: 'Тип', width: 10 },
   {
     field: 'project',
@@ -70,9 +70,9 @@ const columns: GridColDef[] = [
       if (params.value === 'In process')
         return <p style={{ color: 'yellow' }}>В процес</p>;
       if (params.value === 'Canceled')
-        return <p style={{ color: 'red' }}>В процес</p>;
+        return <p style={{ color: 'red' }}>Отказан</p>;
       if (params.value === 'Finished')
-        return <p style={{ color: 'green' }}>В процес</p>;
+        return <p style={{ color: 'green' }}>Завършен</p>;
     }
   },
   {

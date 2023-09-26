@@ -25,3 +25,38 @@ export const createDocument = async (body: Object) => {
       console.error(error);
     }
   };
+
+  export const updateDocument = async (body: Object, id: string) => {
+    try {
+      const response = await customeAxios.put(
+        `${api}/document/update/${id}`,
+        body
+      );
+  
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  export const deleteDocument = async (body: Object) => {
+    try {
+      const response = await customeAxios.delete(`${api}/document/delete`, {
+        data: body
+      });
+  
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  export const getDocumentId = async (id: string) => {
+    try {
+      const response = await customeAxios.get(`${api}/document/${id}`);
+  
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
