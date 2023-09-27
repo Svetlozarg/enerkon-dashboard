@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { log } from 'console';
 
 const styles = {
   root: {
@@ -54,11 +55,9 @@ export default function AddDocumentModal() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
-    setDocumentTitle('');
     setSelectedFile(null);
     setOpen(false);
   };
-  const [documentTitle, setDocumentTitle] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -66,7 +65,6 @@ export default function AddDocumentModal() {
   const [selectedProject, setSelectedProject] = useState('');
 
   useEffect(() => {
-    // Fetch projects when the modal opens
     if (open) {
       getProjects()
         .then((res) => {
@@ -82,47 +80,33 @@ export default function AddDocumentModal() {
     }
   }, [open]);
 
-  const handleDocumentTitleChange = (event: any) => {
-    setDocumentTitle(event.target.value);
-  };
-
   const handleFileChange = (event: any) => {
     setSelectedFile(event.target.files[0]);
   };
 
   const handleDocumentCreate = () => {
-    if (documentTitle !== '') {
-      const regex = /^[A-Za-zА-Яа-я0-9\s]+$/;
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('projectId', selectedProject);
+      formData.append('file', selectedFile);
 
-      if (regex.test(documentTitle)) {
-        if (selectedFile) {
-          const formData = new FormData();
-          formData.append('title', documentTitle);
-          formData.append('file', selectedFile);
-
-          createDocument(formData).then((res) => {
-            if (res.success) {
-              dispatch(fetchDocuments() as any);
-              dispatch(
-                openNotification({
-                  isOpen: true,
-                  text: 'Документа е успешно създаден',
-                  severity: 'success'
-                })
-              );
-              handleClose();
-            } else if (!res.success) {
-              console.log('Problem');
-            }
-          });
-        } else {
-          setError('Моля дабавете файл към документа');
+      createDocument(formData).then((res) => {
+        if (res.success) {
+          dispatch(fetchDocuments() as any);
+          dispatch(
+            openNotification({
+              isOpen: true,
+              text: 'Документа е успешно създаден',
+              severity: 'success'
+            })
+          );
+          handleClose();
+        } else if (!res.success) {
+          console.log('Problem');
         }
-      } else {
-        setError('Заглавието може да съдържа само букви и цифри');
-      }
+      });
     } else {
-      setError('Моля въведете заглавие на документа');
+      setError('Моля дабавете файл към документа');
     }
   };
 
@@ -153,19 +137,6 @@ export default function AddDocumentModal() {
           </Box>
 
           <Box width="100%">
-            <Typography sx={{ fontSize: '1.2rem', mb: '1rem' }}>
-              Заглавие на проекта
-            </Typography>
-
-            <TextField
-              error={error ? true : false}
-              label="Въведете заглавие..."
-              helperText={error ? error : ''}
-              fullWidth
-              value={documentTitle}
-              onChange={handleDocumentTitleChange}
-            />
-
             <Typography sx={{ fontSize: '1.2rem', mb: '1rem', mt: '1rem' }}>
               Изберете проект
             </Typography>
@@ -176,7 +147,7 @@ export default function AddDocumentModal() {
               fullWidth
             >
               {projects.map((project) => (
-                <MenuItem key={project._id} value={project.title}>
+                <MenuItem key={project._id} value={project._id}>
                   {project.title}
                 </MenuItem>
               ))}
@@ -196,7 +167,7 @@ export default function AddDocumentModal() {
                 Добави документ
                 <input
                   hidden
-                  accept=".pdf,.xlsx,.docx"
+                  accept=".pdf,.xlsx,.docx,.xml"
                   type="file"
                   onChange={handleFileChange}
                 />
