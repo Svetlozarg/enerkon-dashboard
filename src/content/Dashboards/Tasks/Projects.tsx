@@ -1,60 +1,49 @@
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   CardHeader,
   Box,
   Grid,
   Typography,
-  Avatar,
   IconButton,
   Tooltip,
-  AvatarGroup,
   LinearProgress,
-  Badge,
   styled,
-  useTheme
+  useTheme,
 } from '@mui/material';
-import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
-import Text from 'src/components/Text';
-import CalendarTodayTwoToneIcon from '@mui/icons-material/CalendarTodayTwoTone';
-import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import StarTwoToneIcon from '@mui/icons-material/StarTwoTone';
 
-const AvatarWrapperSuccess = styled(Avatar)(
-  ({ theme }) => `
-      background-color: ${theme.colors.success.lighter};
-      color:  ${theme.colors.success.main};
-`
-);
+// Import your getProjects function
+import { getProjects } from '@/services/project';
 
-const DotLegend = styled('span')(
-  ({ theme }) => `
-    border-radius: 22px;
-    width: ${theme.spacing(1.8)};
-    height: ${theme.spacing(1.8)};
-    display: inline-block;
-    border: 2px solid ${theme.colors.alpha.white[100]};
-    margin-right: ${theme.spacing(0.5)};
-`
-);
-
-const LinearProgressWrapper = styled(LinearProgress)(
-  ({ theme }) => `
-        flex-grow: 1;
-        height: 10px;
-        margin: ${theme.spacing(1, 0, 2)};
-        
-        &.MuiLinearProgress-root {
-          background-color: ${theme.colors.alpha.black[10]};
-        }
-        
-        .MuiLinearProgress-bar {
-          border-radius: ${theme.general.borderRadiusXl};
-        }
-`
-);
+const LinearProgressWrapper = styled(LinearProgress)(({ theme }) => `
+  flex-grow: 1;
+  height: 10px;
+  margin: ${theme.spacing(1, 0, 2)};
+  
+  &.MuiLinearProgress-root {
+    background-color: ${theme.colors.alpha.black[10]};
+  }
+  
+  .MuiLinearProgress-bar {
+    border-radius: ${theme.general.borderRadiusXl};
+  }
+`);
 
 function Projects() {
   const theme = useTheme();
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      const projectData = await getProjects();
+      if (projectData && projectData.success) {
+        setProjects(projectData.data);
+      }
+    }
+
+    fetchProjects();
+  }, []);
 
   return (
     <>
@@ -63,7 +52,7 @@ function Projects() {
         alignItems="center"
         justifyContent="space-between"
         sx={{
-          pb: 3
+          pb: 3,
         }}
       >
         <Typography variant="h3">Проекти</Typography>
@@ -74,253 +63,63 @@ function Projects() {
         </Box>
       </Box>
       <Grid container spacing={4}>
-        <Grid item xs={12} md={4}>
-          <Box>
-            <CardHeader
-              sx={{
-                px: 0,
-                pt: 0
-              }}
-              avatar={
-                <AvatarWrapperSuccess>
-                  <CheckTwoToneIcon />
-                </AvatarWrapperSuccess>
-              }
-              action={
-                <IconButton size="small" color="primary">
-                  <MoreVertTwoToneIcon />
-                </IconButton>
-              }
-              title="Име на проект"
-              titleTypographyProps={{
-                variant: 'h5',
-                color: 'textPrimary'
-              }}
-            />
+        {projects.map((project) => (
+          <Grid item xs={12} md={4} key={project._id}>
             <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Файлове:{' '}
-                <Text color="black">
-                  <b>25</b>
-                </Text>
-                <b> /100</b>
-              </Typography>
-              <LinearProgressWrapper
-                value={25}
-                color="primary"
-                variant="determinate"
+              <CardHeader
+                sx={{
+                  px: 0,
+                  pt: 0,
+                }}
+                title={project.title}
+                titleTypographyProps={{
+                  variant: 'h5',
+                  color: 'textPrimary',
+                }}
               />
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <AvatarGroup></AvatarGroup>
               <Box>
-                <Tooltip arrow title="View project calendar" placement="top">
-                  <IconButton
-                    size="small"
-                    color="secondary"
-                    sx={{
-                      ml: 0.5
-                    }}
+                <Typography variant="subtitle2" gutterBottom>
+                  Файлове:{' '}
+                  
+                    <b>{project.documents.length}</b>
+                  
+                  <b> /100</b>
+                </Typography>
+                <LinearProgressWrapper
+                  value={project.documents.length}
+                  color="primary"
+                  variant="determinate"
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                
+                <Box>
+                  <Tooltip
+                    arrow
+                    title="Mark project as favourite"
+                    placement="top"
                   >
-                    <CalendarTodayTwoToneIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip
-                  arrow
-                  title="Mark project as favourite"
-                  placement="top"
-                >
-                  <IconButton
-                    size="small"
-                    sx={{
-                      color: `${theme.colors.warning.main}`,
-                      ml: 0.5
-                    }}
-                  >
-                    <StarTwoToneIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
+                    <IconButton
+                      size="small"
+                      sx={{
+                        color: `${theme.colors.warning.main}`,
+                        ml: 0.5,
+                      }}
+                    >
+                      <StarTwoToneIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
               </Box>
             </Box>
-          </Box>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Box>
-            <CardHeader
-              sx={{
-                px: 0,
-                pt: 0
-              }}
-              avatar={
-                <Avatar
-                  sx={{
-                    background: `${theme.colors.gradients.blue1}`
-                  }}
-                >
-                  RP
-                </Avatar>
-              }
-              action={
-                <IconButton size="small" color="primary">
-                  <MoreVertTwoToneIcon />
-                </IconButton>
-              }
-              title="Име на проект"
-              titleTypographyProps={{
-                variant: 'h5',
-                color: 'textPrimary'
-              }}
-            />
-            <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Файлове:{' '}
-                <Text color="black">
-                  <b>80</b>
-                </Text>
-                <b> /100</b>
-              </Typography>
-              <LinearProgressWrapper
-                value={80}
-                color="primary"
-                variant="determinate"
-              />
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <AvatarGroup></AvatarGroup>
-              <Box>
-                <Tooltip arrow title="View project calendar" placement="top">
-                  <IconButton
-                    size="small"
-                    color="secondary"
-                    sx={{
-                      ml: 0.5
-                    }}
-                  >
-                    <CalendarTodayTwoToneIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip
-                  arrow
-                  title="Mark project as favourite"
-                  placement="top"
-                >
-                  <IconButton
-                    size="small"
-                    sx={{
-                      color: `${theme.colors.warning.main}`,
-                      ml: 0.5
-                    }}
-                  >
-                    <StarTwoToneIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </Box>
-          </Box>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Box>
-            <CardHeader
-              sx={{
-                px: 0,
-                pt: 0
-              }}
-              avatar={
-                <Badge
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                  }}
-                  overlap="circular"
-                  badgeContent={
-                    <Tooltip arrow placement="top" title="Online right now">
-                      <DotLegend
-                        style={{ background: `${theme.colors.success.main}` }}
-                      />
-                    </Tooltip>
-                  }
-                >
-                  <Avatar alt="Remy Sharp" src="/static/images/avatars/1.jpg" />
-                </Badge>
-              }
-              action={
-                <IconButton size="small" color="primary">
-                  <MoreVertTwoToneIcon />
-                </IconButton>
-              }
-              title="Име на проект"
-              titleTypographyProps={{
-                variant: 'h5',
-                color: 'textPrimary'
-              }}
-            />
-            <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Файлове:{' '}
-                <Text color="black">
-                  <b>87</b>
-                </Text>
-                <b> /100</b>
-              </Typography>
-              <LinearProgressWrapper
-                value={87}
-                color="primary"
-                variant="determinate"
-              />
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <AvatarGroup></AvatarGroup>
-              <Box>
-                <Tooltip arrow title="View project calendar" placement="top">
-                  <IconButton
-                    size="small"
-                    color="secondary"
-                    sx={{
-                      ml: 0.5
-                    }}
-                  >
-                    <CalendarTodayTwoToneIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip
-                  arrow
-                  title="Mark project as favourite"
-                  placement="top"
-                >
-                  <IconButton
-                    size="small"
-                    sx={{
-                      color: `${theme.colors.warning.main}`,
-                      ml: 0.5
-                    }}
-                  >
-                    <StarTwoToneIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </Box>
-          </Box>
-        </Grid>
+          </Grid>
+        ))}
       </Grid>
     </>
   );

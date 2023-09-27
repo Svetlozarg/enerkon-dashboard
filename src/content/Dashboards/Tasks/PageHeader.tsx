@@ -35,10 +35,6 @@ const AvatarPageTitle = styled(Avatar)(
 );
 
 function PageHeader() {
-  const user = {
-    name: 'Име Фамилия',
-    avatar: '/static/images/avatars/1.jpg'
-  };
 
   return (
     <Box
@@ -53,18 +49,13 @@ function PageHeader() {
         </AvatarPageTitle>
         <Box>
           <Typography variant="h3" component="h3" gutterBottom>
-            Добре дошли, {user.name}!
+            Добре дошли!
           </Typography>
           <Typography variant="subtitle2">
             Управлявайте ежедневните си задачи със стил! Всички проекти и
             документи на едно място!
           </Typography>
         </Box>
-      </Box>
-      <Box mt={{ xs: 3, md: 0 }}>
-        <Button variant="contained" startIcon={<DocumentScannerTwoToneIcon />}>
-          Експорт
-        </Button>
       </Box>
     </Box>
   );

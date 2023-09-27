@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useEffect} from 'react'
 import {
   Card,
   Box,
@@ -11,8 +11,7 @@ import {
 
 import FolderIcon from '@mui/icons-material/Folder';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import { getDocuments } from '@/services/document';
-import { getProjects } from '@/services/project';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { fetchProjects } from '@/store/slices/project/projectSlice';
