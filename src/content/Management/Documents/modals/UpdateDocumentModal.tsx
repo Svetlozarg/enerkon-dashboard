@@ -2,7 +2,17 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
 import Modal from '@mui/material/Modal';
-import { Button, IconButton, TextField, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import {
+  Button,
+  IconButton,
+  TextField,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  CircularProgress
+} from '@mui/material';
 
 import ClearIcon from '@mui/icons-material/Clear';
 
@@ -10,7 +20,6 @@ import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import { fetchDocuments } from '@/store/slices/document/documentSlice';
 import { updateDocument } from '@/services/document';
-
 
 const styles = {
   root: {
@@ -55,6 +64,7 @@ export default function UpdateDocumentModal(props: Props) {
   const [newDocumentTitle, setDocumentTitle] = useState<string>('');
   const [selectedStatus, setSelectedStatus] = useState<string>(currentStatus); // Initialize with the current status
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleNewDocumentTitleChange = (event) => {
     setDocumentTitle(event.target.value);
@@ -69,6 +79,7 @@ export default function UpdateDocumentModal(props: Props) {
       const regex = /^[A-Za-zА-Яа-я0-9\s]+$/;
 
       if (regex.test(newDocumentTitle)) {
+        setLoading(true);
         const body: Object = {
           title: newDocumentTitle,
           status: selectedStatus, // Update the status
@@ -85,6 +96,7 @@ export default function UpdateDocumentModal(props: Props) {
                 severity: 'success'
               })
             );
+            setLoading(false);
             handleClose();
           } else if (!res.success) {
             console.log('Problem');
@@ -132,23 +144,24 @@ export default function UpdateDocumentModal(props: Props) {
 
           <FormControl fullWidth>
             <InputLabel>Статус</InputLabel>
-            <Select
-              value={selectedStatus}
-              onChange={handleStatusChange}
-            >
+            <Select value={selectedStatus} onChange={handleStatusChange}>
               <MenuItem value="In process">В процес</MenuItem>
               <MenuItem value="Canceled">Отказан</MenuItem>
               <MenuItem value="Finished">Завършен</MenuItem>
             </Select>
           </FormControl>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleDocumentUpdate}
-          >
-            Запази
-          </Button>
+          {!loading ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleDocumentUpdate}
+            >
+              Запази
+            </Button>
+          ) : (
+            <CircularProgress />
+          )}
         </Box>
       </Modal>
     </div>

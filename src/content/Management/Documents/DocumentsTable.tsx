@@ -138,9 +138,16 @@ const columns: GridColDef[] = [
           >
             <DownloadIcon sx={{ color: '#0096FF' }} />
           </IconButton>
-          {!params.row.default ? <UpdateDocumentModal id={params.row._id} title={params.row.title} currentStatus={params.row.status}/> : ''}
-          {!params.row.default ? <DeleteDocumentModal id={params.row._id} fileName={params.row.document.fileName} title={params.row.title} /> : ''}
-          
+          <UpdateDocumentModal
+            id={params.row._id}
+            title={params.row.title}
+            currentStatus={params.row.status}
+          />
+          <DeleteDocumentModal
+            id={params.row._id}
+            fileName={params.row.fileName}
+            title={params.row.title}
+          />
         </>
       );
     }

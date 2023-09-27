@@ -9,7 +9,8 @@ import {
   Stack,
   Tooltip,
   Select,
-  MenuItem
+  MenuItem,
+  CircularProgress
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -60,6 +61,7 @@ export default function AddDocumentModal() {
   };
   const [error, setError] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState('');
@@ -86,6 +88,7 @@ export default function AddDocumentModal() {
 
   const handleDocumentCreate = () => {
     if (selectedFile) {
+      setLoading(true);
       const formData = new FormData();
       formData.append('projectId', selectedProject);
       formData.append('file', selectedFile);
@@ -100,6 +103,7 @@ export default function AddDocumentModal() {
               severity: 'success'
             })
           );
+          setLoading(false);
           handleClose();
         } else if (!res.success) {
           console.log('Problem');
@@ -122,7 +126,7 @@ export default function AddDocumentModal() {
         startIcon={<AddTwoToneIcon fontSize="small" />}
         onClick={handleOpen}
       >
-        Добави проект
+        Добави документ
       </Button>
       <Modal open={open} onClose={handleClose}>
         <Box sx={styles.root}>
@@ -154,7 +158,7 @@ export default function AddDocumentModal() {
             </Select>
 
             <Typography sx={{ fontSize: '1.2rem', mb: '1rem', mt: '1rem' }}>
-              Документи към проекта
+              Документ към проекта
             </Typography>
 
             <Stack direction="row" alignItems="center" spacing={2} sx={{}}>
@@ -209,13 +213,17 @@ export default function AddDocumentModal() {
             )}
           </Box>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleDocumentCreate}
-          >
-            Създай
-          </Button>
+          {!loading ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleDocumentCreate}
+            >
+              Създай
+            </Button>
+          ) : (
+            <CircularProgress />
+          )}
         </Box>
       </Modal>
     </div>
