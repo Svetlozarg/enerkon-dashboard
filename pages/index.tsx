@@ -19,8 +19,6 @@ import PageTitleWrapper from '@/components/PageTitleWrapper';
 import TasksAnalytics from '@/content/Dashboards/Tasks/TasksAnalytics';
 import Performance from '@/content/Dashboards/Tasks/Performance';
 import Projects from '@/content/Dashboards/Tasks/Projects';
-import Checklist from '@/content/Dashboards/Tasks/Checklist';
-import Profile from '@/content/Dashboards/Tasks/Profile';
 import TaskSearch from '@/content/Dashboards/Tasks/TaskSearch';
 
 const TabsContainerWrapper = styled(Box)(
@@ -178,31 +176,6 @@ function DashboardTasks() {
                     </Grid>
                   </Box>
                   <Divider />
-                </Grid>
-                <Grid item xs={12}>
-                  <Box
-                    sx={{
-                      background: `${theme.colors.alpha.black[5]}`
-                    }}
-                  >
-                    <Grid container spacing={0}>
-                      <Grid item xs={12} md={6}>
-                        <Box
-                          p={4}
-                          sx={{
-                            background: `${theme.colors.alpha.white[70]}`
-                          }}
-                        >
-                          <Checklist />
-                        </Box>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Box p={4}>
-                          <Profile />
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Box>
                 </Grid>
               </>
             )}

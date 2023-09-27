@@ -1,3 +1,4 @@
+import {useState, useEffect} from 'react'
 import {
   Card,
   Box,
@@ -5,11 +6,17 @@ import {
   Typography,
   Avatar,
   useTheme,
-  LinearProgress,
   styled
 } from '@mui/material';
-import AssignmentTurnedInTwoToneIcon from '@mui/icons-material/AssignmentTurnedInTwoTone';
-import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
+
+import FolderIcon from '@mui/icons-material/Folder';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import { getDocuments } from '@/services/document';
+import { getProjects } from '@/services/project';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { fetchProjects } from '@/store/slices/project/projectSlice';
+import { fetchDocuments } from '@/store/slices/document/documentSlice';
 
 const RootWrapper = styled(Card)(
   ({ theme }) => `
@@ -28,39 +35,30 @@ const AvatarSuccess = styled(Avatar)(
 `
 );
 
-const AvatarError = styled(Avatar)(
-  ({ theme }) => `
-      background-color: ${theme.colors.error.main};
-      color: ${theme.palette.error.contrastText};
-      width: ${theme.spacing(8)};
-      height: ${theme.spacing(8)};
-      box-shadow: ${theme.colors.shadows.error};
-`
-);
-
 const TypographySecondary = styled(Typography)(
   ({ theme }) => `
       color: ${theme.colors.alpha.white[70]};
 `
 );
 
-const LinearProgressWrapper = styled(LinearProgress)(
-  ({ theme }) => `
-        flex-grow: 1;
-        margin-right: ${theme.spacing(1)};
-        height: 10px;
-        background-color: ${theme.colors.error.main};
 
-        .MuiLinearProgress-barColorPrimary {
-          background-color: ${theme.colors.alpha.white[100]};
-          border-top-right-radius: ${theme.general.borderRadius};
-          border-bottom-right-radius: ${theme.general.borderRadius};
-        }
-`
-);
 
 function Performance() {
   const theme = useTheme();
+
+  const dispatch = useDispatch();
+  const { projects} = useSelector(
+    (state: RootState) => state.project
+  );
+  const { documents} = useSelector(
+    (state: RootState) => state.document
+  );
+
+  useEffect(() => {
+    dispatch(fetchProjects() as any);
+    dispatch(fetchDocuments() as any)
+  }, [dispatch]);
+
 
   return (
     <RootWrapper
@@ -78,7 +76,7 @@ function Performance() {
           color: `${theme.colors.alpha.white[100]}`
         }}
       >
-        Ефективност
+        Общи Данни
       </Typography>
       <CardContent>
         <Box
@@ -95,12 +93,12 @@ function Performance() {
             }}
             variant="rounded"
           >
-            <AssignmentTurnedInTwoToneIcon fontSize="large" />
+            <FolderIcon fontSize="large" />
           </AvatarSuccess>
           <Box>
-            <Typography variant="h1">23</Typography>
+            <Typography variant="h1">{projects.length}</Typography>
             <TypographySecondary variant="subtitle2" noWrap>
-              проекта започнати
+              общо проекти
             </TypographySecondary>
           </Box>
         </Box>
@@ -112,27 +110,20 @@ function Performance() {
           }}
           alignItems="center"
         >
-          <AvatarError
+          <AvatarSuccess
             sx={{
               mr: 2
             }}
             variant="rounded"
           >
-            <CancelPresentationTwoToneIcon fontSize="large" />
-          </AvatarError>
+            <InsertDriveFileIcon fontSize="large" />
+          </AvatarSuccess>
           <Box>
-            <Typography variant="h1">5</Typography>
+            <Typography variant="h1">{documents.length}</Typography>
             <TypographySecondary variant="subtitle2" noWrap>
-              проекта завършени
+              общо файлове
             </TypographySecondary>
           </Box>
-        </Box>
-        <Box pt={3}>
-          <LinearProgressWrapper
-            value={73}
-            color="primary"
-            variant="determinate"
-          />
         </Box>
       </CardContent>
     </RootWrapper>
