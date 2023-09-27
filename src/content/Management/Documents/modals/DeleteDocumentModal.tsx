@@ -44,7 +44,6 @@ export default function DeleteDocumentModal(props: Props) {
     const body: Object = {
       id: id,
       fileName: fileName,
-      title: title
     };
 
     deleteDocument(body)
@@ -67,6 +66,7 @@ export default function DeleteDocumentModal(props: Props) {
         console.log(error.message);
       });
   };
+  
 
   return (
     <div>

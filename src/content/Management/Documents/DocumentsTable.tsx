@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import DeleteDocumentModal from './modals/DeleteDocumentModal';
 import UpdateDocumentModal from './modals/UpdateDocumentModal';
 import { Document } from '@/store/slices/document/documentSlice';
@@ -32,9 +32,42 @@ const handleDownloadFile = async (filename: string, fileType: string) => {
 
 const columns: GridColDef[] = [
   { field: '_id', headerName: 'ИД', width: 20 },
-  { field: 'document', headerName: 'Заглавие', width: 150 },
-  { field: 'title', headerName: 'Документ', width: 150 },
-  { field: 'type', headerName: 'Тип', width: 10 },
+  { field: 'title', headerName: 'Заглавие', width: 150 },
+  {
+    field: 'type',
+    headerName: 'Тип',
+    width: 10,
+    renderCell: (params) => {
+      const typeParts = params.value.split('/');
+      const fileType = typeParts[typeParts.length - 1]; // Get the last part of the split string
+
+      return fileType; // Display only the file type (e.g., 'xml')
+    }
+  },
+  {
+    field: 'document',
+    headerName: 'Документ',
+    width: 150,
+    renderCell: (params) => {
+      // Extract the required information from the 'document' object
+      const { id, size } = params.value;
+      const sizeInMb = (size / (1024 * 1024)).toFixed(2); // Convert size to MB with two decimal places
+
+      // Create a custom tooltip with the extracted information
+      const tooltipContent = (
+        <div>
+          <p>ID: {id}</p>
+          <p>Size: {sizeInMb} MB</p>
+        </div>
+      );
+
+      return (
+        <Tooltip title={<div>{tooltipContent}</div>} arrow>
+          <span style={{cursor: 'pointer'}}>Виж повече</span> 
+        </Tooltip>
+      );
+    }
+  },
   {
     field: 'project',
     headerName: 'Проект',
@@ -105,8 +138,9 @@ const columns: GridColDef[] = [
           >
             <DownloadIcon sx={{ color: '#0096FF' }} />
           </IconButton>
-          <UpdateDocumentModal id={params.row._id} title={params.row.title} currentStatus={params.row.status}/>
-          <DeleteDocumentModal id={params.row._id} fileName={params.row.fileName} title={params.row.title} />
+          {!params.row.default ? <UpdateDocumentModal id={params.row._id} title={params.row.title} currentStatus={params.row.status}/> : ''}
+          {!params.row.default ? <DeleteDocumentModal id={params.row._id} fileName={params.row.document.fileName} title={params.row.title} /> : ''}
+          
         </>
       );
     }
@@ -115,6 +149,8 @@ const columns: GridColDef[] = [
 
 export default function DocumentsTable(props: Props) {
   const { documents, loading } = props;
+  console.log(documents);
+  
 
   return (
     <div style={{ height: 500, width: '100%' }}>
