@@ -3,16 +3,32 @@ import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { IconButton } from '@mui/material';
 import DeleteDocumentModal from './modals/DeleteDocumentModal';
 import UpdateDocumentModal from './modals/UpdateDocumentModal';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Document } from '@/store/slices/document/documentSlice';
 import LinearProgress from '@mui/material/LinearProgress';
 import { DataGridLocale } from '@/helpers/DataGridLocale';
 import CustomTitleColumn from './CustomeTitleColumn';
+import DownloadIcon from '@mui/icons-material/Download';
+import { downloadDocument } from '@/services/document';
 
 interface Props {
   documents: Document[];
   loading: boolean;
 }
+
+const handleDownloadFile = async (filename: string, fileType: string) => {
+  try {
+    const response = await downloadDocument(filename);
+
+    const file = new Blob([response], { type: fileType });
+    const element = document.createElement('a');
+    element.href = URL.createObjectURL(file);
+    element.download = filename;
+    document.body.appendChild(element);
+    element.click();
+  } catch (error) {
+    console.error('Error downloading file:', error);
+  }
+};
 
 const columns: GridColDef[] = [
   { field: '_id', headerName: 'ИД', width: 20 },
@@ -82,8 +98,12 @@ const columns: GridColDef[] = [
     renderCell: (params) => {
       return (
         <>
-          <IconButton>
-            <VisibilityIcon sx={{ color: '#0096FF' }} />
+          <IconButton
+            onClick={() =>
+              handleDownloadFile(params.row.document.fileName, params.row.type)
+            }
+          >
+            <DownloadIcon sx={{ color: '#0096FF' }} />
           </IconButton>
           <UpdateDocumentModal id={params.row._id} title={params.row.title} currentStatus={params.row.status}/>
           <DeleteDocumentModal id={params.row._id} fileName={params.row.fileName} title={params.row.title} />
@@ -95,7 +115,6 @@ const columns: GridColDef[] = [
 
 export default function DocumentsTable(props: Props) {
   const { documents, loading } = props;
-  console.log(documents);
 
   return (
     <div style={{ height: 500, width: '100%' }}>
