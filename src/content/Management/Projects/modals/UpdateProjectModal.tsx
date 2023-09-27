@@ -69,8 +69,7 @@ export default function UpdateProjectModal(props: Props) {
       if (regex.test(newProjectTitle)) {
         setLoading(true);
         const body: Object = {
-          title: newProjectTitle,
-          documents: [] // TODO: Add documents when backend ready
+          title: newProjectTitle
         };
 
         updateProject(body, id).then((res) => {

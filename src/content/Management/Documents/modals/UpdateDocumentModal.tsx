@@ -82,8 +82,7 @@ export default function UpdateDocumentModal(props: Props) {
         setLoading(true);
         const body: Object = {
           title: newDocumentTitle,
-          status: selectedStatus, // Update the status
-          documents: [] // TODO: Add documents when backend is ready
+          status: selectedStatus
         };
 
         updateDocument(body, id).then((res) => {
