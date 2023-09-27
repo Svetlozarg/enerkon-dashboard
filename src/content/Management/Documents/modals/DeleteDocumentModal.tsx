@@ -11,9 +11,9 @@ import {
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteProject } from '@/services/project';
-import { fetchProjects } from '@/store/slices/project/projectSlice';
-// import { useDispatch } from 'react-redux';
+import { deleteDocument } from '@/services/document';
+import { fetchDocuments } from '@/store/slices/document/documentSlice';
+import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 
 interface Props {
@@ -32,29 +32,29 @@ const Transition = forwardRef(function Transition(
 
 export default function DeleteDocumentModal(props: Props) {
   const { id, title } = props;
-//   const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
 
   const handleClose = () => setOpen(false);
 
-  const handleDeleteProject = () => {
+  const handleDeleteDocument = () => {
     const body: Object = {
       id: id
     };
 
-    deleteProject(body)
+    deleteDocument(body)
       .then((res) => {
         if (res.success) {
-        //   dispatch(fetchProjects() as any);
-        //   dispatch(
-        //     openNotification({
-        //       isOpen: true,
-        //       text: 'Проекта е успешно изтрит',
-        //       severity: 'success'
-        //     })
-        //   );
+          dispatch(fetchDocuments() as any);
+          dispatch(
+            openNotification({
+              isOpen: true,
+              text: 'Документа е успешно изтрит',
+              severity: 'success'
+            })
+          );
           handleClose();
         } else if (!res.success) {
           console.log('Problem');
@@ -107,7 +107,7 @@ export default function DeleteDocumentModal(props: Props) {
           <Button
             variant="contained"
             sx={{ bgcolor: 'red' }}
-            onClick={handleDeleteProject}
+            onClick={handleDeleteDocument}
           >
             Изтрий
           </Button>
