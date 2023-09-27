@@ -2,7 +2,13 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
 import Modal from '@mui/material/Modal';
-import { Button, IconButton, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  IconButton,
+  TextField,
+  Typography
+} from '@mui/material';
 import { updateProject } from '@/services/project';
 import ClearIcon from '@mui/icons-material/Clear';
 import { fetchProjects } from '@/store/slices/project/projectSlice';
@@ -50,6 +56,7 @@ export default function UpdateProjectModal(props: Props) {
   const handleClose = () => setOpen(false);
   const [newProjectTitle, setNewProjectTitle] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleNewProjectTitleChange = (event) => {
     setNewProjectTitle(event.target.value);
@@ -60,6 +67,7 @@ export default function UpdateProjectModal(props: Props) {
       const regex = /^[A-Za-zА-Яа-я0-9\s]+$/;
 
       if (regex.test(newProjectTitle)) {
+        setLoading(true);
         const body: Object = {
           title: newProjectTitle,
           documents: [] // TODO: Add documents when backend ready
@@ -75,6 +83,7 @@ export default function UpdateProjectModal(props: Props) {
                 severity: 'success'
               })
             );
+            setLoading(false);
             handleClose();
           } else if (!res.success) {
             console.log('Problem');
@@ -120,13 +129,17 @@ export default function UpdateProjectModal(props: Props) {
             />
           </Box>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleProjectUpdate}
-          >
-            Запази
-          </Button>
+          {!loading ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleProjectUpdate}
+            >
+              Запази
+            </Button>
+          ) : (
+            <CircularProgress />
+          )}
         </Box>
       </Modal>
     </div>

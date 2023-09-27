@@ -7,7 +7,8 @@ import {
   DialogContentText,
   DialogTitle,
   Slide,
-  IconButton
+  IconButton,
+  CircularProgress
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -34,12 +35,14 @@ export default function DeleteProjectModal(props: Props) {
   const { id, title } = props;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleOpen = () => setOpen(true);
 
   const handleClose = () => setOpen(false);
 
   const handleDeleteProject = () => {
+    setLoading(true);
     const body: Object = {
       id: id
     };
@@ -55,6 +58,7 @@ export default function DeleteProjectModal(props: Props) {
               severity: 'success'
             })
           );
+          setLoading(false);
           handleClose();
         } else if (!res.success) {
           console.log('Problem');
@@ -104,13 +108,18 @@ export default function DeleteProjectModal(props: Props) {
           >
             Отказ
           </Button>
-          <Button
-            variant="contained"
-            sx={{ bgcolor: 'red' }}
-            onClick={handleDeleteProject}
-          >
-            Изтрий
-          </Button>
+
+          {!loading ? (
+            <Button
+              variant="contained"
+              sx={{ bgcolor: 'red' }}
+              onClick={handleDeleteProject}
+            >
+              Изтрий
+            </Button>
+          ) : (
+            <CircularProgress />
+          )}
         </DialogActions>
       </Dialog>
     </div>

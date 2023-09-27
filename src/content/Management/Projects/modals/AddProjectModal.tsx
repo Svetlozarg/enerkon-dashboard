@@ -7,7 +7,8 @@ import {
   IconButton,
   TextField,
   Stack,
-  Tooltip
+  Tooltip,
+  CircularProgress
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -57,6 +58,7 @@ export default function AddProjectModal() {
   };
   const [projectTitle, setProjectTitle] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleProjectTitleChange = (event: any) => {
@@ -73,6 +75,7 @@ export default function AddProjectModal() {
 
       if (regex.test(projectTitle)) {
         if (selectedFile) {
+          setLoading(true);
           const formData = new FormData();
           formData.append('title', projectTitle);
           formData.append('file', selectedFile);
@@ -87,6 +90,7 @@ export default function AddProjectModal() {
                   severity: 'success'
                 })
               );
+              setLoading(false);
               handleClose();
             } else if (!res.success) {
               console.log('Problem');
@@ -195,13 +199,17 @@ export default function AddProjectModal() {
             )}
           </Box>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleProjectCreate}
-          >
-            Създай
-          </Button>
+          {!loading ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleProjectCreate}
+            >
+              Създай
+            </Button>
+          ) : (
+            <CircularProgress />
+          )}
         </Box>
       </Modal>
     </div>
