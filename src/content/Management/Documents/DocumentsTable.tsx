@@ -85,8 +85,8 @@ const columns: GridColDef[] = [
           <IconButton>
             <VisibilityIcon sx={{ color: '#0096FF' }} />
           </IconButton>
-          <UpdateDocumentModal id={params.row._id} title={params.row.title} />
-          <DeleteDocumentModal id={params.row._id} title={params.row.title} />
+          <UpdateDocumentModal id={params.row._id} title={params.row.title} currentStatus={params.row.status}/>
+          <DeleteDocumentModal id={params.row._id} fileName={params.row.fileName} title={params.row.title} />
         </>
       );
     }

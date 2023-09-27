@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
 import Modal from '@mui/material/Modal';
-import { Button, IconButton, TextField, Typography } from '@mui/material';
+import { Button, IconButton, TextField, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 import ClearIcon from '@mui/icons-material/Clear';
 
@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import { fetchDocuments } from '@/store/slices/document/documentSlice';
 import { updateDocument } from '@/services/document';
+
 
 const styles = {
   root: {
@@ -42,19 +43,25 @@ const styles = {
 interface Props {
   id: string;
   title: any;
+  currentStatus: string;
 }
 
 export default function UpdateDocumentModal(props: Props) {
-  const { id, title } = props;
+  const { id, title, currentStatus } = props;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [newDocumentTitle, setDocumentTitle] = useState<string>('');
+  const [selectedStatus, setSelectedStatus] = useState<string>(currentStatus); // Initialize with the current status
   const [error, setError] = useState<string>('');
 
   const handleNewDocumentTitleChange = (event) => {
     setDocumentTitle(event.target.value);
+  };
+
+  const handleStatusChange = (event) => {
+    setSelectedStatus(event.target.value);
   };
 
   const handleDocumentUpdate = () => {
@@ -64,7 +71,8 @@ export default function UpdateDocumentModal(props: Props) {
       if (regex.test(newDocumentTitle)) {
         const body: Object = {
           title: newDocumentTitle,
-          documents: [] // TODO: Add documents when backend ready
+          status: selectedStatus, // Update the status
+          documents: [] // TODO: Add documents when backend is ready
         };
 
         updateDocument(body, id).then((res) => {
@@ -73,7 +81,7 @@ export default function UpdateDocumentModal(props: Props) {
             dispatch(
               openNotification({
                 isOpen: true,
-                text: 'Проекта е успешно променен',
+                text: 'Проектът е успешно променен',
                 severity: 'success'
               })
             );
@@ -121,6 +129,18 @@ export default function UpdateDocumentModal(props: Props) {
               onChange={handleNewDocumentTitleChange}
             />
           </Box>
+
+          <FormControl fullWidth>
+            <InputLabel>Статус</InputLabel>
+            <Select
+              value={selectedStatus}
+              onChange={handleStatusChange}
+            >
+              <MenuItem value="In process">В процес</MenuItem>
+              <MenuItem value="Canceled">Отказан</MenuItem>
+              <MenuItem value="Finished">Завършен</MenuItem>
+            </Select>
+          </FormControl>
 
           <Button
             variant="contained"
