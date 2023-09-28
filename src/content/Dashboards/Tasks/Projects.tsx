@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import {
   Button,
   CardHeader,
@@ -9,7 +9,9 @@ import {
   Tooltip,
   LinearProgress,
   styled,
-  useTheme
+  useTheme,
+  CircularProgress,
+  Pagination
 } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,8 +41,19 @@ const LinearProgressWrapper = styled(LinearProgress)(
 function Projects() {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { projects } = useSelector((state: RootState) => state.project);
+  const { projects, loading } = useSelector(
+    (state: RootState) => state.project
+  );
   const { documents } = useSelector((state: RootState) => state.document);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const projectsPerPage = 6;
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const filteredProject = projects.filter((obj: any) => obj.favourite === true);
+  const currentProjects = filteredProject.slice(
+    indexOfFirstProject,
+    indexOfLastProject
+  );
 
   const getProjectDocumentsTotalCount = (projectId: string) => {
     let documentsCount: number = 0;
@@ -73,6 +86,13 @@ function Projects() {
     });
   };
 
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page);
+  };
+
   return (
     <>
       <Box
@@ -93,7 +113,7 @@ function Projects() {
         </Box>
       </Box>
       <Grid container spacing={4}>
-        {projects.map((project: any) => {
+        {currentProjects.map((project: any) => {
           const dateString = project.createdAt;
           const dateObject = new Date(dateString);
           const year = dateObject.getFullYear();
@@ -140,15 +160,17 @@ function Projects() {
                     </Box>
                     <Box>
                       <Tooltip arrow title="Прегледай проекта" placement="top">
-                        <IconButton
-                          size="small"
-                          sx={{
-                            color: '#0096FF',
-                            ml: 0.5
-                          }}
-                        >
-                          <VisibilityIcon fontSize="small" />
-                        </IconButton>
+                        <Link href={`/dashboard/project/${project._id}`}>
+                          <IconButton
+                            size="small"
+                            sx={{
+                              color: '#0096FF',
+                              ml: 0.5
+                            }}
+                          >
+                            <VisibilityIcon fontSize="small" />
+                          </IconButton>
+                        </Link>
                       </Tooltip>
                       <Tooltip arrow title="Премахни от любими" placement="top">
                         <IconButton
@@ -171,6 +193,44 @@ function Projects() {
             );
           }
         })}
+
+        {/* Pagination */}
+        {!loading && filteredProject.length >= 6 && (
+          <Box
+            sx={{
+              width: '100%',
+              pt: 4
+            }}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Pagination
+              showFirstButton
+              showLastButton
+              count={Math.ceil(filteredProject.length / projectsPerPage)}
+              page={currentPage}
+              onChange={handlePageChange}
+              siblingCount={0}
+              size="large"
+              shape="rounded"
+              color="primary"
+            />
+          </Box>
+        )}
+
+        {loading && (
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
       </Grid>
     </>
   );

@@ -27,10 +27,21 @@ export const createProject = async (body: Object) => {
   }
 };
 
-// Get Projects By Id
+// Get Project By Id
 export const getProjectId = async (id: string) => {
   try {
     const response = await customeAxios.get(`${api}/project/${id}`);
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Get Project Documents
+export const getProjectDocuments = async (id: string) => {
+  try {
+    const response = await customeAxios.get(`${api}/project/${id}/documents`);
 
     return response.data;
   } catch (error) {

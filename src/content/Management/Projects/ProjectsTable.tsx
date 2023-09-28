@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { Project, fetchProjects } from '@/store/slices/project/projectSlice';
-import { IconButton, Link } from '@mui/material';
+import { IconButton } from '@mui/material';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -14,6 +14,7 @@ import { DataGridLocale } from '@/helpers/DataGridLocale';
 import { updateProject } from '@/services/project';
 import { store } from '@/store/store';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
+import Link from 'next/link';
 
 interface Props {
   projects: Project[];
@@ -108,10 +109,10 @@ const columns: GridColDef[] = [
     renderCell: (params) => {
       return (
         <>
-        <Link href={`/dashboard/project/${params.row._id}`} >
-          <IconButton>
-            <VisibilityIcon sx={{ color: '#0096FF' }} />
-          </IconButton>
+          <Link href={`/dashboard/project/${params.row._id}`}>
+            <IconButton>
+              <VisibilityIcon sx={{ color: '#0096FF' }} />
+            </IconButton>
           </Link>
 
           {params.row.favourite ? (

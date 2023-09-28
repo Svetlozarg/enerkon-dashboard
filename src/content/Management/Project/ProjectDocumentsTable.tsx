@@ -11,8 +11,8 @@ import DownloadIcon from '@mui/icons-material/Download';
 import { downloadDocument } from '@/services/document';
 
 interface Props {
-    documents: Document[];
-    loading: boolean;
+  documents: Document[];
+  loading: boolean;
 }
 
 const handleDownloadFile = async (filename: string, fileType: string) => {
@@ -160,7 +160,6 @@ const columns: GridColDef[] = [
 
 export default function ProjectDocumentTable(props: Props) {
   const { documents, loading } = props;
-  console.log(documents);
 
   return (
     <div style={{ height: 500, width: '100%' }}>
