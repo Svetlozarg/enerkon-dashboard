@@ -38,10 +38,13 @@ const columns: GridColDef[] = [
     headerName: 'Тип',
     width: 10,
     renderCell: (params) => {
-      const typeParts = params.value.split('/');
-      const fileType = typeParts[typeParts.length - 1]; // Get the last part of the split string
-
-      return fileType; // Display only the file type (e.g., 'xml')
+      if (params.value === 'text/xml') return 'xml';
+      if (params.value === 'application/msword') return 'word';
+      if (
+        params.value ===
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      )
+        return 'excel';
     }
   },
   {
