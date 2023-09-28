@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import {
   Button,
   Card,
@@ -51,10 +51,6 @@ function TaskSearch() {
   const [openPeriod, setOpenMenuPeriod] = useState<boolean>(false);
   const [period, setPeriod] = useState<string>(periods[0].text);
 
-  const [searchText, setSearchText] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const projectsPerPage = 3; // Number of projects to display per page
-
   const getProjectDocumentsTotalCount = (projectId: string) => {
     let documentsCount: number = 0;
     for (const document of documents) {
@@ -65,15 +61,33 @@ function TaskSearch() {
     return documentsCount;
   };
 
-  // Calculate the index range for the current page
-  const indexOfLastProject = currentPage * projectsPerPage;
-  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
-  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
+  const [searchText, setSearchText] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const projectsPerPage = 3; 
 
-  // Function to handle page change
-  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+  const [filteredProjects, setFilteredProjects] = useState(projects);
+
+  
+  useEffect(() => {
+    const filtered = projects.filter((project: any) =>
+      project.title.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredProjects(filtered);
+    setCurrentPage(1); 
+  }, [searchText, projects]);
+
+
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page);
   };
+  
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+
+  const currentProjects = filteredProjects.slice(
+    indexOfFirstProject,
+    indexOfLastProject
+  );
 
   return (
     <>
@@ -243,7 +257,7 @@ function TaskSearch() {
         <Pagination
           showFirstButton
           showLastButton
-          count={Math.ceil(projects.length / projectsPerPage)}
+          count={Math.ceil(filteredProjects.length / projectsPerPage)} 
           page={currentPage}
           onChange={handlePageChange}
           siblingCount={0}
