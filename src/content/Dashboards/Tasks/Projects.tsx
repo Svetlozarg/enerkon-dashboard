@@ -12,10 +12,13 @@ import {
   useTheme
 } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Link from 'next/link';
+import { updateProject } from '@/services/project';
+import { fetchProjects } from '@/store/slices/project/projectSlice';
+import { openNotification } from '@/store/slices/notifications/notificationSlice';
 
 const LinearProgressWrapper = styled(LinearProgress)(
   ({ theme }) => `
@@ -35,6 +38,7 @@ const LinearProgressWrapper = styled(LinearProgress)(
 
 function Projects() {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const { projects } = useSelector((state: RootState) => state.project);
   const { documents } = useSelector((state: RootState) => state.document);
 
@@ -46,6 +50,27 @@ function Projects() {
       }
     }
     return documentsCount;
+  };
+
+  const handleRemoveProjectFromFavourite = (id: string) => {
+    const body: Object = {
+      favourite: false
+    };
+
+    updateProject(body, id).then((res) => {
+      if (res.success) {
+        dispatch(fetchProjects() as any);
+        dispatch(
+          openNotification({
+            isOpen: true,
+            text: 'Проекта е успешно премахнат от любими',
+            severity: 'success'
+          })
+        );
+      } else if (!res.success) {
+        console.log('Problem');
+      }
+    });
   };
 
   return (
@@ -132,6 +157,9 @@ function Projects() {
                             color: `${theme.colors.warning.main}`,
                             ml: 0.5
                           }}
+                          onClick={() =>
+                            handleRemoveProjectFromFavourite(project._id)
+                          }
                         >
                           <StarIcon fontSize="small" />
                         </IconButton>
