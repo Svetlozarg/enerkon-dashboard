@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { Button, Container, Paper, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Container,
+  Paper,
+  TextField,
+  Typography,
+  Box,
+  CircularProgress,
+  Link
+} from '@mui/material';
 import { signUp } from '@/services/auth';
-
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -12,6 +20,7 @@ const Register = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*[._-])[A-Za-z0-9._-]{6,}$/;
@@ -29,7 +38,9 @@ const Register = () => {
     setPassword(e.target.value);
   };
 
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setConfirmPassword(e.target.value);
   };
 
@@ -39,27 +50,47 @@ const Register = () => {
     setPasswordError('');
     setConfirmPasswordError('');
 
+    if (
+      username === '' ||
+      email === '' ||
+      password === '' ||
+      confirmPassword === ''
+    ) {
+      if (username === '') setEmailError('Моля въведете потребителско име');
+      if (email === '') setEmailError('Моля въведете имайл адрес');
+      if (password === '') setPasswordError('Моля въведете парола');
+      if (confirmPassword === '')
+        setPasswordError('Моля въведете потвърждение на парола');
+      return;
+    }
+
     if (!usernameRegex.test(username)) {
-      setUsernameError('Username must be at least 6 characters');
+      setUsernameError('Потребителското име трябва да съдържа поне 6 символа');
       return;
     }
 
     if (!emailRegex.test(email)) {
-      setEmailError('Invalid email address');
+      setEmailError('Невалиден имейл адрес');
       return;
     }
 
     if (!passwordRegex.test(password)) {
-      setPasswordError('Password must be at least 6 characters with one uppercase letter and one special character (._-)');
+      setPasswordError(
+        'Паролата трябва да съдържа поне 6 символа с една главна буква и един специален символ (. _ -)'
+      );
       return;
     }
 
     if (password !== confirmPassword) {
-      setConfirmPasswordError('Passwords do not match');
+      setConfirmPasswordError('Паролите не съвпадат');
       return;
     }
 
-    signUp(username, email, password)
+    setLoading(true);
+
+    signUp(username, email, password).then(() => {
+      setLoading(false);
+    });
   };
 
   return (
@@ -75,10 +106,10 @@ const Register = () => {
     >
       <Paper elevation={3} style={{ padding: '20px' }}>
         <Typography variant="h3" align="center" gutterBottom>
-          Register
+          Регистрация
         </Typography>
         <TextField
-          label="Username"
+          label="Потребителско име"
           type="text"
           fullWidth
           required
@@ -89,7 +120,7 @@ const Register = () => {
           helperText={usernameError}
         />
         <TextField
-          label="Email"
+          label="Имейл"
           type="email"
           fullWidth
           required
@@ -100,7 +131,7 @@ const Register = () => {
           helperText={emailError}
         />
         <TextField
-          label="Password"
+          label="Парола"
           type="password"
           fullWidth
           required
@@ -111,7 +142,7 @@ const Register = () => {
           helperText={passwordError}
         />
         <TextField
-          label="Confirm Password"
+          label="Потвърждение на парола"
           type="password"
           fullWidth
           required
@@ -121,16 +152,39 @@ const Register = () => {
           error={Boolean(confirmPasswordError)}
           helperText={confirmPasswordError}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          type="submit"
-          style={{ marginTop: '20px' }}
-          onClick={handleSubmit}
-        >
-          Register
-        </Button>
+
+        {!loading ? (
+          <Box>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              type="submit"
+              style={{ marginTop: '20px', marginBottom: '20px' }}
+              onClick={handleSubmit}
+            >
+              Регистрация
+            </Button>
+            <Typography>
+              Нямате акаунт?{' '}
+              <Link href="/auth/login" underline="none">
+                Регистрирай се тук
+              </Link>
+            </Typography>
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              my: '1rem'
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
       </Paper>
     </Container>
   );
