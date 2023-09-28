@@ -1,13 +1,4 @@
-import {
-  Typography,
-  Button,
-  Box,
-  alpha,
-  lighten,
-  Avatar,
-  styled
-} from '@mui/material';
-import DocumentScannerTwoToneIcon from '@mui/icons-material/DocumentScannerTwoTone';
+import { Typography, Box, alpha, lighten, Avatar, styled } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 
 const AvatarPageTitle = styled(Avatar)(
@@ -35,7 +26,6 @@ const AvatarPageTitle = styled(Avatar)(
 );
 
 function PageHeader() {
-
   return (
     <Box
       display="flex"

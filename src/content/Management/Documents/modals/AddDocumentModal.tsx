@@ -5,7 +5,6 @@ import {
   Modal,
   Typography,
   IconButton,
-  TextField,
   Stack,
   Tooltip,
   Select,
@@ -21,7 +20,6 @@ import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { log } from 'console';
 
 const styles = {
   root: {
@@ -212,6 +210,8 @@ export default function AddDocumentModal() {
               </Box>
             )}
           </Box>
+
+          {error ? error : ''}
 
           {!loading ? (
             <Button
