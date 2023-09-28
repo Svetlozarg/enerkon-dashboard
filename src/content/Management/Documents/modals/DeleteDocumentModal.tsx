@@ -19,7 +19,7 @@ import { openNotification } from '@/store/slices/notifications/notificationSlice
 interface Props {
   id: string;
   fileName: string;
-  title: string
+  title: string;
 }
 
 const Transition = forwardRef(function Transition(
@@ -43,7 +43,7 @@ export default function DeleteDocumentModal(props: Props) {
   const handleDeleteDocument = () => {
     const body: Object = {
       id: id,
-      fileName: fileName,
+      fileName: fileName
     };
 
     deleteDocument(body)
@@ -66,7 +66,6 @@ export default function DeleteDocumentModal(props: Props) {
         console.log(error.message);
       });
   };
-  
 
   return (
     <div>

@@ -1,4 +1,3 @@
-import {useEffect} from 'react'
 import {
   Card,
   Box,
@@ -11,11 +10,8 @@ import {
 
 import FolderIcon from '@mui/icons-material/Folder';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { fetchProjects } from '@/store/slices/project/projectSlice';
-import { fetchDocuments } from '@/store/slices/document/documentSlice';
 
 const RootWrapper = styled(Card)(
   ({ theme }) => `
@@ -40,24 +36,10 @@ const TypographySecondary = styled(Typography)(
 `
 );
 
-
-
 function Performance() {
   const theme = useTheme();
-
-  const dispatch = useDispatch();
-  const { projects} = useSelector(
-    (state: RootState) => state.project
-  );
-  const { documents} = useSelector(
-    (state: RootState) => state.document
-  );
-
-  useEffect(() => {
-    dispatch(fetchProjects() as any);
-    dispatch(fetchDocuments() as any)
-  }, [dispatch]);
-
+  const { projects } = useSelector((state: RootState) => state.project);
+  const { documents } = useSelector((state: RootState) => state.document);
 
   return (
     <RootWrapper

@@ -32,7 +32,7 @@ const handleProjectFavourite = (id: string, favourite: boolean) => {
         store.dispatch(
           openNotification({
             isOpen: true,
-            text: 'Проекта е успешно добавен в любими',
+            text: 'Проекта е успешно премахнат от любими',
             severity: 'success'
           })
         );
@@ -51,7 +51,7 @@ const handleProjectFavourite = (id: string, favourite: boolean) => {
         store.dispatch(
           openNotification({
             isOpen: true,
-            text: 'Проекта е успешно премахнат от любими',
+            text: 'Проекта е успешно добавен в любими ',
             severity: 'success'
           })
         );

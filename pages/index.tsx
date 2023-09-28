@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import PageHeader from '@/content/Dashboards/Tasks/PageHeader';
 import Footer from '@/components/Footer';
 import {
@@ -20,6 +20,9 @@ import TasksAnalytics from '@/content/Dashboards/Tasks/TasksAnalytics';
 import Performance from '@/content/Dashboards/Tasks/Performance';
 import Projects from '@/content/Dashboards/Tasks/Projects';
 import TaskSearch from '@/content/Dashboards/Tasks/TaskSearch';
+import { useDispatch } from 'react-redux';
+import { fetchProjects } from '@/store/slices/project/projectSlice';
+import { fetchDocuments } from '@/store/slices/document/documentSlice';
 
 const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
@@ -105,6 +108,7 @@ const TabsContainerWrapper = styled(Box)(
 
 function DashboardTasks() {
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   const [currentTab, setCurrentTab] = useState<string>('analytics');
 
@@ -116,6 +120,11 @@ function DashboardTasks() {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
+
+  useEffect(() => {
+    dispatch(fetchProjects() as any);
+    dispatch(fetchDocuments() as any);
+  }, [dispatch]);
 
   return (
     <>

@@ -6,14 +6,14 @@ import { RootState } from '@/store/store';
 import { fetchDocuments } from '@/store/slices/document/documentSlice';
 
 function Documents() {
- const dispatch = useDispatch()
- const { documents, loading } = useSelector(
-  (state: RootState) => state.document
-);
+  const dispatch = useDispatch();
+  const { documents, loading } = useSelector(
+    (state: RootState) => state.document
+  );
 
-useEffect(() => {
-  dispatch(fetchDocuments() as any);
-}, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchDocuments() as any);
+  }, [dispatch]);
 
   return (
     <Card>
