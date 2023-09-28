@@ -163,7 +163,6 @@ const columns: GridColDef[] = [
 
 export default function DocumentsTable(props: Props) {
   const { documents, loading } = props;
-  console.log(documents);
 
   return (
     <div style={{ height: 500, width: '100%' }}>
