@@ -38,16 +38,8 @@ function TaskSearch() {
 
   const periods = [
     {
-      value: 'popular',
-      text: 'Популярност'
-    },
-    {
       value: 'recent',
       text: 'Най-нови'
-    },
-    {
-      value: 'updated',
-      text: 'Последно прегледани'
     },
     {
       value: 'oldest',
@@ -59,6 +51,10 @@ function TaskSearch() {
   const [openPeriod, setOpenMenuPeriod] = useState<boolean>(false);
   const [period, setPeriod] = useState<string>(periods[0].text);
 
+  const [searchText, setSearchText] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const projectsPerPage = 3; // Number of projects to display per page
+
   const getProjectDocumentsTotalCount = (projectId: string) => {
     let documentsCount: number = 0;
     for (const document of documents) {
@@ -67,6 +63,16 @@ function TaskSearch() {
       }
     }
     return documentsCount;
+  };
+
+  // Calculate the index range for the current page
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
+
+  // Function to handle page change
+  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -87,6 +93,8 @@ function TaskSearch() {
               <SearchTwoToneIcon />
             </InputAdornment>
           }
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
         />
       </FormControl>
       <Box
@@ -150,9 +158,9 @@ function TaskSearch() {
         </Box>
       </Box>
 
-      {/* Porjects */}
+      {/* Projects */}
       <Grid container spacing={3}>
-        {projects.map((project: any) => {
+        {currentProjects.map((project: any) => {
           const dateString = project.createdAt;
           const dateObject = new Date(dateString);
           const year = dateObject.getFullYear();
@@ -235,8 +243,9 @@ function TaskSearch() {
         <Pagination
           showFirstButton
           showLastButton
-          count={15}
-          defaultPage={6}
+          count={Math.ceil(projects.length / projectsPerPage)}
+          page={currentPage}
+          onChange={handlePageChange}
           siblingCount={0}
           size="large"
           shape="rounded"
