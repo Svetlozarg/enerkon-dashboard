@@ -171,7 +171,7 @@ export default function AddDocumentModal() {
                 Добави документ
                 <input
                   hidden
-                  accept=".pdf,.xlsx,.docx,.xml"
+                  accept=".pdf,.xml,.xlsx,.docx"
                   type="file"
                   onChange={handleFileChange}
                 />
