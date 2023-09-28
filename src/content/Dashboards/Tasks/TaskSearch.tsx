@@ -16,13 +16,13 @@ import {
   styled,
   useTheme
 } from '@mui/material';
-import { formatDistance, subDays } from 'date-fns';
 import TodayTwoToneIcon from '@mui/icons-material/TodayTwoTone';
 import Link from 'src/components/Link';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import Text from 'src/components/Text';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
-import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const OutlinedInputWrapper = styled(OutlinedInput)(
   ({ theme }) => `
@@ -33,6 +33,8 @@ const OutlinedInputWrapper = styled(OutlinedInput)(
 
 function TaskSearch() {
   const theme = useTheme();
+  const { projects } = useSelector((state: RootState) => state.project);
+  const { documents } = useSelector((state: RootState) => state.document);
 
   const periods = [
     {
@@ -56,6 +58,16 @@ function TaskSearch() {
   const actionRef1 = useRef<any>(null);
   const [openPeriod, setOpenMenuPeriod] = useState<boolean>(false);
   const [period, setPeriod] = useState<string>(periods[0].text);
+
+  const getProjectDocumentsTotalCount = (projectId: string) => {
+    let documentsCount: number = 0;
+    for (const document of documents) {
+      if (document.project === projectId) {
+        documentsCount++;
+      }
+    }
+    return documentsCount;
+  };
 
   return (
     <>
@@ -87,7 +99,7 @@ function TaskSearch() {
           <Typography variant="subtitle2">
             Налични{' '}
             <Text color="black">
-              <b>57 проекти</b>
+              <b>{projects.length}</b>
             </Text>
           </Typography>
         </Box>
@@ -140,234 +152,75 @@ function TaskSearch() {
 
       {/* Porjects */}
       <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
-          <Card
-            variant="outlined"
-            sx={{
-              p: 3,
-              background: `${theme.colors.alpha.black[5]}`
-            }}
-          >
-            <Link href="#" variant="h3" color="text.primary">
-              Име на проект
-            </Link>
+        {projects.map((project: any) => {
+          const dateString = project.createdAt;
+          const dateObject = new Date(dateString);
+          const year = dateObject.getFullYear();
+          const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
+          const day = dateObject.getDate().toString().padStart(2, '0');
+          const formattedDate = `${day}.${month}.${year}`;
 
-            <Box
-              sx={{
-                width: '100%',
-                height: '200px',
-                bgcolor: 'gray',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: '10px',
-                my: '.5rem'
-              }}
-            >
-              <ImageNotSupportedIcon sx={{ fontSize: '10rem' }} />
-            </Box>
-
-            <Typography
-              sx={{
-                pb: 2
-              }}
-              color="text.secondary"
-            >
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout beatae
-              vitae dicta sunt explicabo.
-            </Typography>
-            <Button size="small" variant="contained">
-              Прегледай проект
-            </Button>
-            <Divider
-              sx={{
-                my: 2
-              }}
-            />
-            <CardActions
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Typography
-                display="flex"
-                alignItems="center"
-                variant="subtitle2"
+          return (
+            <Grid item xs={12} md={4} key={project.id}>
+              <Card
+                variant="outlined"
+                sx={{
+                  p: 3,
+                  background: `${theme.colors.alpha.black[5]}`
+                }}
               >
-                <TodayTwoToneIcon
+                <Link href="#" variant="h3" color="text.primary">
+                  {project.title}
+                </Link>
+
+                {/* Rest of your card content */}
+                <Typography
                   sx={{
-                    mr: 1
+                    pb: 2
+                  }}
+                  color="text.secondary"
+                >
+                  {project.description}
+                </Typography>
+                <Button size="small" variant="contained">
+                  Прегледай проект
+                </Button>
+                <Divider
+                  sx={{
+                    my: 2
                   }}
                 />
-                {formatDistance(subDays(new Date(), 24), new Date(), {
-                  addSuffix: true
-                })}
-              </Typography>
-              <Typography
-                display="flex"
-                alignItems="center"
-                variant="subtitle2"
-              >
-                24 файла
-              </Typography>
-            </CardActions>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Card
-            variant="outlined"
-            sx={{
-              p: 3,
-              background: `${theme.colors.alpha.black[5]}`
-            }}
-          >
-            <Link href="#" variant="h3" color="text.primary">
-              Име на проект
-            </Link>
-
-            <Box
-              sx={{
-                width: '100%',
-                height: '200px',
-                bgcolor: 'gray',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: '10px',
-                my: '.5rem'
-              }}
-            >
-              <ImageNotSupportedIcon sx={{ fontSize: '10rem' }} />
-            </Box>
-
-            <Typography
-              sx={{
-                pb: 2
-              }}
-              color="text.secondary"
-            >
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout beatae
-              vitae dicta sunt explicabo.
-            </Typography>
-            <Button size="small" variant="contained">
-              Прегледай проект
-            </Button>
-            <Divider
-              sx={{
-                my: 2
-              }}
-            />
-            <CardActions
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Typography
-                display="flex"
-                alignItems="center"
-                variant="subtitle2"
-              >
-                <TodayTwoToneIcon
+                <CardActions
                   sx={{
-                    mr: 1
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
                   }}
-                />
-                {formatDistance(subDays(new Date(), 24), new Date(), {
-                  addSuffix: true
-                })}
-              </Typography>
-              <Typography
-                display="flex"
-                alignItems="center"
-                variant="subtitle2"
-              >
-                24 файла
-              </Typography>
-            </CardActions>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Card
-            variant="outlined"
-            sx={{
-              p: 3,
-              background: `${theme.colors.alpha.black[5]}`
-            }}
-          >
-            <Link href="#" variant="h3" color="text.primary">
-              Име на проект
-            </Link>
-
-            <Box
-              sx={{
-                width: '100%',
-                height: '200px',
-                bgcolor: 'gray',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: '10px',
-                my: '.5rem'
-              }}
-            >
-              <ImageNotSupportedIcon sx={{ fontSize: '10rem' }} />
-            </Box>
-
-            <Typography
-              sx={{
-                pb: 2
-              }}
-              color="text.secondary"
-            >
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout beatae
-              vitae dicta sunt explicabo.
-            </Typography>
-            <Button size="small" variant="contained">
-              Прегледай проект
-            </Button>
-            <Divider
-              sx={{
-                my: 2
-              }}
-            />
-            <CardActions
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Typography
-                display="flex"
-                alignItems="center"
-                variant="subtitle2"
-              >
-                <TodayTwoToneIcon
-                  sx={{
-                    mr: 1
-                  }}
-                />
-                {formatDistance(subDays(new Date(), 24), new Date(), {
-                  addSuffix: true
-                })}
-              </Typography>
-              <Typography
-                display="flex"
-                alignItems="center"
-                variant="subtitle2"
-              >
-                24 файла
-              </Typography>
-            </CardActions>
-          </Card>
-        </Grid>
+                >
+                  <Typography
+                    display="flex"
+                    alignItems="center"
+                    variant="subtitle2"
+                  >
+                    <TodayTwoToneIcon
+                      sx={{
+                        mr: 1
+                      }}
+                    />
+                    <p>{formattedDate}</p>
+                  </Typography>
+                  <Typography
+                    display="flex"
+                    alignItems="center"
+                    variant="subtitle2"
+                  >
+                    {getProjectDocumentsTotalCount(project._id)} файла
+                  </Typography>
+                </CardActions>
+              </Card>
+            </Grid>
+          );
+        })}
       </Grid>
 
       {/* Pagination */}
