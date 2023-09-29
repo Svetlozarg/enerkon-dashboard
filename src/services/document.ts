@@ -71,3 +71,13 @@ export const downloadDocument = async (filename: string) => {
     console.error(error);
   }
 };
+
+export const getFile = async (filename: string) => {
+  try {
+    const response = await customeAxios.get(`${api}/document/file/${filename}`);
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

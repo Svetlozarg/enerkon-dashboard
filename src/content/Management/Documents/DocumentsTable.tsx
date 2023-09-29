@@ -9,6 +9,8 @@ import { DataGridLocale } from '@/helpers/DataGridLocale';
 import CustomTitleColumn from './CustomeTitleColumn';
 import DownloadIcon from '@mui/icons-material/Download';
 import { downloadDocument } from '@/services/document';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import Link from 'next/link';
 
 interface Props {
   documents: Document[];
@@ -141,6 +143,11 @@ const columns: GridColDef[] = [
           >
             <DownloadIcon sx={{ color: '#0096FF' }} />
           </IconButton>
+          <Link href={`/dashboard/document/${params.row.document.fileName}`}>
+            <IconButton>
+              <VisibilityIcon sx={{ color: '#4682B4' }} />
+            </IconButton>
+          </Link>
           {!params.row.default && (
             <UpdateDocumentModal
               id={params.row._id}
