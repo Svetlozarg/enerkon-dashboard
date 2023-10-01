@@ -129,6 +129,7 @@ function DashboardTasks() {
   return (
     <>
       <Head>
+        <meta charSet="UTF-8" />
         <title>Enerkon - Табло за управление</title>
       </Head>
 

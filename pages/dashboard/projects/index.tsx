@@ -12,6 +12,7 @@ function DashboardProjects() {
     <>
       <Head>
         <title>Проекти</title>
+        <meta charSet="UTF-8" />
       </Head>
       <PageTitleWrapper>
         <PageHeader />
