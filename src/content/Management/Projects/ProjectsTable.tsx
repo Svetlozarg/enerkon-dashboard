@@ -103,6 +103,17 @@ const columns: GridColDef[] = [
     }
   },
   {
+    field: 'status',
+    headerName: 'Статус',
+    width: 100,
+    renderCell: (params) => {
+      if (params.value === 'Unpaid')
+        return <p style={{ color: 'red' }}>Неплатен</p>;
+      if (params.value === 'Paid')
+        return <p style={{ color: 'green' }}>Платен</p>;
+    }
+  },
+  {
     field: 'actions',
     headerName: 'Действия',
     width: 200,
@@ -133,7 +144,9 @@ const columns: GridColDef[] = [
             </IconButton>
           )}
 
-          <UpdateProjectModal id={params.row._id} title={params.row.title} />
+          
+            <UpdateProjectModal id={params.row._id} title={params.row.title} currentStatus={params.row.status} />
+          
           <DeleteProjectModal id={params.row._id} title={params.row.title} />
         </>
       );

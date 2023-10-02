@@ -75,3 +75,13 @@ export const deleteProject = async (body: Object) => {
     console.error(error);
   }
 };
+
+export const getProjectLog = async (id: string) => {
+  try {
+    const response = await customeAxios.get(`${api}/project/log/${id}`);
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

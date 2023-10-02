@@ -5,7 +5,11 @@ import Modal from '@mui/material/Modal';
 import {
   Button,
   CircularProgress,
+  FormControl,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography
 } from '@mui/material';
@@ -46,17 +50,23 @@ const styles = {
 interface Props {
   id: string;
   title: any;
+  currentStatus: string;
 }
 
 export default function UpdateProjectModal(props: Props) {
-  const { id, title } = props;
+  const { id, title, currentStatus } = props;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [newProjectTitle, setNewProjectTitle] = useState<string>('');
+  const [selectedStatus, setSelectedStatus] = useState<string>(currentStatus); // Initialize with the current status
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+
+  const handleStatusChange = (event) => {
+    setSelectedStatus(event.target.value);
+  };
 
   const handleNewProjectTitleChange = (event) => {
     setNewProjectTitle(event.target.value);
@@ -69,7 +79,8 @@ export default function UpdateProjectModal(props: Props) {
       if (regex.test(newProjectTitle)) {
         setLoading(true);
         const body: Object = {
-          title: newProjectTitle
+          title: newProjectTitle,
+          status: selectedStatus
         };
 
         updateProject(body, id).then((res) => {
@@ -127,6 +138,14 @@ export default function UpdateProjectModal(props: Props) {
               onChange={handleNewProjectTitleChange}
             />
           </Box>
+
+          <FormControl fullWidth>
+            <InputLabel>Статус</InputLabel>
+            <Select value={selectedStatus} onChange={handleStatusChange}>
+              <MenuItem value="Unpaid">Неплатен</MenuItem>
+              <MenuItem value="Paid">Платен</MenuItem>
+            </Select>
+          </FormControl>
 
           {!loading ? (
             <Button

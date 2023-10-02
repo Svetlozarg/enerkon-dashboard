@@ -149,6 +149,7 @@ export default function AddDocumentModal() {
               value={selectedProject}
               onChange={handleProjectChange}
               fullWidth
+              disabled={projects.length === 0}
             >
               {projects.map((project) => (
                 <MenuItem key={project._id} value={project._id}>
