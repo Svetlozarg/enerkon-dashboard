@@ -76,6 +76,17 @@ function TaskSearch() {
     setCurrentPage(1); 
   }, [searchText, projects]);
 
+  const [sortedProjects, setSortedProjects] = useState([...filteredProjects]);
+
+  useEffect(() => {
+    const sorted = [...filteredProjects].sort((a, b) => {
+      const dateA = new Date(a.createdAt) as any;
+      const dateB = new Date(b.createdAt) as any;
+      return dateA - dateB;
+    });
+    setSortedProjects(sorted);
+    setCurrentPage(1);
+  }, [filteredProjects]);
 
   const handlePageChange = (_event: React.ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page);
@@ -126,50 +137,56 @@ function TaskSearch() {
           </Typography>
         </Box>
         <Box display="flex" alignItems="center">
-          <Typography
-            variant="subtitle2"
-            sx={{
-              pr: 1
+        <Typography variant="subtitle2" sx={{ pr: 1 }}>
+          Филтър:
+        </Typography>
+        <Button
+          size="small"
+          variant="outlined"
+          ref={actionRef1}
+          onClick={() => setOpenMenuPeriod(true)}
+          endIcon={<ExpandMoreTwoToneIcon fontSize="small" />}
+        >
+          {period}
+        </Button>
+        <Menu
+          disableScrollLock
+          anchorEl={actionRef1.current}
+          onClose={() => setOpenMenuPeriod(false)}
+          open={openPeriod}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem
+            key="oldest"
+            onClick={() => {
+              setPeriod('Най-стари');
+              setOpenMenuPeriod(false);
+              setCurrentPage(1);
+              setFilteredProjects(sortedProjects); // Sorted in ascending order
             }}
           >
-            Филтър:
-          </Typography>
-          <Button
-            size="small"
-            variant="outlined"
-            ref={actionRef1}
-            onClick={() => setOpenMenuPeriod(true)}
-            endIcon={<ExpandMoreTwoToneIcon fontSize="small" />}
-          >
-            {period}
-          </Button>
-          <Menu
-            disableScrollLock
-            anchorEl={actionRef1.current}
-            onClose={() => setOpenMenuPeriod(false)}
-            open={openPeriod}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right'
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
+            Най-стари
+          </MenuItem>
+          <MenuItem
+            key="newest"
+            onClick={() => {
+              setPeriod('Най-нови');
+              setOpenMenuPeriod(false);
+              setCurrentPage(1);
+              setFilteredProjects([...sortedProjects].reverse()); // Reversed for "Най-нови"
             }}
           >
-            {periods.map((_period) => (
-              <MenuItem
-                key={_period.value}
-                onClick={() => {
-                  setPeriod(_period.text);
-                  setOpenMenuPeriod(false);
-                }}
-              >
-                {_period.text}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
+            Най-нови
+          </MenuItem>
+        </Menu>
+      </Box>
       </Box>
 
       {/* Projects */}

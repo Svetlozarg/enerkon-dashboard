@@ -123,8 +123,12 @@ function Projects() {
 
           if (project.favourite) {
             return (
-              <Grid item xs={12} md={4} key={project._id}>
-                <Box>
+              <Grid item xs={12} md={4} key={project._id} >
+                <Box sx={{
+                  border: '2px solid #2C3152',
+                  borderRadius: '15px',
+                  padding: '15px'
+                }}>
                   <CardHeader
                     sx={{
                       px: 0,
@@ -162,28 +166,32 @@ function Projects() {
                       <Tooltip arrow title="Прегледай проекта" placement="top">
                         <Link href={`/dashboard/project/${project._id}`}>
                           <IconButton
-                            size="small"
+                            size="medium"
                             sx={{
                               color: '#0096FF',
                               ml: 0.5
                             }}
                           >
-                            <VisibilityIcon fontSize="small" />
+                            <VisibilityIcon fontSize="medium" sx={{
+                            fontSize: '2rem'
+                          }}/>
                           </IconButton>
                         </Link>
                       </Tooltip>
                       <Tooltip arrow title="Премахни от любими" placement="top">
                         <IconButton
-                          size="small"
+                          size="medium"
                           sx={{
                             color: `${theme.colors.warning.main}`,
-                            ml: 0.5
+                            ml: 0.5,
                           }}
                           onClick={() =>
                             handleRemoveProjectFromFavourite(project._id)
                           }
                         >
-                          <StarIcon fontSize="small" />
+                          <StarIcon fontSize="medium" sx={{
+                            fontSize: '2rem'
+                          }}/>
                         </IconButton>
                       </Tooltip>
                     </Box>

@@ -5,6 +5,7 @@ import { getProjects } from '@/services/project';
 export interface Project {
   id: string;
   title: string;
+  createdAt: string
 }
 
 interface ProjectState {
