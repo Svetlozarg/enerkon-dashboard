@@ -90,6 +90,7 @@ export default function AddDocumentModal() {
       setLoading(true);
       const formData = new FormData();
       formData.append('projectId', selectedProject);
+      formData.append('filename', selectedFile.name);
       formData.append('file', selectedFile);
 
       createDocument(formData).then((res) => {
@@ -170,7 +171,7 @@ export default function AddDocumentModal() {
                 Добави документ
                 <input
                   hidden
-                  accept=".pdf,.xml,.xlsx,.docx,.doc"
+                  accept=".pdf,.xml,.xlsx,.docx,.doc,.csv,.png,.jpg,.jpeg"
                   type="file"
                   onChange={handleFileChange}
                 />

@@ -13,6 +13,7 @@ export default function ProjectPage() {
     <>
       <Head>
         <title>{filename}</title>
+        <meta charSet="UTF-8" />
       </Head>
 
       <Box sx={{ width: '100%', p: '2rem 4rem' }}>

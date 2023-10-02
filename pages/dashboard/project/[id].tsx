@@ -38,6 +38,7 @@ export default function ProjectPage() {
     <>
       <Head>
         <title>{id}</title>
+        <meta charSet="UTF-8" />
       </Head>
       <ProjectHeader project={project} />
 

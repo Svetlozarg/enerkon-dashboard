@@ -13,7 +13,6 @@ export const getDocuments = async () => {
 
 export const createDocument = async (body: Object) => {
   try {
-    // TODO: set header to send UTF-8 encoding
     const response = await customeAxios.post(`${api}/document/create`, body, {
       headers: {
         'Content-Type': 'multipart/form-data'
