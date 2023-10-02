@@ -39,14 +39,14 @@ const columns: GridColDef[] = [
     width: 150,
     renderCell: (params) => {
       // Extract the required information from the 'document' object
-      const { id, size } = params.value;
+      const { size } = params.value;
       const sizeInMb = (size / (1024 * 1024)).toFixed(2); // Convert size to MB with two decimal places
 
       // Create a custom tooltip with the extracted information
       const tooltipContent = (
         <div>
-          <p>ID: {id}</p>
-          <p>Size: {sizeInMb} MB</p>
+          <p>Файл: {params.row.title}</p>
+          <p>Размер: {sizeInMb} MB</p>
         </div>
       );
 
