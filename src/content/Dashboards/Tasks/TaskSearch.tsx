@@ -14,15 +14,23 @@ import {
   Menu,
   MenuItem,
   styled,
-  useTheme
+  useTheme,
+  IconButton
 } from '@mui/material';
 import TodayTwoToneIcon from '@mui/icons-material/TodayTwoTone';
-import Link from 'src/components/Link';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import Text from 'src/components/Text';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { updateProject } from '@/services/project';
+import { store } from '@/store/store';
+import { openNotification } from '@/store/slices/notifications/notificationSlice';
+import { fetchProjects } from '@/store/slices/project/projectSlice';
+import Link from 'next/link';
 
 const OutlinedInputWrapper = styled(OutlinedInput)(
   ({ theme }) => `
@@ -63,17 +71,16 @@ function TaskSearch() {
 
   const [searchText, setSearchText] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const projectsPerPage = 3; 
+  const projectsPerPage = 3;
 
   const [filteredProjects, setFilteredProjects] = useState(projects);
 
-  
   useEffect(() => {
     const filtered = projects.filter((project: any) =>
       project.title.toLowerCase().includes(searchText.toLowerCase())
     );
     setFilteredProjects(filtered);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   }, [searchText, projects]);
 
   const [sortedProjects, setSortedProjects] = useState([...filteredProjects]);
@@ -88,10 +95,13 @@ function TaskSearch() {
     setCurrentPage(1);
   }, [filteredProjects]);
 
-  const handlePageChange = (_event: React.ChangeEvent<unknown>, page: number) => {
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
     setCurrentPage(page);
   };
-  
+
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
 
@@ -99,6 +109,48 @@ function TaskSearch() {
     indexOfFirstProject,
     indexOfLastProject
   );
+
+  const handleProjectFavourite = (id: string, favourite: boolean) => {
+    if (favourite) {
+      const body: Object = {
+        favourite: false
+      };
+
+      updateProject(body, id).then((res) => {
+        if (res.success) {
+          store.dispatch(fetchProjects() as any);
+          store.dispatch(
+            openNotification({
+              isOpen: true,
+              text: 'Проекта е успешно премахнат от любими',
+              severity: 'success'
+            })
+          );
+        } else if (!res.success) {
+          console.log('Problem');
+        }
+      });
+    } else if (!favourite) {
+      const body: Object = {
+        favourite: true
+      };
+
+      updateProject(body, id).then((res) => {
+        if (res.success) {
+          store.dispatch(fetchProjects() as any);
+          store.dispatch(
+            openNotification({
+              isOpen: true,
+              text: 'Проекта е успешно добавен в любими ',
+              severity: 'success'
+            })
+          );
+        } else if (!res.success) {
+          console.log('Problem');
+        }
+      });
+    }
+  };
 
   return (
     <>
@@ -137,56 +189,56 @@ function TaskSearch() {
           </Typography>
         </Box>
         <Box display="flex" alignItems="center">
-        <Typography variant="subtitle2" sx={{ pr: 1 }}>
-          Филтър:
-        </Typography>
-        <Button
-          size="small"
-          variant="outlined"
-          ref={actionRef1}
-          onClick={() => setOpenMenuPeriod(true)}
-          endIcon={<ExpandMoreTwoToneIcon fontSize="small" />}
-        >
-          {period}
-        </Button>
-        <Menu
-          disableScrollLock
-          anchorEl={actionRef1.current}
-          onClose={() => setOpenMenuPeriod(false)}
-          open={openPeriod}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-        >
-          <MenuItem
-            key="oldest"
-            onClick={() => {
-              setPeriod('Най-стари');
-              setOpenMenuPeriod(false);
-              setCurrentPage(1);
-              setFilteredProjects(sortedProjects); // Sorted in ascending order
+          <Typography variant="subtitle2" sx={{ pr: 1 }}>
+            Филтър:
+          </Typography>
+          <Button
+            size="small"
+            variant="outlined"
+            ref={actionRef1}
+            onClick={() => setOpenMenuPeriod(true)}
+            endIcon={<ExpandMoreTwoToneIcon fontSize="small" />}
+          >
+            {period}
+          </Button>
+          <Menu
+            disableScrollLock
+            anchorEl={actionRef1.current}
+            onClose={() => setOpenMenuPeriod(false)}
+            open={openPeriod}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right'
             }}
           >
-            Най-стари
-          </MenuItem>
-          <MenuItem
-            key="newest"
-            onClick={() => {
-              setPeriod('Най-нови');
-              setOpenMenuPeriod(false);
-              setCurrentPage(1);
-              setFilteredProjects([...sortedProjects].reverse()); // Reversed for "Най-нови"
-            }}
-          >
-            Най-нови
-          </MenuItem>
-        </Menu>
-      </Box>
+            <MenuItem
+              key="oldest"
+              onClick={() => {
+                setPeriod('Най-стари');
+                setOpenMenuPeriod(false);
+                setCurrentPage(1);
+                setFilteredProjects(sortedProjects); // Sorted in ascending order
+              }}
+            >
+              Най-стари
+            </MenuItem>
+            <MenuItem
+              key="newest"
+              onClick={() => {
+                setPeriod('Най-нови');
+                setOpenMenuPeriod(false);
+                setCurrentPage(1);
+                setFilteredProjects([...sortedProjects].reverse()); // Reversed for "Най-нови"
+              }}
+            >
+              Най-нови
+            </MenuItem>
+          </Menu>
+        </Box>
       </Box>
 
       {/* Projects */}
@@ -208,9 +260,48 @@ function TaskSearch() {
                   background: `${theme.colors.alpha.black[5]}`
                 }}
               >
-                <Link href="#" variant="h3" color="text.primary">
-                  {project.title}
-                </Link>
+                <Box
+                  sx={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Typography fontSize="1.5rem" fontWeight="bold">
+                    {project.title}
+                  </Typography>
+
+                  <Box>
+                    <Link href={`/dashboard/project/${project._id}`}>
+                      <IconButton>
+                        <VisibilityIcon
+                          sx={{ color: '#0096FF', fontSize: '2rem' }}
+                        />
+                      </IconButton>
+                    </Link>
+
+                    {project.favourite ? (
+                      <IconButton
+                        onClick={() =>
+                          handleProjectFavourite(project._id, project.favourite)
+                        }
+                      >
+                        <StarIcon sx={{ color: '#FFA319', fontSize: '2rem' }} />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        onClick={() =>
+                          handleProjectFavourite(project._id, project.favourite)
+                        }
+                      >
+                        <StarBorderIcon
+                          sx={{ color: '#FFA319', fontSize: '2rem' }}
+                        />
+                      </IconButton>
+                    )}
+                  </Box>
+                </Box>
 
                 {/* Rest of your card content */}
                 <Typography
@@ -221,9 +312,14 @@ function TaskSearch() {
                 >
                   {project.description}
                 </Typography>
-                <Button size="small" variant="contained">
-                  Прегледай проект
-                </Button>
+
+                {project.status === 'Paid' && (
+                  <Typography color="green">Платен</Typography>
+                )}
+                {project.status === 'Unpaid' && (
+                  <Typography color="red">Неплатен</Typography>
+                )}
+
                 <Divider
                   sx={{
                     my: 2
@@ -274,7 +370,7 @@ function TaskSearch() {
         <Pagination
           showFirstButton
           showLastButton
-          count={Math.ceil(filteredProjects.length / projectsPerPage)} 
+          count={Math.ceil(filteredProjects.length / projectsPerPage)}
           page={currentPage}
           onChange={handlePageChange}
           siblingCount={0}

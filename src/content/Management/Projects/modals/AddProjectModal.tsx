@@ -197,6 +197,12 @@ export default function AddProjectModal() {
                 </Tooltip>
               </Box>
             )}
+
+            <Box mt="1rem">
+              <span style={{ fontSize: '.9rem', color: 'gray' }}>
+                * Project.xml и Master_file.xlsx
+              </span>
+            </Box>
           </Box>
 
           {!loading ? (

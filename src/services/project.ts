@@ -85,3 +85,16 @@ export const getProjectLog = async (id: string) => {
     console.error(error);
   }
 };
+
+// Get Projects Analytics
+export const getProjectsAnalytics = async () => {
+  try {
+    const response = await customeAxios.get(
+      `${api}/project/projects/analytics`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

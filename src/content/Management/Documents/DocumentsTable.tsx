@@ -176,7 +176,7 @@ export default function DocumentsTable(props: Props) {
   const { documents, loading } = props;
 
   return (
-    <div style={{ height: 500, width: '100%' }}>
+    <div style={{ height: 600, width: '100%' }}>
       <DataGrid
         getRowId={(row) => row._id}
         rows={documents}

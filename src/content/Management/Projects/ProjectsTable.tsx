@@ -65,7 +65,7 @@ const handleProjectFavourite = (id: string, favourite: boolean) => {
 
 const columns: GridColDef[] = [
   { field: '_id', headerName: 'ИД', width: 100 },
-  { field: 'title', headerName: 'Заглавие', width: 400 },
+  { field: 'title', headerName: 'Заглавие', width: 250 },
   {
     field: 'updatedAt',
     headerName: 'Дата на промяна',
@@ -144,9 +144,12 @@ const columns: GridColDef[] = [
             </IconButton>
           )}
 
-          
-            <UpdateProjectModal id={params.row._id} title={params.row.title} currentStatus={params.row.status} />
-          
+          <UpdateProjectModal
+            id={params.row._id}
+            title={params.row.title}
+            currentStatus={params.row.status}
+          />
+
           <DeleteProjectModal id={params.row._id} title={params.row.title} />
         </>
       );
@@ -157,7 +160,7 @@ const columns: GridColDef[] = [
 export default function ProjectsTable(props: Props) {
   const { projects, loading } = props;
   return (
-    <div style={{ height: 500, width: '100%' }}>
+    <div style={{ height: 600, width: '100%' }}>
       <DataGrid
         getRowId={(row) => row._id}
         rows={projects}

@@ -1,17 +1,18 @@
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  Button,
+  // Button,
   Box,
-  Menu,
+  // Menu,
   alpha,
-  MenuItem,
+  // MenuItem,
   Typography,
   styled,
   useTheme
 } from '@mui/material';
-import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
+// import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import { Chart } from 'src/components/Chart';
 import type { ApexOptions } from 'apexcharts';
+import { getProjectsAnalytics } from '@/services/project';
 
 const DotPrimaryLight = styled('span')(
   ({ theme }) => `
@@ -37,6 +38,7 @@ const DotPrimary = styled('span')(
 
 function TasksAnalytics() {
   const theme = useTheme();
+  const [chartData, setChartData] = useState<any>([]);
 
   const chartOptions: ApexOptions = {
     chart: {
@@ -127,47 +129,58 @@ function TasksAnalytics() {
         show: false
       },
       y: {
-        formatter: function (val) {
-          return '$ ' + val + 'k';
+        formatter: function (val: any) {
+          return val;
         }
       },
       theme: 'dark'
     }
   };
 
-  const chartData = [
-    {
-      name: 'Общо проекти',
-      data: [28, 47, 41, 34, 69, 91, 49, 82, 52, 72, 32, 99]
-    },
-    {
-      name: 'Общо файлове',
-      data: [38, 85, 64, 40, 97, 82, 58, 42, 55, 46, 57, 70]
-    }
-  ];
+  // const periods = [
+  //   {
+  //     value: 'today',
+  //     text: 'Днес'
+  //   },
+  //   {
+  //     value: 'yesterday',
+  //     text: 'Вчера'
+  //   },
+  //   {
+  //     value: 'last_month',
+  //     text: 'Последният месец'
+  //   },
+  //   {
+  //     value: 'last_year',
+  //     text: 'Последната година'
+  //   }
+  // ];
 
-  const periods = [
-    {
-      value: 'today',
-      text: 'Днес'
-    },
-    {
-      value: 'yesterday',
-      text: 'Вчера'
-    },
-    {
-      value: 'last_month',
-      text: 'Последният месец'
-    },
-    {
-      value: 'last_year',
-      text: 'Последната година'
-    }
-  ];
+  // const actionRef1 = useRef<any>(null);
+  // const [openPeriod, setOpenMenuPeriod] = useState<boolean>(false);
+  // const [period, setPeriod] = useState<string>(periods[3].text);
 
-  const actionRef1 = useRef<any>(null);
-  const [openPeriod, setOpenMenuPeriod] = useState<boolean>(false);
-  const [period, setPeriod] = useState<string>(periods[3].text);
+  useEffect(() => {
+    const fetchAnalyticsData = async () => {
+      const res = await getProjectsAnalytics();
+
+      if (res.success) {
+        const data: Array<Object> = [
+          {
+            name: 'Платени проекти',
+            data: res.data.paid
+          },
+          {
+            name: 'Неплатени проекти',
+            data: res.data.unpaid
+          }
+        ];
+
+        setChartData(data);
+      }
+    };
+    fetchAnalyticsData();
+  }, []);
 
   return (
     <Box>
@@ -177,8 +190,8 @@ function TasksAnalytics() {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography variant="h4">Общ Анализ</Typography>
-        <Button
+        <Typography variant="h3">Общ Анализ</Typography>
+        {/* <Button
           size="small"
           variant="contained"
           color="secondary"
@@ -187,8 +200,8 @@ function TasksAnalytics() {
           endIcon={<ExpandMoreTwoToneIcon fontSize="small" />}
         >
           {period}
-        </Button>
-        <Menu
+        </Button> */}
+        {/* <Menu
           disableScrollLock
           anchorEl={actionRef1.current}
           onClose={() => setOpenMenuPeriod(false)}
@@ -213,7 +226,7 @@ function TasksAnalytics() {
               {_period.text}
             </MenuItem>
           ))}
-        </Menu>
+        </Menu> */}
       </Box>
       <Box display="flex" alignItems="center" pb={2}>
         <Typography
@@ -226,7 +239,7 @@ function TasksAnalytics() {
           }}
         >
           <DotPrimary />
-          Общо проекти
+          Платени проекти
         </Typography>
         <Typography
           variant="body2"
@@ -237,7 +250,7 @@ function TasksAnalytics() {
           }}
         >
           <DotPrimaryLight />
-          Общо файлове
+          Неплатени проекти
         </Typography>
       </Box>
       <Chart
