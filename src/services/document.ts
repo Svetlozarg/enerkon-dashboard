@@ -81,3 +81,21 @@ export const getFile = async (filename: string) => {
     console.error(error);
   }
 };
+
+export const generateKCCTemplate = async (body: Object) => {
+  try {
+    const response = await customeAxios.post(
+      `${api}/document/template/kcc`,
+      body,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

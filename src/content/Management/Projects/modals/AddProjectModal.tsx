@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { generateKCCTemplate } from '@/services/document';
 
 const styles = {
   root: {
@@ -69,7 +70,7 @@ export default function AddProjectModal() {
     setSelectedFile(event.target.files[0]);
   };
 
-  const handleProjectCreate = () => {
+  const handleProjectCreate = async () => {
     if (projectTitle !== '') {
       const regex = /^[A-Za-zА-Яа-я0-9\s]+$/;
 
@@ -79,6 +80,19 @@ export default function AddProjectModal() {
           const formData = new FormData();
           formData.append('title', projectTitle);
           formData.append('file', selectedFile);
+
+          const response = await fetch(
+            'https://ik.imagekit.io/obelussoft/Enerkon/kcc.xlsx'
+          );
+          const blob = await response.blob();
+
+          // Create a new File object from the blob
+          const file = new File([blob], 'kcc.xlsx');
+
+          const kccFormData = new FormData();
+          kccFormData.append('file', file);
+
+          generateKCCTemplate(kccFormData);
 
           createProject(formData).then((res) => {
             if (res.success) {
