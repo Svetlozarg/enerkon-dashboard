@@ -26,7 +26,7 @@ const styles = {
     top: '50%',
     left: '50%',
     width: '600px',
-    height: '550px',
+    height: '650px',
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
     boxShadow: 24,
@@ -61,6 +61,7 @@ export default function AddProjectModal() {
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFileTwo, setSelectedFileTwo] = useState(null);
 
   const handleProjectTitleChange = (event: any) => {
     setProjectTitle(event.target.value);
@@ -68,6 +69,10 @@ export default function AddProjectModal() {
 
   const handleFileChange = (event: any) => {
     setSelectedFile(event.target.files[0]);
+  };
+
+  const handleFileTwoChange = (event: any) => {
+    setSelectedFileTwo(event.target.files[0]);
   };
 
   const handleProjectCreate = async () => {
@@ -79,7 +84,8 @@ export default function AddProjectModal() {
           setLoading(true);
           const formData = new FormData();
           formData.append('title', projectTitle);
-          formData.append('file', selectedFile);
+          formData.append('files', selectedFile);
+          formData.append('files', selectedFileTwo);
 
           const response = await fetch(
             'https://ik.imagekit.io/obelussoft/Enerkon/kcc.xlsx'
@@ -93,6 +99,19 @@ export default function AddProjectModal() {
           kccFormData.append('file', file);
 
           generateKCCTemplate(kccFormData);
+
+          const responseReport = await fetch(
+            'https://ik.imagekit.io/obelussoft/Enerkon/report.docx'
+          );
+          const blobReport = await responseReport.blob();
+
+          // Create a new File object from the blob
+          const fileReport = new File([blobReport], 'report.docx');
+
+          const reportFormData = new FormData();
+          reportFormData.append('file', fileReport);
+
+          generateKCCTemplate(reportFormData);
 
           createProject(formData).then((res) => {
             if (res.success) {
@@ -158,24 +177,26 @@ export default function AddProjectModal() {
             />
 
             <Typography sx={{ fontSize: '1.2rem', mb: '1rem', mt: '1rem' }}>
-              Документи към проекта
+              XML Документ
             </Typography>
 
             <Stack direction="row" alignItems="center" spacing={2} sx={{}}>
-              <Button
-                sx={{ border: '1px solid #8C7CF0' }}
-                component="label"
-                disabled={selectedFile}
-              >
-                <FileUploadIcon sx={{ color: '#7063C0', mr: '5px' }} />
-                Добави документ
-                <input
-                  hidden
-                  accept="application/xml,text/xml"
-                  type="file"
-                  onChange={handleFileChange}
-                />
-              </Button>
+              {!selectedFile && (
+                <Button
+                  sx={{ border: '1px solid #8C7CF0' }}
+                  component="label"
+                  disabled={selectedFile}
+                >
+                  <FileUploadIcon sx={{ color: '#7063C0', mr: '5px' }} />
+                  Добави документ
+                  <input
+                    hidden
+                    accept="application/xml,text/xml"
+                    type="file"
+                    onChange={handleFileChange}
+                  />
+                </Button>
+              )}
             </Stack>
             {selectedFile && (
               <Box
@@ -194,7 +215,6 @@ export default function AddProjectModal() {
                     sx={{
                       display: 'flex',
                       alignItems: 'center',
-                      flexDirection: 'column',
                       gap: '5px',
                       border: 'solid 1px',
                       p: '10px',
@@ -214,7 +234,71 @@ export default function AddProjectModal() {
 
             <Box mt="1rem">
               <span style={{ fontSize: '.9rem', color: 'gray' }}>
-                * Project.xml и Master_file.xlsx
+                * Project.xml
+              </span>
+            </Box>
+
+            <Typography sx={{ fontSize: '1.2rem', mb: '1rem', mt: '1rem' }}>
+              Мастър Документ
+            </Typography>
+
+            <Stack direction="row" alignItems="center" spacing={2} sx={{}}>
+              {!selectedFileTwo && (
+                <Button
+                  sx={{ border: '1px solid #8C7CF0' }}
+                  component="label"
+                  disabled={selectedFileTwo}
+                >
+                  <FileUploadIcon sx={{ color: '#7063C0', mr: '5px' }} />
+                  Добави документ
+                  <input
+                    hidden
+                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                    type="file"
+                    onChange={handleFileTwoChange}
+                  />
+                </Button>
+              )}
+            </Stack>
+            {selectedFileTwo && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  mt: '1rem'
+                }}
+              >
+                <Tooltip
+                  title="Изтрий"
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => setSelectedFileTwo(null)}
+                >
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      border: 'solid 1px',
+                      p: '10px',
+                      borderRadius: '20px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <InsertDriveFileIcon sx={{ fontSize: '32px' }} />
+                    <Typography>{selectedFileTwo?.name}</Typography>
+                    <Typography>
+                      {(selectedFileTwo?.size / 1048576).toFixed(2) +
+                        ' ' +
+                        'MB'}
+                    </Typography>
+                  </Box>
+                </Tooltip>
+              </Box>
+            )}
+
+            <Box mt="1rem">
+              <span style={{ fontSize: '.9rem', color: 'gray' }}>
+                * Master_file.xlsx
               </span>
             </Box>
           </Box>

@@ -99,3 +99,21 @@ export const generateKCCTemplate = async (body: Object) => {
     console.error(error);
   }
 };
+
+export const generateReportTemplate = async (body: Object) => {
+  try {
+    const response = await customeAxios.post(
+      `${api}/document/template/report`,
+      body,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
