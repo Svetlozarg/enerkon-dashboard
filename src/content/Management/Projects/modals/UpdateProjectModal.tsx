@@ -11,6 +11,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Tooltip,
   Typography
 } from '@mui/material';
 import { updateProject } from '@/services/project';
@@ -25,7 +26,7 @@ const styles = {
     top: '50%',
     left: '50%',
     width: '600px',
-    height: '400px',
+    height: '500px',
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
     boxShadow: 24,
@@ -59,7 +60,7 @@ export default function UpdateProjectModal(props: Props) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [newProjectTitle, setNewProjectTitle] = useState<string>('');
+  const [newProjectTitle, setNewProjectTitle] = useState<string>(title);
   const [selectedStatus, setSelectedStatus] = useState<string>(currentStatus); // Initialize with the current status
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -109,9 +110,12 @@ export default function UpdateProjectModal(props: Props) {
 
   return (
     <div>
-      <IconButton onClick={handleOpen}>
-        <EditIcon sx={{ color: '#FFBF00' }} />
-      </IconButton>
+      <Tooltip title="Промени">
+        <IconButton onClick={handleOpen}>
+          <EditIcon sx={{ color: '#FFBF00' }} />
+        </IconButton>
+      </Tooltip>
+
       <Modal open={open} onClose={handleClose}>
         <Box sx={styles.root}>
           <Box sx={styles.header}>
@@ -126,12 +130,12 @@ export default function UpdateProjectModal(props: Props) {
 
           <Box width="100%">
             <Typography sx={{ fontSize: '1.2rem', mb: '1rem' }}>
-              Въведете ново заглавие на проекта
+              Ново заглавие на проекта
             </Typography>
 
             <TextField
               error={error ? true : false}
-              label="Въведете ново заглавие..."
+              label={title}
               helperText={error ? error : ''}
               fullWidth
               value={newProjectTitle}
@@ -139,13 +143,19 @@ export default function UpdateProjectModal(props: Props) {
             />
           </Box>
 
-          <FormControl fullWidth>
-            <InputLabel>Статус</InputLabel>
-            <Select value={selectedStatus} onChange={handleStatusChange}>
-              <MenuItem value="Unpaid">Неплатен</MenuItem>
-              <MenuItem value="Paid">Платен</MenuItem>
-            </Select>
-          </FormControl>
+          <Box width="100%">
+            <Typography sx={{ fontSize: '1.2rem', mb: '1rem' }}>
+              Статус на проекта
+            </Typography>
+
+            <FormControl fullWidth>
+              <InputLabel>Статус</InputLabel>
+              <Select value={selectedStatus} onChange={handleStatusChange}>
+                <MenuItem value="Unpaid">Неплатен</MenuItem>
+                <MenuItem value="Paid">Платен</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
           {!loading ? (
             <Button

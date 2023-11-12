@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { Project, fetchProjects } from '@/store/slices/project/projectSlice';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -121,27 +121,33 @@ const columns: GridColDef[] = [
       return (
         <>
           <Link href={`/dashboard/project/${params.row._id}`}>
-            <IconButton>
-              <VisibilityIcon sx={{ color: '#0096FF' }} />
-            </IconButton>
+            <Tooltip title="Виж">
+              <IconButton>
+                <VisibilityIcon sx={{ color: '#0096FF' }} />
+              </IconButton>
+            </Tooltip>
           </Link>
 
           {params.row.favourite ? (
-            <IconButton
-              onClick={() =>
-                handleProjectFavourite(params.row._id, params.row.favourite)
-              }
-            >
-              <StarIcon sx={{ color: '#FFD700' }} />
-            </IconButton>
+            <Tooltip title="Премахни от любими">
+              <IconButton
+                onClick={() =>
+                  handleProjectFavourite(params.row._id, params.row.favourite)
+                }
+              >
+                <StarIcon sx={{ color: '#FFD700' }} />
+              </IconButton>
+            </Tooltip>
           ) : (
-            <IconButton
-              onClick={() =>
-                handleProjectFavourite(params.row._id, params.row.favourite)
-              }
-            >
-              <StarBorderIcon sx={{ color: '#FFD700' }} />
-            </IconButton>
+            <Tooltip title="Добави в любими">
+              <IconButton
+                onClick={() =>
+                  handleProjectFavourite(params.row._id, params.row.favourite)
+                }
+              >
+                <StarBorderIcon sx={{ color: '#FFD700' }} />
+              </IconButton>
+            </Tooltip>
           )}
 
           <UpdateProjectModal

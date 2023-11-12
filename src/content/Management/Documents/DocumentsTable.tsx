@@ -9,7 +9,7 @@ import { DataGridLocale } from '@/helpers/DataGridLocale';
 import CustomTitleColumn from './CustomeTitleColumn';
 import DownloadIcon from '@mui/icons-material/Download';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import Link from 'next/link';
+// import Link from 'next/link';
 
 interface Props {
   documents: Document[];
@@ -141,15 +141,19 @@ const columns: GridColDef[] = [
       return (
         <>
           {/* Download */}
-          <IconButton onClick={download}>
-            <DownloadIcon sx={{ color: '#0096FF' }} />
-          </IconButton>
+          <Tooltip title="Изтегли">
+            <IconButton onClick={download}>
+              <DownloadIcon sx={{ color: '#0096FF' }} />
+            </IconButton>
+          </Tooltip>
           {/* View */}
-          <Link href={`/dashboard/document/${params.row.document.fileName}`}>
-            <IconButton>
+          <Tooltip title="Прегледай">
+            {/* <Link href={`/dashboard/document/${params.row.document.fileName}`}> */}
+            <IconButton disabled>
               <VisibilityIcon sx={{ color: '#4682B4' }} />
             </IconButton>
-          </Link>
+            {/* </Link> */}
+          </Tooltip>
           {/* Update */}
           {!params.row.default && (
             <UpdateDocumentModal

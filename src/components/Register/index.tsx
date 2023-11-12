@@ -166,9 +166,9 @@ const Register = () => {
               Регистрация
             </Button>
             <Typography>
-              Нямате акаунт?{' '}
+              Имате акаунт?{' '}
               <Link href="/auth/login" underline="none">
-                Регистрирай се тук
+                Влезте тук
               </Link>
             </Typography>
           </Box>

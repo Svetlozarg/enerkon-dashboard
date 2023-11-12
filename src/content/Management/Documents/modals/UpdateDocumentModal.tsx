@@ -11,7 +11,8 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  CircularProgress
+  CircularProgress,
+  Tooltip
 } from '@mui/material';
 
 import ClearIcon from '@mui/icons-material/Clear';
@@ -27,7 +28,7 @@ const styles = {
     top: '50%',
     left: '50%',
     width: '600px',
-    height: '400px',
+    height: '500px',
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
     boxShadow: 24,
@@ -61,7 +62,7 @@ export default function UpdateDocumentModal(props: Props) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [newDocumentTitle, setDocumentTitle] = useState<string>('');
+  const [newDocumentTitle, setDocumentTitle] = useState<string>(title);
   const [selectedStatus, setSelectedStatus] = useState<string>(currentStatus); // Initialize with the current status
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -76,44 +77,40 @@ export default function UpdateDocumentModal(props: Props) {
 
   const handleDocumentUpdate = () => {
     if (newDocumentTitle !== '') {
-      const regex = /^[A-Za-zА-Яа-я0-9\s]+$/;
+      setLoading(true);
+      const body: Object = {
+        title: newDocumentTitle,
+        status: selectedStatus
+      };
 
-      if (regex.test(newDocumentTitle)) {
-        setLoading(true);
-        const body: Object = {
-          title: newDocumentTitle,
-          status: selectedStatus
-        };
-
-        updateDocument(body, id).then((res) => {
-          if (res.success) {
-            dispatch(fetchDocuments() as any);
-            dispatch(
-              openNotification({
-                isOpen: true,
-                text: 'Проектът е успешно променен',
-                severity: 'success'
-              })
-            );
-            setLoading(false);
-            handleClose();
-          } else if (!res.success) {
-            console.log('Problem');
-          }
-        });
-      } else {
-        setError('Заглавието може да съдържа само букви и цифри');
-      }
+      updateDocument(body, id).then((res) => {
+        if (res.success) {
+          dispatch(fetchDocuments() as any);
+          dispatch(
+            openNotification({
+              isOpen: true,
+              text: 'Проектът е успешно променен',
+              severity: 'success'
+            })
+          );
+          setLoading(false);
+          handleClose();
+        } else if (!res.success) {
+          console.log('Problem');
+        }
+      });
     } else {
-      setError('Моля въведете заглавие на проекта');
+      setError('Заглавието може да съдържа само букви и цифри');
     }
   };
 
   return (
     <div>
-      <IconButton onClick={handleOpen}>
-        <EditIcon sx={{ color: '#FFBF00' }} />
-      </IconButton>
+      <Tooltip title="Промени">
+        <IconButton onClick={handleOpen}>
+          <EditIcon sx={{ color: '#FFBF00' }} />
+        </IconButton>
+      </Tooltip>
       <Modal open={open} onClose={handleClose}>
         <Box sx={styles.root}>
           <Box sx={styles.header}>
@@ -128,12 +125,12 @@ export default function UpdateDocumentModal(props: Props) {
 
           <Box width="100%">
             <Typography sx={{ fontSize: '1.2rem', mb: '1rem' }}>
-              Въведете ново заглавие на проекта
+              Ново заглавие на документа
             </Typography>
 
             <TextField
               error={error ? true : false}
-              label="Въведете ново заглавие..."
+              label={title}
               helperText={error ? error : ''}
               fullWidth
               value={newDocumentTitle}
@@ -141,14 +138,20 @@ export default function UpdateDocumentModal(props: Props) {
             />
           </Box>
 
-          <FormControl fullWidth>
-            <InputLabel>Статус</InputLabel>
-            <Select value={selectedStatus} onChange={handleStatusChange}>
-              <MenuItem value="In process">В процес</MenuItem>
-              <MenuItem value="Canceled">Отказан</MenuItem>
-              <MenuItem value="Finished">Завършен</MenuItem>
-            </Select>
-          </FormControl>
+          <Box width="100%">
+            <Typography sx={{ fontSize: '1.2rem', mb: '1rem' }}>
+              Статус на документа
+            </Typography>
+
+            <FormControl fullWidth>
+              <InputLabel>Статус</InputLabel>
+              <Select value={selectedStatus} onChange={handleStatusChange}>
+                <MenuItem value="In process">В процес</MenuItem>
+                <MenuItem value="Canceled">Отказан</MenuItem>
+                <MenuItem value="Finished">Завършен</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
           {!loading ? (
             <Button

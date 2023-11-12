@@ -4,14 +4,13 @@ import {
   CardContent,
   Card,
   Box,
-  Divider,
-  Button
+  Divider
 } from '@mui/material';
 
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DoneTwoToneIcon from '@mui/icons-material/DoneTwoTone';
 import Text from '@/components/Text';
 import Label from '@/components/Label';
+import { userEmail } from '@/helpers/GetUser';
 
 function EditProfileTab() {
   return (
@@ -26,15 +25,12 @@ function EditProfileTab() {
           >
             <Box>
               <Typography variant="h4" gutterBottom>
-                Personal Details
+                Лични данни
               </Typography>
               <Typography variant="subtitle2">
-                Manage informations related to your personal details
+                Управление на информацията, свързана с личните ви данни
               </Typography>
             </Box>
-            <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              Edit
-            </Button>
           </Box>
           <Divider />
           <CardContent sx={{ p: 4 }}>
@@ -42,36 +38,23 @@ function EditProfileTab() {
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    Name:
+                    Име и Фамилия:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
                   <Text color="black">
-                    <b>Craig Donin</b>
+                    <b>{userEmail}</b>
                   </Text>
                 </Grid>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    Date of birth:
+                    Имейл Адрес:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
                   <Text color="black">
-                    <b>15 March 1977</b>
+                    <b>{userEmail}</b>
                   </Text>
-                </Grid>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Address:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <Box sx={{ maxWidth: { xs: 'auto', sm: 300 } }}>
-                    <Text color="black">
-                      1749 High Meadow Lane, SEQUOIA NATIONAL PARK, California,
-                      93262
-                    </Text>
-                  </Box>
                 </Grid>
               </Grid>
             </Typography>
@@ -88,15 +71,12 @@ function EditProfileTab() {
           >
             <Box>
               <Typography variant="h4" gutterBottom>
-                Account Settings
+                Настройки на акаунта
               </Typography>
               <Typography variant="subtitle2">
-                Manage details related to your account
+                Управление на данните, свързани с профила ви
               </Typography>
             </Box>
-            <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              Edit
-            </Button>
           </Box>
           <Divider />
           <CardContent sx={{ p: 4 }}>
@@ -104,17 +84,17 @@ function EditProfileTab() {
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    Language:
+                    Език:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
                   <Text color="black">
-                    <b>English (US)</b>
+                    <b>Български (БГ)</b>
                   </Text>
                 </Grid>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    Timezone:
+                    Времева зона:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
@@ -124,66 +104,14 @@ function EditProfileTab() {
                 </Grid>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    Account status:
+                    Статус на профила:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
                   <Label color="success">
                     <DoneTwoToneIcon fontSize="small" />
-                    <b>Active</b>
+                    <b>Активен</b>
                   </Label>
-                </Grid>
-              </Grid>
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12}>
-        <Card>
-          <Box
-            p={3}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Box>
-              <Typography variant="h4" gutterBottom>
-                Email Addresses
-              </Typography>
-              <Typography variant="subtitle2">
-                Manage details related to your associated email addresses
-              </Typography>
-            </Box>
-            <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              Edit
-            </Button>
-          </Box>
-          <Divider />
-          <CardContent sx={{ p: 4 }}>
-            <Typography variant="subtitle2">
-              <Grid container spacing={0}>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Email ID:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>example@demo.com</b>
-                  </Text>
-                  <Box pl={1} component="span">
-                    <Label color="success">Primary</Label>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Email ID:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>demo@example.com</b>
-                  </Text>
                 </Grid>
               </Grid>
             </Typography>

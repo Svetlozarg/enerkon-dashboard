@@ -7,7 +7,8 @@ import {
   DialogContentText,
   DialogTitle,
   Slide,
-  IconButton
+  IconButton,
+  Tooltip
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -69,9 +70,11 @@ export default function DeleteDocumentModal(props: Props) {
 
   return (
     <div>
-      <IconButton onClick={handleOpen}>
-        <DeleteIcon sx={{ color: '#dc143c' }} />
-      </IconButton>
+      <Tooltip title="Изтрий">
+        <IconButton onClick={handleOpen}>
+          <DeleteIcon sx={{ color: '#dc143c' }} />
+        </IconButton>
+      </Tooltip>
       <Dialog
         open={open}
         TransitionComponent={Transition}

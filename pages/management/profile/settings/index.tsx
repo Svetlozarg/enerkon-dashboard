@@ -22,8 +22,8 @@ function ManagementUserSettings() {
   const [currentTab, setCurrentTab] = useState<string>('edit_profile');
 
   const tabs = [
-    { value: 'edit_profile', label: 'Edit Profile' },
-    { value: 'security', label: 'Passwords/Security' }
+    { value: 'edit_profile', label: 'Редактиране на профила' },
+    { value: 'security', label: 'Пароли/сигурност' }
   ];
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -33,7 +33,7 @@ function ManagementUserSettings() {
   return (
     <>
       <Head>
-        <title>User Settings - Applications</title>
+        <title>Настройки</title>
       </Head>
       <PageTitleWrapper>
         <PageHeader />
