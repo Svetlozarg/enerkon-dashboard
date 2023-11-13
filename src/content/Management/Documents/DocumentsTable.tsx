@@ -18,21 +18,13 @@ interface Props {
 
 const columns: GridColDef[] = [
   { field: '_id', headerName: 'ИД', width: 20 },
-  { field: 'title', headerName: 'Заглавие', width: 150 },
   {
-    field: 'type',
-    headerName: 'Тип',
-    width: 10,
-    renderCell: (params) => {
-      if (params.value === 'text/xml') return 'xml';
-      if (params.value === 'application/msword') return 'word';
-      if (
-        params.value ===
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      )
-        return 'excel';
-    }
+    field: 'project',
+    headerName: 'Проект',
+    width: 150,
+    renderCell: (params) => <CustomTitleColumn id={params.value} />
   },
+  { field: 'title', headerName: 'Заглавие', width: 150 },
   {
     field: 'document',
     headerName: 'Документ',
@@ -58,10 +50,18 @@ const columns: GridColDef[] = [
     }
   },
   {
-    field: 'project',
-    headerName: 'Проект',
-    width: 150,
-    renderCell: (params) => <CustomTitleColumn id={params.value} />
+    field: 'type',
+    headerName: 'Тип',
+    width: 10,
+    renderCell: (params) => {
+      if (params.value === 'text/xml') return 'xml';
+      if (params.value === 'application/msword') return 'word';
+      if (
+        params.value ===
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      )
+        return 'excel';
+    }
   },
   {
     field: 'updatedAt',

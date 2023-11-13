@@ -8,27 +8,11 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { DataGridLocale } from '@/helpers/DataGridLocale';
 import CustomTitleColumn from '../Documents/CustomeTitleColumn';
 import DownloadIcon from '@mui/icons-material/Download';
-import { downloadDocument } from '@/services/document';
 
 interface Props {
   documents: Document[];
   loading: boolean;
 }
-
-const handleDownloadFile = async (filename: string, fileType: string) => {
-  try {
-    const response = await downloadDocument(filename);
-
-    const file = new Blob([response], { type: fileType });
-    const element = document.createElement('a');
-    element.href = URL.createObjectURL(file);
-    element.download = filename;
-    document.body.appendChild(element);
-    element.click();
-  } catch (error) {
-    console.error('Error downloading file:', error);
-  }
-};
 
 const columns: GridColDef[] = [
   { field: '_id', headerName: 'ИД', width: 20 },
@@ -132,15 +116,35 @@ const columns: GridColDef[] = [
     headerName: 'Действия',
     width: 200,
     renderCell: (params) => {
+      const download = async () => {
+        fetch(
+          `https://enerkon-server.onrender.com/uploads/` +
+            params.row.document.fileName
+        )
+          .then((response) => response.blob())
+          .then((blob) => {
+            const a = document.createElement('a');
+            const blobUrl = URL.createObjectURL(blob);
+            a.href = blobUrl;
+            a.download = params.row.title;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+          })
+          .catch((error) => {
+            console.error('Error downloading file:', error);
+          });
+      };
       return (
         <>
-          <IconButton
-            onClick={() =>
-              handleDownloadFile(params.row.document.fileName, params.row.type)
-            }
-          >
-            <DownloadIcon sx={{ color: '#0096FF' }} />
-          </IconButton>
+          {/* Download */}
+          <Tooltip title="Изтегли">
+            <IconButton onClick={download}>
+              <DownloadIcon sx={{ color: '#0096FF' }} />
+            </IconButton>
+          </Tooltip>
           {!params.row.default && (
             <UpdateDocumentModal
               id={params.row._id}
