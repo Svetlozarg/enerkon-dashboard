@@ -21,7 +21,7 @@ const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  const passwordRegex = /^(?=.*[A-Z])(?=.*[._-])[A-Za-z0-9._-]{6,}$/;
+  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
