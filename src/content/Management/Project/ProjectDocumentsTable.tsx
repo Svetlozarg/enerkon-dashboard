@@ -150,6 +150,7 @@ const columns: GridColDef[] = [
               id={params.row._id}
               title={params.row.title}
               currentStatus={params.row.status}
+              projectId={params.row.project}
             />
           )}
           {!params.row.default && (
@@ -157,6 +158,7 @@ const columns: GridColDef[] = [
               id={params.row._id}
               fileName={params.row.document.fileName}
               title={params.row.title}
+              projectId={params.row.project}
             />
           )}
         </>

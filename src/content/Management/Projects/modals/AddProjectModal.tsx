@@ -113,6 +113,19 @@ export default function AddProjectModal() {
 
           generateKCCTemplate(reportFormData);
 
+          const responseResume = await fetch(
+            'https://ik.imagekit.io/obelussoft/Enerkon/resume.xlsx'
+          );
+          const blobResume = await responseResume.blob();
+
+          // Create a new File object from the blob
+          const fileResume = new File([blobResume], 'resume.xlsx');
+
+          const resumeFormData = new FormData();
+          resumeFormData.append('file', fileResume);
+
+          generateKCCTemplate(resumeFormData);
+
           createProject(formData).then((res) => {
             if (res.success) {
               dispatch(fetchProjects() as any);

@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import { fetchDocuments } from '@/store/slices/document/documentSlice';
 import { updateDocument } from '@/services/document';
+import { fetchProjectDocuments } from '@/store/slices/project/projectDocuments';
 
 const styles = {
   root: {
@@ -54,10 +55,11 @@ interface Props {
   id: string;
   title: any;
   currentStatus: string;
+  projectId?: string;
 }
 
 export default function UpdateDocumentModal(props: Props) {
-  const { id, title, currentStatus } = props;
+  const { id, title, currentStatus, projectId } = props;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -86,6 +88,7 @@ export default function UpdateDocumentModal(props: Props) {
       updateDocument(body, id).then((res) => {
         if (res.success) {
           dispatch(fetchDocuments() as any);
+          if (projectId) dispatch(fetchProjectDocuments(projectId) as any);
           dispatch(
             openNotification({
               isOpen: true,

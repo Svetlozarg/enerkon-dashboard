@@ -16,11 +16,13 @@ import { deleteDocument } from '@/services/document';
 import { fetchDocuments } from '@/store/slices/document/documentSlice';
 import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
+import { fetchProjectDocuments } from '@/store/slices/project/projectDocuments';
 
 interface Props {
   id: string;
   fileName: string;
   title: string;
+  projectId?: string;
 }
 
 const Transition = forwardRef(function Transition(
@@ -33,7 +35,7 @@ const Transition = forwardRef(function Transition(
 });
 
 export default function DeleteDocumentModal(props: Props) {
-  const { id, fileName, title } = props;
+  const { id, fileName, title, projectId } = props;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
@@ -51,6 +53,7 @@ export default function DeleteDocumentModal(props: Props) {
       .then((res) => {
         if (res.success) {
           dispatch(fetchDocuments() as any);
+          if (projectId) dispatch(fetchProjectDocuments(projectId) as any);
           dispatch(
             openNotification({
               isOpen: true,
