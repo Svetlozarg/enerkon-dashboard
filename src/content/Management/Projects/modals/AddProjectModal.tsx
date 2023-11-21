@@ -18,7 +18,7 @@ import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { generateKCCTemplate } from '@/services/document';
+// import { generateKCCTemplate } from '@/services/document';
 
 const styles = {
   root: {
@@ -87,45 +87,6 @@ export default function AddProjectModal() {
           formData.append('files', selectedFile);
           formData.append('files', selectedFileTwo);
 
-          const response = await fetch(
-            'https://ik.imagekit.io/obelussoft/Enerkon/kcc.xlsx'
-          );
-          const blob = await response.blob();
-
-          // Create a new File object from the blob
-          const file = new File([blob], 'kcc.xlsx');
-
-          const kccFormData = new FormData();
-          kccFormData.append('file', file);
-
-          generateKCCTemplate(kccFormData);
-
-          const responseReport = await fetch(
-            'https://ik.imagekit.io/obelussoft/Enerkon/report.docx'
-          );
-          const blobReport = await responseReport.blob();
-
-          // Create a new File object from the blob
-          const fileReport = new File([blobReport], 'report.docx');
-
-          const reportFormData = new FormData();
-          reportFormData.append('file', fileReport);
-
-          generateKCCTemplate(reportFormData);
-
-          const responseResume = await fetch(
-            'https://ik.imagekit.io/obelussoft/Enerkon/resume.xlsx'
-          );
-          const blobResume = await responseResume.blob();
-
-          // Create a new File object from the blob
-          const fileResume = new File([blobResume], 'resume.xlsx');
-
-          const resumeFormData = new FormData();
-          resumeFormData.append('file', fileResume);
-
-          generateKCCTemplate(resumeFormData);
-
           createProject(formData).then((res) => {
             if (res.success) {
               dispatch(fetchProjects() as any);
@@ -142,6 +103,49 @@ export default function AddProjectModal() {
               console.log('Problem');
             }
           });
+
+          // const response = await fetch(
+          //   'https://ik.imagekit.io/obelussoft/Enerkon/kcc.xlsx'
+          // );
+          // const blob = await response.blob();
+
+          // // Create a new File object from the blob
+          // const file = new File([blob], 'kcc.xlsx');
+
+          // const kccFormData = new FormData();
+          // kccFormData.append('file', file);
+
+          // generateKCCTemplate(kccFormData);
+
+          // const responseReport = await fetch(
+          //   'https://ik.imagekit.io/obelussoft/Enerkon/report.docx'
+          // );
+          // const blobReport = await responseReport.blob();
+
+          // // Create a new File object from the blob
+          // const fileReport = new File([blobReport], 'report.docx');
+
+          // const reportFormData = new FormData();
+          // reportFormData.append('file', fileReport);
+
+          // generateKCCTemplate(reportFormData)
+          //   .then(async () => {
+          //     const responseResume = await fetch(
+          //       'https://ik.imagekit.io/obelussoft/Enerkon/resume.xlsx'
+          //     );
+          //     const blobResume = await responseResume.blob();
+
+          //     // Create a new File object from the blob
+          //     const fileResume = new File([blobResume], 'resume.xlsx');
+
+          //     const resumeFormData = new FormData();
+          //     resumeFormData.append('file', fileResume);
+
+          //     generateKCCTemplate(resumeFormData);
+          //   })
+          //   .then(async () => {
+
+          //   });
         } else {
           setError('Моля дабавете xml файл към проекта');
         }
