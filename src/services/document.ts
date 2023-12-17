@@ -60,18 +60,6 @@ export const getDocumentId = async (id: string) => {
   }
 };
 
-export const downloadDocument = async (filename: string) => {
-  try {
-    const response = await customeAxios.get(
-      `${api}/document/download/${filename}`
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 export const getFile = async (filename: string) => {
   try {
     const response = await customeAxios.get(`${api}/document/file/${filename}`);
@@ -110,6 +98,37 @@ export const generateReportTemplate = async (body: Object) => {
           'Content-Type': 'multipart/form-data'
         }
       }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const downloadDocument = async (filename: string) => {
+  try {
+    const response = await customeAxios.get(
+      `${api}/document/download/${filename}`,
+      { responseType: 'blob' }
+    );
+
+    const blob = response.data;
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const previewDocument = async (filename: string) => {
+  try {
+    const response = await customeAxios.get(
+      `${api}/document/preview/${filename}`
     );
 
     return response.data;

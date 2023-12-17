@@ -9,6 +9,7 @@ import { DataGridLocale } from '@/helpers/DataGridLocale';
 import CustomTitleColumn from './CustomeTitleColumn';
 import DownloadIcon from '@mui/icons-material/Download';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { downloadDocument, previewDocument } from '@/services/document';
 // import Link from 'next/link';
 
 interface Props {
@@ -17,7 +18,6 @@ interface Props {
 }
 
 const columns: GridColDef[] = [
-  { field: '_id', headerName: 'ИД', width: 20 },
   {
     field: 'project',
     headerName: 'Проект',
@@ -77,7 +77,9 @@ const columns: GridColDef[] = [
       const year = dateObject.getFullYear();
       const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
       const day = dateObject.getDate().toString().padStart(2, '0');
-      const formattedDate = `${day}.${month}.${year}`;
+      const hours = dateObject.getHours().toString().padStart(2, '0');
+      const minutes = dateObject.getMinutes().toString().padStart(2, '0');
+      const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
       return formattedDate;
     }
   },
@@ -95,7 +97,9 @@ const columns: GridColDef[] = [
       const year = dateObject.getFullYear();
       const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
       const day = dateObject.getDate().toString().padStart(2, '0');
-      const formattedDate = `${day}.${month}.${year}`;
+      const hours = dateObject.getHours().toString().padStart(2, '0');
+      const minutes = dateObject.getMinutes().toString().padStart(2, '0');
+      const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
       return formattedDate;
     }
   },
@@ -117,42 +121,28 @@ const columns: GridColDef[] = [
     headerName: 'Действия',
     width: 200,
     renderCell: (params) => {
-      const download = async () => {
-        fetch(
-          `https://enerkon-server.onrender.com/uploads/` +
-            params.row.document.fileName
-        )
-          .then((response) => response.blob())
-          .then((blob) => {
-            const a = document.createElement('a');
-            const blobUrl = URL.createObjectURL(blob);
-            a.href = blobUrl;
-            a.download = params.row.title;
-            a.style.display = 'none';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(blobUrl);
-          })
-          .catch((error) => {
-            console.error('Error downloading file:', error);
-          });
+      const handlePreviewURL = async () => {
+        const previewURL = await previewDocument(params.row.document.fileName);
+        window.open(previewURL.data, '_blank');
       };
       return (
         <>
           {/* Download */}
           <Tooltip title="Изтегли">
-            <IconButton onClick={download}>
+            <IconButton
+              onClick={async () =>
+                // download the file from this endpoint
+                await downloadDocument(params.row.document.fileName)
+              }
+            >
               <DownloadIcon sx={{ color: '#0096FF' }} />
             </IconButton>
           </Tooltip>
           {/* View */}
           <Tooltip title="Прегледай">
-            {/* <Link href={`/dashboard/document/${params.row.document.fileName}`}> */}
-            <IconButton disabled>
+            <IconButton onClick={handlePreviewURL}>
               <VisibilityIcon sx={{ color: '#4682B4' }} />
             </IconButton>
-            {/* </Link> */}
           </Tooltip>
           {/* Update */}
           {!params.row.default && (

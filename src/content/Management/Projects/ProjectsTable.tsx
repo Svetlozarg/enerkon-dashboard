@@ -15,6 +15,8 @@ import { updateProject } from '@/services/project';
 import { store } from '@/store/store';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import Link from 'next/link';
+import RecreateProjectModal from './modals/RecreatePorjectModal';
+import ConstructionIcon from '@mui/icons-material/Construction';
 
 interface Props {
   projects: Project[];
@@ -64,12 +66,11 @@ const handleProjectFavourite = (id: string, favourite: boolean) => {
 };
 
 const columns: GridColDef[] = [
-  { field: '_id', headerName: 'ИД', width: 100 },
   { field: 'title', headerName: 'Заглавие', width: 250 },
   {
     field: 'updatedAt',
     headerName: 'Дата на промяна',
-    width: 220,
+    width: 180,
     valueGetter: (params) => {
       if (!params.value) {
         return params.value;
@@ -80,14 +81,16 @@ const columns: GridColDef[] = [
       const year = dateObject.getFullYear();
       const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
       const day = dateObject.getDate().toString().padStart(2, '0');
-      const formattedDate = `${day}.${month}.${year}`;
+      const hours = dateObject.getHours().toString().padStart(2, '0');
+      const minutes = dateObject.getMinutes().toString().padStart(2, '0');
+      const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
       return formattedDate;
     }
   },
   {
     field: 'createdAt',
     headerName: 'Дата на създаване',
-    width: 220,
+    width: 180,
     valueGetter: (params) => {
       if (!params.value) {
         return params.value;
@@ -98,14 +101,16 @@ const columns: GridColDef[] = [
       const year = dateObject.getFullYear();
       const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
       const day = dateObject.getDate().toString().padStart(2, '0');
-      const formattedDate = `${day}.${month}.${year}`;
+      const hours = dateObject.getHours().toString().padStart(2, '0');
+      const minutes = dateObject.getMinutes().toString().padStart(2, '0');
+      const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
       return formattedDate;
     }
   },
   {
     field: 'status',
     headerName: 'Статус',
-    width: 100,
+    width: 150,
     renderCell: (params) => {
       if (params.value === 'Unpaid')
         return <p style={{ color: 'red' }}>Неплатен</p>;
@@ -116,7 +121,7 @@ const columns: GridColDef[] = [
   {
     field: 'actions',
     headerName: 'Действия',
-    width: 200,
+    width: 300,
     renderCell: (params) => {
       return (
         <>
@@ -155,6 +160,19 @@ const columns: GridColDef[] = [
             title={params.row.title}
             currentStatus={params.row.status}
           />
+
+          <RecreateProjectModal id={params.row._id} title={params.row.title} />
+
+          <Tooltip title="Замени">
+            <IconButton
+              onClick={() =>
+                handleProjectFavourite(params.row._id, params.row.favourite)
+              }
+              disabled
+            >
+              <ConstructionIcon sx={{ color: '#f4430e' }} />
+            </IconButton>
+          </Tooltip>
 
           <DeleteProjectModal id={params.row._id} title={params.row.title} />
         </>

@@ -98,3 +98,13 @@ export const getProjectsAnalytics = async () => {
     console.error(error);
   }
 };
+
+export const recreateProjectDocuments = async (id: string) => {
+  try {
+    const response = await customeAxios.get(`${api}/project/recreate/${id}`);
+
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
