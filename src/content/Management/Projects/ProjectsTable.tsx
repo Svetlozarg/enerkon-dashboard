@@ -126,7 +126,7 @@ const columns: GridColDef[] = [
       return (
         <>
           <Link href={`/dashboard/project/${params.row._id}`}>
-            <Tooltip title="Виж">
+            <Tooltip title="Прегледай">
               <IconButton>
                 <VisibilityIcon sx={{ color: '#0096FF' }} />
               </IconButton>
@@ -163,7 +163,7 @@ const columns: GridColDef[] = [
 
           <RecreateProjectModal id={params.row._id} title={params.row.title} />
 
-          <Tooltip title="Замени">
+          <Tooltip title="Пресъздай проект">
             <IconButton
               onClick={() =>
                 handleProjectFavourite(params.row._id, params.row.favourite)

@@ -61,7 +61,7 @@ export default function RecreateProjectModal(props: Props) {
 
   return (
     <div>
-      <Tooltip title="Пресъздай">
+      <Tooltip title="Пресъздай проектови файлове">
         <IconButton onClick={handleOpen}>
           <RefreshIcon sx={{ color: '#228B22' }} />
         </IconButton>

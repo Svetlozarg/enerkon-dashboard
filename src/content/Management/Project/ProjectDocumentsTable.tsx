@@ -8,6 +8,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { DataGridLocale } from '@/helpers/DataGridLocale';
 import CustomTitleColumn from '../Documents/CustomeTitleColumn';
 import DownloadIcon from '@mui/icons-material/Download';
+import { downloadDocument, previewDocument } from '@/services/document';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 interface Props {
   documents: Document[];
@@ -116,33 +118,27 @@ const columns: GridColDef[] = [
     headerName: 'Действия',
     width: 200,
     renderCell: (params) => {
-      const download = async () => {
-        fetch(
-          `https://enerkon-server.onrender.com/uploads/` +
-            params.row.document.fileName
-        )
-          .then((response) => response.blob())
-          .then((blob) => {
-            const a = document.createElement('a');
-            const blobUrl = URL.createObjectURL(blob);
-            a.href = blobUrl;
-            a.download = params.row.title;
-            a.style.display = 'none';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(blobUrl);
-          })
-          .catch((error) => {
-            console.error('Error downloading file:', error);
-          });
+      const handlePreviewURL = async () => {
+        const previewURL = await previewDocument(params.row.document.fileName);
+        window.open(previewURL.data, '_blank');
       };
+
       return (
         <>
           {/* Download */}
           <Tooltip title="Изтегли">
-            <IconButton onClick={download}>
+            <IconButton
+              onClick={async () =>
+                await downloadDocument(params.row.document.fileName)
+              }
+            >
               <DownloadIcon sx={{ color: '#0096FF' }} />
+            </IconButton>
+          </Tooltip>
+          {/* View */}
+          <Tooltip title="Прегледай">
+            <IconButton onClick={handlePreviewURL}>
+              <VisibilityIcon sx={{ color: '#4682B4' }} />
             </IconButton>
           </Tooltip>
           {!params.row.default && (

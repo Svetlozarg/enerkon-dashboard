@@ -131,7 +131,6 @@ const columns: GridColDef[] = [
           <Tooltip title="Изтегли">
             <IconButton
               onClick={async () =>
-                // download the file from this endpoint
                 await downloadDocument(params.row.document.fileName)
               }
             >
