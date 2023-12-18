@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import { Box } from '@mui/material';
-import DocumentViewer from '@/content/Management/Document/DocumentViewer';
 
 export default function ProjectPage() {
   const router = useRouter();
@@ -16,9 +15,7 @@ export default function ProjectPage() {
         <meta charSet="UTF-8" />
       </Head>
 
-      <Box sx={{ width: '100%', p: '2rem 4rem' }}>
-        <DocumentViewer />
-      </Box>
+      <Box sx={{ width: '100%', p: '2rem 4rem' }}></Box>
       <Footer />
     </>
   );
