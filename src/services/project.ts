@@ -108,3 +108,21 @@ export const recreateProjectDocuments = async (id: string) => {
     console.error(error);
   }
 };
+
+export const recreateProject = async (id: string, body: Object) => {
+  try {
+    const response = await customeAxios.post(
+      `${api}/project/recreate/${id}`,
+      body,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};

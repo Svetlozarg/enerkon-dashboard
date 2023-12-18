@@ -32,7 +32,7 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function RecreateProjectModal(props: Props) {
+export default function RecreateProjectDocumentsModal(props: Props) {
   const { id, title } = props;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -92,6 +92,10 @@ export default function RecreateProjectModal(props: Props) {
           <DialogContentText sx={{ fontSize: '1rem' }}>
             Сигурни ли сте, че искате да пресъздадете документите към този
             проект?
+          </DialogContentText>
+          <DialogContentText sx={{ fontSize: '1rem', mt: '1rem' }}>
+            Чрез натискането на "Пресъздай" бутона, текущите документи (КСС,
+            Резюме и Доклад) към този проект, ще бъдат изтрити и пресъздадени.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

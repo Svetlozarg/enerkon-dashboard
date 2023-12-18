@@ -15,8 +15,8 @@ import { updateProject } from '@/services/project';
 import { store } from '@/store/store';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import Link from 'next/link';
-import RecreateProjectModal from './modals/RecreatePorjectModal';
-import ConstructionIcon from '@mui/icons-material/Construction';
+import RecreatePorjectDocumentsModal from './modals/RecreatePorjectDocumentsModal';
+import RecreatePorjectModal from './modals/RecreateProjectModal';
 
 interface Props {
   projects: Project[];
@@ -161,18 +161,15 @@ const columns: GridColDef[] = [
             currentStatus={params.row.status}
           />
 
-          <RecreateProjectModal id={params.row._id} title={params.row.title} />
+          <RecreatePorjectDocumentsModal
+            id={params.row._id}
+            title={params.row.title}
+          />
 
-          <Tooltip title="Пресъздай проект">
-            <IconButton
-              onClick={() =>
-                handleProjectFavourite(params.row._id, params.row.favourite)
-              }
-              disabled
-            >
-              <ConstructionIcon sx={{ color: '#f4430e' }} />
-            </IconButton>
-          </Tooltip>
+          <RecreatePorjectModal
+            projectTitle={params.row.title}
+            projectID={params.row._id}
+          />
 
           <DeleteProjectModal id={params.row._id} title={params.row.title} />
         </>

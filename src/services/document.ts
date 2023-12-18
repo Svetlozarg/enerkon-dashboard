@@ -110,7 +110,12 @@ export const downloadDocument = async (filename: string) => {
   try {
     const response = await customeAxios.get(
       `${api}/document/download/${filename}`,
-      { responseType: 'blob' }
+      {
+        responseType: 'blob',
+        headers: {
+          Accept: 'application/octet-stream'
+        }
+      }
     );
 
     const blob = response.data;

@@ -5,19 +5,24 @@ import {
   Modal,
   Typography,
   IconButton,
-  TextField,
   Stack,
   Tooltip,
   CircularProgress
 } from '@mui/material';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import ClearIcon from '@mui/icons-material/Clear';
-import { createProject } from '@/services/project';
+import { recreateProject } from '@/services/project';
 import { fetchProjects } from '@/store/slices/project/projectSlice';
 import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import ConstructionIcon from '@mui/icons-material/Construction';
+import { AxiosResponse } from 'axios';
+
+interface Props {
+  projectTitle: string;
+  projectID: string;
+}
 
 const styles = {
   root: {
@@ -25,7 +30,7 @@ const styles = {
     top: '50%',
     left: '50%',
     width: '600px',
-    height: '650px',
+    height: '600px',
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
     boxShadow: 24,
@@ -47,25 +52,19 @@ const styles = {
   }
 };
 
-export default function AddProjectModal() {
+export default function RecreatePorjectModal(props: Props) {
+  const { projectTitle, projectID } = props;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
-    setProjectTitle('');
     setSelectedFile(null);
     setSelectedFileTwo(null);
     setOpen(false);
   };
-  const [projectTitle, setProjectTitle] = useState<string>('');
-  const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileTwo, setSelectedFileTwo] = useState(null);
-
-  const handleProjectTitleChange = (event: any) => {
-    setProjectTitle(event.target.value);
-  };
 
   const handleFileChange = (event: any) => {
     setSelectedFile(event.target.files[0]);
@@ -75,79 +74,66 @@ export default function AddProjectModal() {
     setSelectedFileTwo(event.target.files[0]);
   };
 
-  const handleProjectCreate = async () => {
-    setError('');
-    if (projectTitle !== '') {
-      const regex = /^[A-Za-zА-Яа-я0-9\s]+$/;
+  const handleProjectRecreate = async () => {
+    if (selectedFile && selectedFileTwo) {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append('files', selectedFile);
+      formData.append('files', selectedFileTwo);
 
-      if (regex.test(projectTitle)) {
-        if (selectedFile && selectedFileTwo) {
-          setLoading(true);
-          const formData = new FormData();
-          formData.append('title', projectTitle);
-          formData.append('files', selectedFile);
-          formData.append('files', selectedFileTwo);
-
-          createProject(formData).then((res) => {
-            if (res.success) {
-              dispatch(fetchProjects() as any);
-              dispatch(
-                openNotification({
-                  isOpen: true,
-                  text: 'Проекта е успешно създаден',
-                  severity: 'success'
-                })
-              );
-              setLoading(false);
-              handleClose();
-            } else if (!res.success) {
-              console.log('Problem');
-            }
-          });
-        } else {
-          if (!selectedFile) {
-            console.log('Моля дабавете xml файл към проекта');
+      recreateProject(projectID, formData).then(
+        (res: AxiosResponse<any, any>) => {
+          if (res.data.success) {
+            dispatch(fetchProjects() as any);
             dispatch(
               openNotification({
                 isOpen: true,
-                text: 'Моля добавете XML файл към проекта',
-                severity: 'error'
+                text: 'Проекта е успешно създаден',
+                severity: 'success'
               })
             );
-          } else if (!selectedFileTwo) {
-            console.log('Моля дабавете Master файл към проекта');
-            dispatch(
-              openNotification({
-                isOpen: true,
-                text: 'Моля добавете Master файл към проекта',
-                severity: 'error'
-              })
-            );
+            setLoading(false);
+            handleClose();
+          } else if (!res.data.success) {
+            console.log('Problem');
           }
         }
-      } else {
-        setError('Заглавието може да съдържа само букви и цифри');
-      }
+      );
     } else {
-      setError('Моля въведете заглавие на проекта');
+      if (!selectedFile) {
+        console.log('Моля дабавете xml файл към проекта');
+        dispatch(
+          openNotification({
+            isOpen: true,
+            text: 'Моля добавете XML файл към проекта',
+            severity: 'error'
+          })
+        );
+      } else if (!selectedFileTwo) {
+        console.log('Моля дабавете Master файл към проекта');
+        dispatch(
+          openNotification({
+            isOpen: true,
+            text: 'Моля добавете Master файл към проекта',
+            severity: 'error'
+          })
+        );
+      }
     }
   };
 
   return (
     <div>
-      <Button
-        sx={{ mt: { xs: 2, md: 0 } }}
-        variant="contained"
-        startIcon={<AddTwoToneIcon fontSize="small" />}
-        onClick={handleOpen}
-      >
-        Добави проект
-      </Button>
+      <Tooltip title="Пресъздай проект">
+        <IconButton onClick={handleOpen}>
+          <ConstructionIcon sx={{ color: '#f4430e' }} />
+        </IconButton>
+      </Tooltip>
       <Modal open={open} onClose={handleClose}>
         <Box sx={styles.root}>
           <Box sx={styles.header}>
             <Typography sx={{ fontSize: '1.5rem' }}>
-              Създаване на нов проект
+              Пресъздай текущият проект: {projectTitle}
             </Typography>
 
             <IconButton onClick={handleClose}>
@@ -156,18 +142,10 @@ export default function AddProjectModal() {
           </Box>
 
           <Box width="100%">
-            <Typography sx={{ fontSize: '1.2rem', mb: '1rem' }}>
-              Заглавие на проекта
+            <Typography sx={{ fontSize: '1rem' }}>
+              Чрез качването на нов XML и Master_file документ, ще се пресъздаде
+              текущият проект и ще му се генерират нови КСС, Доклад и Резюме.
             </Typography>
-
-            <TextField
-              error={error ? true : false}
-              label="Въведете заглавие..."
-              helperText={error ? error : ''}
-              fullWidth
-              value={projectTitle}
-              onChange={handleProjectTitleChange}
-            />
 
             <Typography sx={{ fontSize: '1.2rem', mb: '1rem', mt: '1rem' }}>
               XML Документ
@@ -300,7 +278,7 @@ export default function AddProjectModal() {
             <Button
               variant="contained"
               color="primary"
-              onClick={handleProjectCreate}
+              onClick={handleProjectRecreate}
             >
               Създай
             </Button>
@@ -312,3 +290,4 @@ export default function AddProjectModal() {
     </div>
   );
 }
+// ...
