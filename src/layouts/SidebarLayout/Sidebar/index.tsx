@@ -10,7 +10,8 @@ import {
   Divider,
   useTheme,
   lighten,
-  darken
+  darken,
+  Typography
 } from '@mui/material';
 
 import SidebarMenu from './SidebarMenu';
@@ -54,14 +55,14 @@ function Sidebar() {
       >
         <Scrollbar>
           <Box mt={3}>
-            <Box
-              mx={2}
-              sx={{
-                width: 52
-              }}
-            >
+            <Box mx={2}>
               {/* LOGO */}
-              LOGO
+              <Typography variant="h3" component="h1">
+                ЕНЕРКОН ЕООД
+              </Typography>
+              <Typography variant="h6" component="h1">
+                Административно Табло
+              </Typography>
             </Box>
           </Box>
           <Divider
