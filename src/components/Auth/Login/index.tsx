@@ -11,8 +11,6 @@ import { Formik, Form } from 'formik';
 import { object, string } from 'yup';
 import Link from 'next/link';
 import Alert, { AlertStatuses } from '@/components/MuiComponents/Alert';
-import { useDispatch } from 'react-redux';
-import { userSignInSuccess } from '@/store/slices/auth/authSlice';
 import signIn from '@/services/auth';
 
 const fieldValidation = object({
@@ -31,7 +29,6 @@ type LoginFormValues = {
 };
 
 const Login = () => {
-  const dispatch = useDispatch();
   const [formStatus, setFormStatus] = useState<AlertStatuses>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -44,13 +41,7 @@ const Login = () => {
   const handleFormSubmit = async (values) => {
     try {
       setLoading(true);
-      const response = await signIn(values.email, values.password);
-
-      if (response) {
-        const { id, email, accessToken } = response;
-
-        dispatch(userSignInSuccess({ id, email, accessToken }));
-      }
+      await signIn(values.email, values.password);
     } catch (error) {
       console.log(error.message);
 

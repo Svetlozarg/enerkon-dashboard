@@ -17,9 +17,8 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useDispatch } from 'react-redux';
-import { signOutUser } from '@/store/slices/auth/authSlice';
-import { userEmail } from '@/helpers/GetUser';
+import { userName } from '@/helpers/GetUser';
+import { signOut } from '@/services/auth';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -57,10 +56,8 @@ const UserBoxDescription = styled(Typography)(
 );
 
 function HeaderUserbox() {
-  const dispatch = useDispatch();
-
   const user = {
-    name: userEmail,
+    name: userName,
     avatar: '/static/images/avatars/1.jpg',
     role: 'Собственик'
   };
@@ -77,7 +74,7 @@ function HeaderUserbox() {
   };
 
   const handleSignOut = () => {
-    dispatch(signOutUser() as any);
+    signOut();
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MUITable from '@/components/MuiComponents/MUITable';
 import { formatDate } from '@/helpers/helpers';
 import {
@@ -28,9 +28,8 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
   singleProject
 }) => {
   const dispatch = useDispatch();
-  const [projectDocumentsData, setProjectDocumentsData] = useState<Document[]>(
-    initialProjectDocumentsData
-  );
+  const [projectDocumentsData, setProjectDocumentsData] =
+    useState<Document[]>();
 
   const documentsColumns: GridColDef[] = [
     {
@@ -49,8 +48,14 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
       headerName: 'Тип',
       width: 10,
       renderCell: (params) => {
-        if (params.value === 'application/xml') return 'xml';
-        if (params.value === 'application/msword') return 'word';
+        if (params.value === 'application/xml' || params.value === 'text/xml')
+          return 'xml';
+        if (
+          params.value === 'application/msword' ||
+          params.value ===
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
+          return 'word';
         if (
           params.value ===
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -108,7 +113,9 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
             {/* Download */}
             <Tooltip title="Изтегли">
               <IconButton
-                onClick={async () => await downloadDocument(params.row.title)}
+                onClick={async () =>
+                  await downloadDocument(params.row.title, 'Тест')
+                }
               >
                 <DownloadIcon sx={{ color: '#0096FF' }} />
               </IconButton>
@@ -183,6 +190,10 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    setProjectDocumentsData(initialProjectDocumentsData);
+  }, [initialProjectDocumentsData]);
 
   return (
     <>

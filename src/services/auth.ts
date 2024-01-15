@@ -15,6 +15,7 @@ export default async function signIn(email: string, password: string) {
 
   if (res.ok && user) {
     document.cookie = 'id=' + user._id + '; path=/';
+    document.cookie = 'username=' + user.username + '; path=/';
     document.cookie = 'email=' + user.email + '; path=/';
     document.cookie = 'accessToken=' + user.accessToken + '; path=/';
 

@@ -12,5 +12,6 @@ function getCookie(name: string) {
 }
 
 export const userAccessToken = getCookie('accessToken');
+export const userName = getCookie('username');
 export const userEmail = getCookie('email');
 export const userID = getCookie('id');

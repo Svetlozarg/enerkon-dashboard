@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import { userEmail } from '@/helpers/GetUser';
 import { Project } from '@/services/apiTypes';
+import { createDocument } from '@/services/document';
 
 interface AddProjectModalContentProps {
   setProjectsData: React.Dispatch<React.SetStateAction<Project[]>>;
@@ -73,22 +74,39 @@ const AddProjectModalContent: React.FC<AddProjectModalContentProps> = ({
       return;
     } else {
       setLoading(true);
-      createProject({ title: projectTitle, owner: userEmail }).then((res) => {
-        if (res.success) {
-          setProjectsData((prev) => [...prev, res.data]);
-          dispatch(
-            openNotification({
-              isOpen: true,
-              text: 'Проекта е успешно създаден',
-              severity: 'success'
-            })
-          );
-          setLoading(false);
-          setOpenProjectModal(!openProjectModal);
-        } else if (!res.success) {
-          console.log('Problem');
+      createProject({ title: projectTitle, owner: userEmail }).then(
+        async (res) => {
+          if (res.success) {
+            const { _id } = res.data;
+
+            const projectXMLDocument = {
+              file: selectedFile
+            };
+
+            const masterXLSXDocument = {
+              file: selectedFileTwo
+            };
+
+            await Promise.all([
+              createDocument(_id, projectXMLDocument),
+              createDocument(_id, masterXLSXDocument)
+            ]);
+
+            setProjectsData((prev) => [...prev, res.data]);
+            dispatch(
+              openNotification({
+                isOpen: true,
+                text: 'Проекта е успешно създаден',
+                severity: 'success'
+              })
+            );
+            setLoading(false);
+            setOpenProjectModal(!openProjectModal);
+          } else if (!res.success) {
+            console.log('Problem');
+          }
         }
-      });
+      );
     }
   };
 
