@@ -10,7 +10,6 @@ import {
   ListItem,
   ListItemText,
   Popover,
-  Tooltip,
   Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -63,7 +62,7 @@ function HeaderUserbox() {
   const user = {
     name: userEmail,
     avatar: '/static/images/avatars/1.jpg',
-    role: 'Owner'
+    role: 'Собственик'
   };
 
   const ref = useRef<any>(null);
@@ -119,30 +118,24 @@ function HeaderUserbox() {
         <Divider sx={{ mb: 0 }} />
         <List sx={{ p: 1 }} component="nav">
           <NextLink href="/management/profile" passHref>
-            <Tooltip title="Вашият профил">
-              <ListItem button>
-                <AccountBoxIcon sx={{ fontSize: '1.5rem' }} />
-                <ListItemText primary="Профил" />
-              </ListItem>
-            </Tooltip>
+            <ListItem button>
+              <AccountBoxIcon sx={{ fontSize: '1.5rem' }} />
+              <ListItemText primary="Профил" />
+            </ListItem>
           </NextLink>
           <NextLink href="/management/profile/settings" passHref>
-            <Tooltip title="Настройки на вашия профил">
-              <ListItem button>
-                <SettingsIcon sx={{ fontSize: '1.5rem' }} />
-                <ListItemText primary="Настройки" />
-              </ListItem>
-            </Tooltip>
+            <ListItem button>
+              <SettingsIcon sx={{ fontSize: '1.5rem' }} />
+              <ListItemText primary="Настройки" />
+            </ListItem>
           </NextLink>
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Tooltip title="Излезте от профила">
-            <Button color="primary" fullWidth onClick={handleSignOut}>
-              <LogoutIcon sx={{ mr: 1 }} />
-              Излез
-            </Button>
-          </Tooltip>
+          <Button color="primary" fullWidth onClick={handleSignOut}>
+            <LogoutIcon sx={{ mr: 1 }} />
+            Излез
+          </Button>
         </Box>
       </Popover>
     </>

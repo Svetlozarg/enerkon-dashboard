@@ -1,28 +1,28 @@
+import { ChangeEvent, useEffect, useState } from 'react';
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { ChangeEvent, useEffect, useState } from 'react';
-import PageHeader from '@/content/Dashboards/Tasks/PageHeader';
-import Footer from '@/components/Footer';
+import PageHeader from '@/components/SmallComponents/DashboardPageHeader/PageHeader';
+import Footer from '@/layouts/Footer';
 import {
   Grid,
   Tab,
   Tabs,
-  Divider,
   Container,
   Card,
   Box,
   useTheme,
-  styled
+  styled,
+  Typography,
+  Skeleton
 } from '@mui/material';
-import PageTitleWrapper from '@/components/PageTitleWrapper';
-
-import TasksAnalytics from '@/content/Dashboards/Tasks/TasksAnalytics';
-import Performance from '@/content/Dashboards/Tasks/Performance';
-import Projects from '@/content/Dashboards/Tasks/Projects';
-import TaskSearch from '@/content/Dashboards/Tasks/TaskSearch';
-import { useDispatch } from 'react-redux';
-import { fetchProjects } from '@/store/slices/project/projectSlice';
-import { fetchDocuments } from '@/store/slices/document/documentSlice';
+import PageTitleWrapper from '@/components/SmallComponents/PageTitleWrapper';
+import FavouriteProjects from '@/components/PageComponents/Dashboard/FavouriteProjects/FavouriteProjects';
+import { getProjects, getProjectsAnalytics } from '@/services/project';
+import { Document, Project } from '@/services/apiTypes';
+import TotalAnalytics from '@/components/PageComponents/Dashboard/TotalAnalytics/TotalAnalytics';
+import { getDocuments } from '@/services/document';
+import ProjectAnalytics from '@/components/PageComponents/Dashboard/ProjectAnalytics/ProjectAnalytics';
+import ProjectSearch from '@/components/PageComponents/Dashboard/ProjectSearch/ProjectSearch';
 
 const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
@@ -106,25 +106,73 @@ const TabsContainerWrapper = styled(Box)(
   `
 );
 
-function DashboardTasks() {
+interface Tabs {
+  value: string;
+  label: string;
+}
+
+const DashboardPage = () => {
   const theme = useTheme();
-  const dispatch = useDispatch();
-
+  const [projectsData, setProjectsData] = useState<Project[]>();
+  const [documentsData, setDocumentsData] = useState<Document[]>();
+  const [favouriteProjectsData, setFavouriteProjectsData] =
+    useState<Project[]>();
+  const [projectsAnalyticsData, setProjectsAnalyticsData] =
+    useState<Object[]>();
   const [currentTab, setCurrentTab] = useState<string>('analytics');
-
-  const tabs = [
+  const tabs: Tabs[] = [
     { value: 'analytics', label: 'Общ преглед' },
-    { value: 'taskSearch', label: 'Търси проект' }
+    { value: 'projectSearch', label: 'Търси проект' }
   ];
 
-  const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
-    setCurrentTab(value);
-  };
-
   useEffect(() => {
-    dispatch(fetchProjects() as any);
-    dispatch(fetchDocuments() as any);
-  }, [dispatch]);
+    (async () => {
+      try {
+        const [projectsResponse, documentsResponse, projectsAnalyticsResponse] =
+          await Promise.all([
+            getProjects(),
+            getDocuments(),
+            getProjectsAnalytics()
+          ]);
+
+        const [projectsData, documentsData, projectsAnalyticsData] = [
+          projectsResponse.data,
+          documentsResponse.data,
+          projectsAnalyticsResponse.data
+        ];
+
+        if (
+          !projectsResponse.success ||
+          !documentsResponse.success ||
+          !projectsAnalyticsResponse.success
+        ) {
+          return;
+        }
+
+        const favoriteProjects = projectsData.filter(
+          (project: Project) => project.favourite === true
+        );
+
+        const filteredProjectsAnalyticsData: Object[] = [
+          {
+            name: 'Платени проекти',
+            data: projectsAnalyticsData.paid
+          },
+          {
+            name: 'Неплатени проекти',
+            data: projectsAnalyticsData.unpaid
+          }
+        ];
+
+        setProjectsData(projectsData);
+        setDocumentsData(documentsData);
+        setFavouriteProjectsData(favoriteProjects);
+        setProjectsAnalyticsData(filteredProjectsAnalyticsData);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
   return (
     <>
@@ -140,18 +188,27 @@ function DashboardTasks() {
       <Container maxWidth="lg">
         <TabsContainerWrapper>
           <Tabs
-            onChange={handleTabsChange}
+            onChange={(_event: ChangeEvent<{}>, value: string): void => {
+              setCurrentTab(value);
+            }}
             value={currentTab}
             variant="scrollable"
             scrollButtons="auto"
-            textColor="primary"
-            indicatorColor="primary"
           >
             {tabs.map((tab) => (
-              <Tab key={tab.value} label={tab.label} value={tab.value} />
+              <Tab
+                key={tab.value}
+                label={
+                  <Typography component="p" variant="h4">
+                    {tab.label}
+                  </Typography>
+                }
+                value={tab.value}
+              />
             ))}
           </Tabs>
         </TabsContainerWrapper>
+
         <Card variant="outlined">
           <Grid
             container
@@ -162,38 +219,66 @@ function DashboardTasks() {
           >
             {currentTab === 'analytics' && (
               <>
-                <Grid item xs={12}>
-                  <Box p={4}>
-                    <Projects />
-                  </Box>
-                  <Divider />
+                <Grid item xs={12} p={4}>
+                  <FavouriteProjects
+                    favouriteProjectsData={favouriteProjectsData}
+                    setFavouriteProjectsData={setFavouriteProjectsData}
+                  />
                 </Grid>
-                <Grid item xs={12}>
-                  <Divider />
-                  <Box
-                    p={4}
-                    sx={{
-                      background: `${theme.colors.alpha.black[5]}`
-                    }}
-                  >
-                    <Grid container spacing={4}>
+
+                <Grid
+                  item
+                  xs={12}
+                  p={4}
+                  sx={{
+                    background: `${theme.colors.alpha.black[5]}`,
+                    borderTop: `1px solid ${theme.colors.alpha.black[10]}`
+                  }}
+                >
+                  <Grid container spacing={4}>
+                    {projectsAnalyticsData ? (
                       <Grid item xs={12} sm={6} md={8}>
-                        <TasksAnalytics />
+                        <ProjectAnalytics
+                          projectsAnalyticsData={projectsAnalyticsData}
+                        />
                       </Grid>
+                    ) : (
+                      <Skeleton
+                        variant="rectangular"
+                        animation="wave"
+                        width={760}
+                        height={300}
+                        sx={{ my: 2, ml: 4, borderRadius: '10px' }}
+                      />
+                    )}
+
+                    {projectsData && documentsData ? (
                       <Grid item xs={12} sm={6} md={4}>
-                        <Performance />
+                        <TotalAnalytics
+                          totalProjects={projectsData.length}
+                          totalDocuments={documentsData.length}
+                        />
                       </Grid>
-                    </Grid>
-                  </Box>
-                  <Divider />
+                    ) : (
+                      <Skeleton
+                        variant="rectangular"
+                        animation="wave"
+                        width={374}
+                        height={300}
+                        sx={{ my: 2, ml: 2, borderRadius: '10px' }}
+                      />
+                    )}
+                  </Grid>
                 </Grid>
               </>
             )}
-            {currentTab === 'taskSearch' && (
-              <Grid item xs={12}>
-                <Box p={4}>
-                  <TaskSearch />
-                </Box>
+
+            {currentTab === 'projectSearch' && (
+              <Grid item xs={12} p={4}>
+                <ProjectSearch
+                  projects={projectsData}
+                  documents={documentsData}
+                />
               </Grid>
             )}
           </Grid>
@@ -202,8 +287,8 @@ function DashboardTasks() {
       <Footer />
     </>
   );
-}
+};
 
-DashboardTasks.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+DashboardPage.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
 
-export default DashboardTasks;
+export default DashboardPage;

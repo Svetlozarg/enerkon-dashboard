@@ -1,14 +1,14 @@
 import { useState, ChangeEvent } from 'react';
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import PageHeader from '@/content/Management/Users/settings/PageHeader';
-import PageTitleWrapper from '@/components/PageTitleWrapper';
+import PageHeader from '@/components/PageComponents/Settings/PageHeader';
+import PageTitleWrapper from '@/components/SmallComponents/PageTitleWrapper';
 import { Container, Tabs, Tab, Grid } from '@mui/material';
-import Footer from '@/components/Footer';
+import Footer from '@/layouts/Footer';
 import { styled } from '@mui/material/styles';
 
-import EditProfileTab from '@/content/Management/Users/settings/EditProfileTab';
-import SecurityTab from '@/content/Management/Users/settings/SecurityTab';
+import EditProfileTab from '@/components/PageComponents/Settings/EditProfileTab';
+import SecurityTab from '@/components/PageComponents/Settings/SecurityTab';
 
 const TabsWrapper = styled(Tabs)(
   () => `

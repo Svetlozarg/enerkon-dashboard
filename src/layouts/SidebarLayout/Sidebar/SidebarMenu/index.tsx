@@ -158,6 +158,35 @@ const SubMenuWrapper = styled(Box)(
 `
 );
 
+type Page = {
+  title: string;
+  href: string;
+  icon: React.ElementType;
+};
+
+const pages: Page[] = [
+  {
+    title: 'Начало',
+    href: '/',
+    icon: HomeIcon
+  },
+  {
+    title: 'Проекти',
+    href: '/projects',
+    icon: ApartmentIcon
+  },
+  {
+    title: 'Документи',
+    href: '/documents',
+    icon: FolderIcon
+  },
+  {
+    title: 'Настройки',
+    href: '/management/profile/settings',
+    icon: BrightnessLowTwoToneIcon
+  }
+];
+
 function SidebarMenu() {
   const { closeSidebar } = useContext(SidebarContext);
   const router = useRouter();
@@ -176,66 +205,21 @@ function SidebarMenu() {
         >
           <SubMenuWrapper>
             <List component="div">
-              <ListItem component="div">
-                <NextLink href="/" passHref>
-                  <Button
-                    className={currentRoute === '/' ? 'active' : ''}
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<HomeIcon />}
-                  >
-                    Начало
-                  </Button>
-                </NextLink>
-              </ListItem>
-              <ListItem component="div">
-                <NextLink href="/dashboard/projects" passHref>
-                  <Button
-                    className={
-                      currentRoute === '/dashboard/projects' ? 'active' : ''
-                    }
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<ApartmentIcon />}
-                  >
-                    Проекти
-                  </Button>
-                </NextLink>
-              </ListItem>
-              <ListItem component="div">
-                <NextLink href="/dashboard/documents" passHref>
-                  <Button
-                    className={
-                      currentRoute === '/dashboard/documents' ? 'active' : ''
-                    }
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<FolderIcon />}
-                  >
-                    Документи
-                  </Button>
-                </NextLink>
-              </ListItem>
-              <ListItem component="div">
-                <NextLink href="/management/profile/settings" passHref>
-                  <Button
-                    className={
-                      currentRoute === '/management/profile/settings'
-                        ? 'active'
-                        : ''
-                    }
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<BrightnessLowTwoToneIcon />}
-                  >
-                    Настройки
-                  </Button>
-                </NextLink>
-              </ListItem>
+              {pages.map((page, index) => (
+                <ListItem key={index}>
+                  <NextLink href={page.href} passHref>
+                    <Button
+                      className={currentRoute === page.href ? 'active' : ''}
+                      disableRipple
+                      component="a"
+                      onClick={closeSidebar}
+                      startIcon={<page.icon />}
+                    >
+                      {page.title}
+                    </Button>
+                  </NextLink>
+                </ListItem>
+              ))}
             </List>
           </SubMenuWrapper>
         </List>

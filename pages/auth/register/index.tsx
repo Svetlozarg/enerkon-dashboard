@@ -1,6 +1,4 @@
-import Footer from '@/components/Footer';
-import Register from '@/components/Register';
-import { Container } from '@mui/material';
+import Register from '@/components/Auth/Register/index';
 import Head from 'next/head';
 
 function RegisterPage() {
@@ -9,10 +7,7 @@ function RegisterPage() {
       <Head>
         <title>Enerkon - Register</title>
       </Head>
-      <Container sx={{ mt: 3}} maxWidth="lg">
-        <Register />
-      </Container>
-      <Footer />
+      <Register />
     </>
   );
 }

@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import Footer from '@/components/Footer';
+import Footer from '@/layouts/Footer';
 
 import { Grid, Container } from '@mui/material';
 
-import ProfileCover from '@/content/Management/Users/details/ProfileCover';
-import RecentActivity from '@/content/Management/Users/details/RecentActivity';
+import ProfileCover from '@/components/PageComponents/Profile/ProfileCover';
+import RecentActivity from '@/components/PageComponents/Profile/RecentActivity';
 
 function ManagementUserProfile() {
   const user = {

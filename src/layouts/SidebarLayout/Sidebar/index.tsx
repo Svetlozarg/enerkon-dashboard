@@ -1,7 +1,6 @@
 import { useContext } from 'react';
-import Scrollbar from 'src/components/Scrollbar';
+import Scrollbar from '@/components/SmallComponents/Scrollbar';
 import { SidebarContext } from 'src/contexts/SidebarContext';
-
 import {
   Box,
   Drawer,
@@ -13,9 +12,9 @@ import {
   darken,
   Typography
 } from '@mui/material';
-
 import SidebarMenu from './SidebarMenu';
-import Logo from 'src/components/LogoSign';
+import Logo from '@/components/SmallComponents/LogoSign';
+import Link from 'next/link';
 
 const SidebarWrapper = styled(Box)(
   ({ theme }) => `
@@ -57,12 +56,16 @@ function Sidebar() {
           <Box mt={3}>
             <Box mx={2}>
               {/* LOGO */}
-              <Typography variant="h3" component="h1">
-                ЕНЕРКОН ЕООД
-              </Typography>
-              <Typography variant="h6" component="h1">
-                Административно Табло
-              </Typography>
+              <Link href="/">
+                <Box sx={{ cursor: 'pointer', userSelect: 'none' }}>
+                  <Typography variant="h3" component="h1">
+                    ЕНЕРКОН ЕООД
+                  </Typography>
+                  <Typography variant="h6" component="h1">
+                    Административно Табло
+                  </Typography>
+                </Box>
+              </Link>
             </Box>
           </Box>
           <Divider

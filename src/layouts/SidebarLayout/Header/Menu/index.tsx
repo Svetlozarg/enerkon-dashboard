@@ -1,6 +1,6 @@
 import { Box, Menu, MenuItem, styled } from '@mui/material';
 import { useRef, useState } from 'react';
-import Link from 'src/components/Link';
+import Link from '@/components/SmallComponents/Link';
 
 const ListWrapper = styled(Box)(
   ({ theme }) => `

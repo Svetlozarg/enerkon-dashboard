@@ -1,9 +1,12 @@
 import { customeAxios } from '@/plugins/axios';
 const api = process.env.NEXT_PUBLIC_API_LINK;
+import { userEmail } from '@/helpers/GetUser';
 
 export const getDocuments = async () => {
   try {
-    const response = await customeAxios.get(`${api}/document/documents`);
+    const response = await customeAxios.get(
+      `${api}/document/${userEmail}/documents`
+    );
 
     return response.data;
   } catch (error) {
@@ -11,13 +14,17 @@ export const getDocuments = async () => {
   }
 };
 
-export const createDocument = async (body: Object) => {
+export const createDocument = async (projectId: string, body: Object) => {
   try {
-    const response = await customeAxios.post(`${api}/document/create`, body, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
+    const response = await customeAxios.post(
+      `${api}/document/create/${userEmail}/${projectId}`,
+      body,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       }
-    });
+    );
 
     return response.data;
   } catch (error) {

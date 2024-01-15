@@ -1,17 +1,12 @@
 import {
   Box,
-  Card,
   Typography,
   Container,
-  Divider,
   Button,
-  FormControl,
-  OutlinedInput,
-  InputAdornment,
-  styled
+  styled,
+  Stack
 } from '@mui/material';
 import Head from 'next/head';
-import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import type { ReactElement } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
 
@@ -35,18 +30,6 @@ const TopWrapper = styled(Box)(
 `
 );
 
-const OutlinedInputWrapper = styled(OutlinedInput)(
-  ({ theme }) => `
-    background-color: ${theme.colors.alpha.white[100]};
-`
-);
-
-const ButtonSearch = styled(Button)(
-  ({ theme }) => `
-    margin-right: -${theme.spacing(1)};
-`
-);
-
 function Status404() {
   return (
     <>
@@ -61,41 +44,13 @@ function Status404() {
               <Typography variant="h2" sx={{ my: 2 }}>
                 Страницата, която търсите, не съществува.
               </Typography>
-              <Typography
-                variant="h4"
-                color="text.secondary"
-                fontWeight="normal"
-                sx={{ mb: 4 }}
-              >
-                Ако търсите нещо специфично, търсенето по-долу трябва да
-                помогне!
-              </Typography>
             </Box>
             <Container maxWidth="sm">
-              <Card sx={{ textAlign: 'center', mt: 3, p: 4 }}>
-                <FormControl variant="outlined" fullWidth>
-                  <OutlinedInputWrapper
-                    type="text"
-                    placeholder="Термини за търсене..."
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <ButtonSearch variant="contained" size="small">
-                          Търси
-                        </ButtonSearch>
-                      </InputAdornment>
-                    }
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <SearchTwoToneIcon />
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
-                <Divider sx={{ my: 4 }}>ИЛИ</Divider>
+              <Stack>
                 <Button href="/" variant="outlined">
                   Отидете в началната страница
                 </Button>
-              </Card>
+              </Stack>
             </Container>
           </Container>
         </TopWrapper>

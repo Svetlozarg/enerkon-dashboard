@@ -7,11 +7,10 @@ function getCookie(name: string) {
         return decodeURIComponent(cookieValue);
       }
     }
-    return null; // Cookie not found
+    return null;
   }
 }
 
-// Retrieve the accessToken, email, and id cookies
 export const userAccessToken = getCookie('accessToken');
 export const userEmail = getCookie('email');
 export const userID = getCookie('id');

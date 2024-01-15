@@ -1,10 +1,13 @@
 import { customeAxios } from '@/plugins/axios';
 const api = process.env.NEXT_PUBLIC_API_LINK;
+import { userEmail } from '@/helpers/GetUser';
 
 // Get All Projects
 export const getProjects = async () => {
   try {
-    const response = await customeAxios.get(`${api}/project/projects`);
+    const response = await customeAxios.get(
+      `${api}/project/${userEmail}/projects`
+    );
 
     return response.data;
   } catch (error) {
@@ -16,9 +19,9 @@ export const getProjects = async () => {
 export const createProject = async (body: Object) => {
   try {
     const response = await customeAxios.post(`${api}/project/create`, body, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+      // headers: {
+      //   'Content-Type': 'multipart/form-data'
+      // }
     });
 
     return response.data;
@@ -90,7 +93,7 @@ export const getProjectLog = async (id: string) => {
 export const getProjectsAnalytics = async () => {
   try {
     const response = await customeAxios.get(
-      `${api}/project/projects/analytics`
+      `${api}/project/${userEmail}/analytics`
     );
 
     return response.data;
