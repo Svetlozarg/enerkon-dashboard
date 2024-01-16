@@ -67,52 +67,6 @@ export const getDocumentId = async (id: string) => {
   }
 };
 
-export const getFile = async (filename: string) => {
-  try {
-    const response = await customeAxios.get(`${api}/document/file/${filename}`);
-
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const generateKCCTemplate = async (body: Object) => {
-  try {
-    const response = await customeAxios.post(
-      `${api}/document/template/kcc`,
-      body,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const generateReportTemplate = async (body: Object) => {
-  try {
-    const response = await customeAxios.post(
-      `${api}/document/template/report`,
-      body,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 export const downloadDocument = async (filename: string) => {
   try {
     const response = await customeAxios.get(
@@ -139,6 +93,24 @@ export const previewDocument = async (filename: string) => {
     const response = await customeAxios.get(
       `${api}/document/preview/${filename}`
     );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const generateKCCDocument = async (
+  projectName: string,
+  projectId: string,
+  owner: string
+) => {
+  try {
+    const response = await customeAxios.post(`${api}/document/generate/kcc`, {
+      projectName: projectName,
+      projectId: projectId,
+      owner: owner
+    });
 
     return response.data;
   } catch (error) {

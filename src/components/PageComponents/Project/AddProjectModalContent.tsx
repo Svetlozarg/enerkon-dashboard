@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import { userEmail } from '@/helpers/GetUser';
 import { Project } from '@/services/apiTypes';
-import { createDocument } from '@/services/document';
+import { createDocument, generateKCCDocument } from '@/services/document';
 
 interface AddProjectModalContentProps {
   setProjectsData: React.Dispatch<React.SetStateAction<Project[]>>;
@@ -89,7 +89,8 @@ const AddProjectModalContent: React.FC<AddProjectModalContentProps> = ({
 
             await Promise.all([
               createDocument(_id, projectXMLDocument),
-              createDocument(_id, masterXLSXDocument)
+              createDocument(_id, masterXLSXDocument),
+              generateKCCDocument(projectTitle, _id, userEmail)
             ]);
 
             setProjectsData((prev) => [...prev, res.data]);
