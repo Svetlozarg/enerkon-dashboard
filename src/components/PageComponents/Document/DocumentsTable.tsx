@@ -19,11 +19,15 @@ import { Document } from '@/services/apiTypes';
 import ProjectTitle from '@/components/SmallComponents/ProjectTitle/ProjecTitle';
 
 interface DocumentsTableProps {
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   initialProjectDocumentsData: Document[];
   singleProject: boolean;
 }
 
 const DocumentsTable: React.FC<DocumentsTableProps> = ({
+  loading,
+  setLoading,
   initialProjectDocumentsData,
   singleProject
 }) => {
@@ -103,19 +107,16 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
       headerName: 'Действия',
       width: 200,
       renderCell: (params) => {
-        const handlePreviewURL = async () => {
-          const previewURL = await previewDocument(params.row.title);
-          window.open(previewURL.data, '_blank');
-        };
-
         return (
           <>
             {/* Download */}
             <Tooltip title="Изтегли">
               <IconButton
-                onClick={async () =>
-                  await downloadDocument(params.row.title, 'Тест')
-                }
+                onClick={async () => {
+                  setLoading(true);
+                  await downloadDocument(params.row.title);
+                  setLoading(false);
+                }}
               >
                 <DownloadIcon sx={{ color: '#0096FF' }} />
               </IconButton>
@@ -123,7 +124,14 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
 
             {/* View */}
             <Tooltip title="Прегледай">
-              <IconButton onClick={handlePreviewURL}>
+              <IconButton
+                onClick={async () => {
+                  setLoading(true);
+                  const previewURL = await previewDocument(params.row.title);
+                  window.open(previewURL.data, '_blank');
+                  setLoading(false);
+                }}
+              >
                 <VisibilityIcon sx={{ color: '#4682B4' }} />
               </IconButton>
             </Tooltip>
@@ -162,6 +170,8 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
 
   const handleDeleteDocument = async (id: string, fileName: string) => {
     try {
+      setLoading(true);
+
       const body: Object = {
         id: id,
         fileName: fileName
@@ -182,6 +192,7 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
               severity: 'success'
             })
           );
+          setLoading(false);
         } else if (!res.success) {
           console.log('Problem');
         }
@@ -196,16 +207,12 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
   }, [initialProjectDocumentsData]);
 
   return (
-    <>
-      {projectDocumentsData && (
-        <MUITable
-          rows={projectDocumentsData}
-          columns={documentsColumns}
-          loading={!projectDocumentsData ? true : false}
-          singleProject={singleProject}
-        />
-      )}
-    </>
+    <MUITable
+      rows={projectDocumentsData}
+      columns={documentsColumns}
+      loading={loading}
+      singleProject={singleProject}
+    />
   );
 };
 

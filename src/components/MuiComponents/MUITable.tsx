@@ -21,7 +21,7 @@ const MUITable: React.FC<MUITableProps> = ({
     <Box sx={{ height: 600, width: '100%', bgcolor: '#101632' }}>
       <DataGrid
         getRowId={(row) => row._id}
-        rows={rows}
+        rows={rows ? rows : []}
         columns={columns}
         initialState={{
           pagination: {

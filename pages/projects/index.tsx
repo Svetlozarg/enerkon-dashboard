@@ -6,9 +6,7 @@ import {
   Container,
   Typography,
   IconButton,
-  Tooltip,
-  CircularProgress,
-  Stack
+  Tooltip
 } from '@mui/material';
 import Footer from '@/layouts/Footer';
 import { useEffect, useState } from 'react';
@@ -220,6 +218,7 @@ function ProjectsPage() {
 
   const handleDeleteProject = async (id: string) => {
     try {
+      setLoading(true);
       const body: Object = {
         id: id
       };
@@ -240,6 +239,7 @@ function ProjectsPage() {
                 severity: 'success'
               })
             );
+            setLoading(false);
           } else if (!res.success) {
             console.log('Problem');
           }
@@ -279,13 +279,7 @@ function ProjectsPage() {
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid item xs={12}>
-          {projectsData ? (
-            <MUITable rows={projectsData} columns={columns} loading={loading} />
-          ) : (
-            <Stack justifyContent="center" alignItems="center" height={600}>
-              <CircularProgress size={100} />
-            </Stack>
-          )}
+          <MUITable rows={projectsData} columns={columns} loading={loading} />
         </Grid>
       </Container>
       <Footer />

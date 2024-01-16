@@ -1,24 +1,45 @@
 import { useEffect, useState } from 'react';
+import { Box, Skeleton } from '@mui/material';
 import { getProjectId } from '@/services/project';
+import { Project } from '@/services/apiTypes';
 
 interface ProjectTitleProps {
   projectId: string;
 }
 
 const ProjectTitle: React.FC<ProjectTitleProps> = ({ projectId }) => {
-  const [project, setProject] = useState(null);
+  const [project, setProject] = useState<Project>();
 
   useEffect(() => {
-    getProjectId(projectId)
-      .then((response) => {
-        setProject(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    (async () => {
+      if (projectId) {
+        try {
+          const project = await getProjectId(projectId);
+
+          if (project.success) {
+            setProject(project.data);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    })();
   }, [projectId]);
 
-  return <div>{project ? project.title : 'Зареждане...'}</div>;
+  return (
+    <Box>
+      {project ? (
+        project.title
+      ) : (
+        <Skeleton
+          variant="rectangular"
+          width={100}
+          height={15}
+          animation="wave"
+        />
+      )}
+    </Box>
+  );
 };
 
 export default ProjectTitle;

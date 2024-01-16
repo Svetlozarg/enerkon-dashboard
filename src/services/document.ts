@@ -118,20 +118,17 @@ export const downloadDocument = async (filename: string) => {
     const response = await customeAxios.get(
       `${api}/document/download/${filename}`,
       {
-        responseType: 'blob',
-        headers: {
-          Accept: 'application/octet-stream'
-        }
+        responseType: 'blob'
       }
     );
 
-    const blob = response.data;
-    const url = URL.createObjectURL(blob);
+    const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
     link.href = url;
-    link.download = filename;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
     link.click();
-    URL.revokeObjectURL(url);
+    link.parentNode.removeChild(link);
   } catch (error) {
     console.error(error);
   }

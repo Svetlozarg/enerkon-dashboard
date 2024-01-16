@@ -11,13 +11,7 @@ import {
   getProjectId,
   getProjectLog
 } from '@/services/project';
-import {
-  CircularProgress,
-  Container,
-  Grid,
-  Stack,
-  Typography
-} from '@mui/material';
+import { Container, Grid, Stack, Typography } from '@mui/material';
 import DocumentsTable from '@/components/PageComponents/Document/DocumentsTable';
 import MUITable from '@/components/MuiComponents/MUITable';
 import { GridColDef } from '@mui/x-data-grid';
@@ -30,7 +24,7 @@ const projectLogColumns: GridColDef[] = [
     width: 300,
     sortable: false,
     renderCell: (params) => {
-      return params.row.log[0].title;
+      return params.row.title;
     }
   },
   {
@@ -39,7 +33,7 @@ const projectLogColumns: GridColDef[] = [
     width: 300,
     sortable: false,
     renderCell: (params) => {
-      return params.row.log[0].action;
+      return params.row.action;
     }
   },
   {
@@ -48,10 +42,10 @@ const projectLogColumns: GridColDef[] = [
     width: 200,
     sortable: false,
     valueGetter: (params) => {
-      if (!params.row.log[0].date) {
-        return params.row.log[0].date;
+      if (!params.row.date) {
+        return params.row.date;
       }
-      return formatDate(params.row.log[0].date);
+      return formatDate(params.row.date);
     }
   }
 ];
@@ -62,9 +56,11 @@ export default function ProjectPage() {
   const [projectData, setProjectData] = useState<Project>();
   const [projectDocumentsData, setProjectDocumentsData] = useState<any>();
   const [projectLogData, setProjectLogData] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       try {
         if (!id) return;
 
@@ -77,19 +73,15 @@ export default function ProjectPage() {
 
           const projectLogData = await getProjectLog(id as string);
 
-          const sortedProjectLogData = projectLogData.data.sort(
-            (a: any, b: any) =>
-              (new Date(b.log[0].date) as any) -
-              (new Date(a.log[0].date) as any)
-          );
-
           if (projectDocumentsData.success) {
             setProjectDocumentsData(projectDocumentsData.data);
           }
 
           if (projectLogData.success) {
-            setProjectLogData(sortedProjectLogData);
+            setProjectLogData(projectLogData.data[0].log);
           }
+
+          setLoading(false);
         }
       } catch (error) {
         console.log(error);
@@ -111,36 +103,32 @@ export default function ProjectPage() {
           />
         </PageTitleWrapper>
 
-        {projectDocumentsData && projectLogData ? (
-          <Container maxWidth="lg">
-            <Grid item xs={12}>
-              <Typography component="h4" variant="h3" mb={2}>
-                Документи
-              </Typography>
+        <Container maxWidth="lg">
+          <Grid item xs={12}>
+            <Typography component="h4" variant="h3" mb={2}>
+              Документи
+            </Typography>
 
-              <DocumentsTable
-                initialProjectDocumentsData={projectDocumentsData}
-                singleProject
-              />
-            </Grid>
+            <DocumentsTable
+              loading={loading}
+              setLoading={setLoading}
+              initialProjectDocumentsData={projectDocumentsData}
+              singleProject
+            />
+          </Grid>
 
-            <Grid item xs={12} mt={8}>
-              <Typography component="h4" variant="h3" mb={2}>
-                История
-              </Typography>
+          <Grid item xs={12} mt={8}>
+            <Typography component="h4" variant="h3" mb={2}>
+              История
+            </Typography>
 
-              <MUITable
-                rows={projectLogData}
-                columns={projectLogColumns}
-                loading={!projectLogData ? true : false}
-              />
-            </Grid>
-          </Container>
-        ) : (
-          <Stack justifyContent="center" alignItems="center" height={600}>
-            <CircularProgress size={100} />
-          </Stack>
-        )}
+            <MUITable
+              rows={projectLogData}
+              columns={projectLogColumns}
+              loading={loading}
+            />
+          </Grid>
+        </Container>
       </Stack>
       <Footer />
     </>

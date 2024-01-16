@@ -3,7 +3,7 @@ import PageHeader from '@/components/SmallComponents/PageHeader/PageHeader';
 import PageTitleWrapper from '@/components/SmallComponents/PageTitleWrapper';
 import Footer from '@/layouts/Footer';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { CircularProgress, Container, Grid, Stack } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 import Head from 'next/head';
 import { getDocuments } from '@/services/document';
 import { Document, Project } from '@/services/apiTypes';
@@ -16,9 +16,11 @@ const DocumentsPage = () => {
   const [projectsData, setProjectsData] = useState<Project[]>();
   const [documentsData, setDocumentsData] = useState<Document[]>();
   const [openDocumentModal, setOpenDocumentModal] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       try {
         const projectsData = await getProjects();
         const documentsData = await getDocuments();
@@ -30,6 +32,8 @@ const DocumentsPage = () => {
         if (documentsData.success) {
           setDocumentsData(documentsData.data);
         }
+
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -64,16 +68,12 @@ const DocumentsPage = () => {
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid item xs={12}>
-          {documentsData ? (
-            <DocumentsTable
-              initialProjectDocumentsData={documentsData}
-              singleProject={false}
-            />
-          ) : (
-            <Stack justifyContent="center" alignItems="center" height={600}>
-              <CircularProgress size={100} />
-            </Stack>
-          )}
+          <DocumentsTable
+            loading={loading}
+            setLoading={setLoading}
+            initialProjectDocumentsData={documentsData}
+            singleProject={false}
+          />
         </Grid>
       </Container>
       <Footer />
