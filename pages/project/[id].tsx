@@ -79,7 +79,7 @@ export default function ProjectPage() {
           }
 
           if (projectLogData.success) {
-            setProjectLogData(projectLogData.data[0].log);
+            setProjectLogData(projectLogData.data[0].log.reverse());
           }
 
           setLoading(false);
