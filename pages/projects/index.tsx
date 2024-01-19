@@ -27,8 +27,8 @@ import Dialog from '@/components/MuiComponents/Dialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import UpdateProjectModal from '@/components/PageComponents/Project/UpdateProjectModal';
 import Link from 'next/link';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import ConstructionIcon from '@mui/icons-material/Construction';
+// import RefreshIcon from '@mui/icons-material/Refresh';
+// import ConstructionIcon from '@mui/icons-material/Construction';
 import { signOut } from '@/services/auth';
 
 function ProjectsPage() {
