@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function SidebarProvider({ children }: Props) {
-  const [sidebarToggle, setSidebarToggle] = useState(false);
+  const [sidebarToggle, setSidebarToggle] = useState<boolean>(false);
   const toggleSidebar = () => {
     setSidebarToggle(!sidebarToggle);
   };

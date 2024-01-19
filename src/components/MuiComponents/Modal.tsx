@@ -1,7 +1,14 @@
 import { Dispatch, SetStateAction, ReactElement } from 'react';
-import { Box, Typography, Modal as MUIModal, IconButton } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Modal as MUIModal,
+  IconButton,
+  Stack
+} from '@mui/material';
 import Button from './Button';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import CloseIcon from '@mui/icons-material/Close';
 
 const style = {
   position: 'absolute',
@@ -53,9 +60,18 @@ const Modal: React.FC<ModalProps> = ({
 
       <MUIModal open={open} onClose={handleClose}>
         <Box sx={style}>
-          <Typography variant="h3" component="h3">
-            {modalTitle}
-          </Typography>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h3" component="h3">
+              {modalTitle}
+            </Typography>
+            <IconButton onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </Stack>
           {children}
         </Box>
       </MUIModal>

@@ -29,6 +29,7 @@ import UpdateProjectModal from '@/components/PageComponents/Project/UpdateProjec
 import Link from 'next/link';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ConstructionIcon from '@mui/icons-material/Construction';
+import { signOut } from '@/services/auth';
 
 function ProjectsPage() {
   const dispatch = useDispatch();
@@ -129,18 +130,18 @@ function ProjectsPage() {
             </Tooltip>
 
             {/* TODO */}
-            <Tooltip title="Пресъздай проектови файлове">
+            {/* <Tooltip title="Пресъздай проектови файлове">
               <IconButton disabled>
                 <RefreshIcon sx={{ color: '#228B22' }} />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             {/* TODO */}
-            <Tooltip title="Пресъздай проект">
+            {/* <Tooltip title="Пресъздай проект">
               <IconButton disabled>
                 <ConstructionIcon sx={{ color: '#F4430E' }} />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             {/* Delete */}
             <Tooltip title="Изтрий">
@@ -167,6 +168,8 @@ function ProjectsPage() {
         if (projectsData.success) {
           setProjectsData(projectsData.data);
           setLoading(false);
+        } else {
+          signOut();
         }
       } catch (error) {
         console.log(error);
@@ -179,6 +182,7 @@ function ProjectsPage() {
     favourite: boolean
   ) => {
     try {
+      setLoading(true);
       const body: Object = {
         favourite: !favourite
       };
@@ -198,6 +202,7 @@ function ProjectsPage() {
             return updatedData;
           });
 
+          setLoading(false);
           dispatch(
             openNotification({
               isOpen: true,

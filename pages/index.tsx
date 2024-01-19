@@ -23,6 +23,7 @@ import TotalAnalytics from '@/components/PageComponents/Dashboard/TotalAnalytics
 import { getDocuments } from '@/services/document';
 import ProjectAnalytics from '@/components/PageComponents/Dashboard/ProjectAnalytics/ProjectAnalytics';
 import ProjectSearch from '@/components/PageComponents/Dashboard/ProjectSearch/ProjectSearch';
+import { signOut } from '@/services/auth';
 
 const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
@@ -146,6 +147,7 @@ const DashboardPage = () => {
           !documentsResponse.success ||
           !projectsAnalyticsResponse.success
         ) {
+          signOut();
           return;
         }
 

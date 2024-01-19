@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   Box,
   Button,
-  CircularProgress,
   Stack,
   TextField,
   Tooltip,
@@ -16,6 +15,7 @@ import { openNotification } from '@/store/slices/notifications/notificationSlice
 import { userEmail } from '@/helpers/GetUser';
 import { Project } from '@/services/apiTypes';
 import { createDocument, generateKCCDocument } from '@/services/document';
+import LoadingProgress from '@/components/MuiComponents/LoadingProgress';
 
 interface AddProjectModalContentProps {
   setProjectsData: React.Dispatch<React.SetStateAction<Project[]>>;
@@ -34,6 +34,7 @@ const AddProjectModalContent: React.FC<AddProjectModalContentProps> = ({
   const [selectedFileTwo, setSelectedFileTwo] = useState<File | null>(null);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [progress, setProgress] = useState(0);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProjectTitle(event.target.value);
@@ -74,10 +75,18 @@ const AddProjectModalContent: React.FC<AddProjectModalContentProps> = ({
       return;
     } else {
       setLoading(true);
+      setProgress(10);
       createProject({ title: projectTitle, owner: userEmail }).then(
         async (res) => {
           if (res.success) {
             const { _id } = res.data;
+
+            setTimeout(() => {
+              setProgress(20);
+            }, 1000);
+            setTimeout(() => {
+              setProgress(30);
+            }, 2000);
 
             const projectXMLDocument = {
               file: selectedFile
@@ -89,20 +98,41 @@ const AddProjectModalContent: React.FC<AddProjectModalContentProps> = ({
 
             await Promise.all([
               createDocument(_id, projectXMLDocument),
-              createDocument(_id, masterXLSXDocument),
-              generateKCCDocument(projectTitle, _id, userEmail)
-            ]);
+              createDocument(_id, masterXLSXDocument)
+            ]).then(async () => {
+              setTimeout(() => {
+                setProgress(50);
+              }, 3000);
+              setTimeout(() => {
+                setProgress(70);
+              }, 4000);
+              setTimeout(() => {
+                setProgress(80);
+              }, 6000);
 
-            setProjectsData((prev) => [...prev, res.data]);
-            dispatch(
-              openNotification({
-                isOpen: true,
-                text: 'Проекта е успешно създаден',
-                severity: 'success'
-              })
-            );
-            setLoading(false);
-            setOpenProjectModal(!openProjectModal);
+              const kccDocument = await generateKCCDocument(
+                projectTitle,
+                _id,
+                userEmail
+              );
+
+              setTimeout(() => {
+                setProgress(100);
+              }, 7000);
+
+              if (kccDocument.success) {
+                setProjectsData((prev) => [...prev, res.data]);
+                dispatch(
+                  openNotification({
+                    isOpen: true,
+                    text: 'Проекта е успешно създаден',
+                    severity: 'success'
+                  })
+                );
+                setLoading(false);
+                setOpenProjectModal(!openProjectModal);
+              }
+            });
           } else if (!res.success) {
             console.log('Problem');
           }
@@ -268,7 +298,7 @@ const AddProjectModalContent: React.FC<AddProjectModalContentProps> = ({
         </>
       ) : (
         <Stack justifyContent="center" alignItems="center" my={5}>
-          <CircularProgress />
+          <LoadingProgress value={progress} />
         </Stack>
       )}
 

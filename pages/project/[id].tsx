@@ -16,6 +16,7 @@ import DocumentsTable from '@/components/PageComponents/Document/DocumentsTable'
 import MUITable from '@/components/MuiComponents/MUITable';
 import { GridColDef } from '@mui/x-data-grid';
 import { formatDate } from '@/helpers/helpers';
+import { signOut } from '@/services/auth';
 
 const projectLogColumns: GridColDef[] = [
   {
@@ -82,6 +83,8 @@ export default function ProjectPage() {
           }
 
           setLoading(false);
+        } else {
+          signOut();
         }
       } catch (error) {
         console.log(error);

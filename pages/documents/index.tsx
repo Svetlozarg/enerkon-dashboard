@@ -11,6 +11,7 @@ import DocumentsTable from '@/components/PageComponents/Document/DocumentsTable'
 import AddDocumentModalContent from '@/components/PageComponents/Document/AddDocumentModalContent';
 import Modal from '@/components/MuiComponents/Modal';
 import { getProjects } from '@/services/project';
+import { signOut } from '@/services/auth';
 
 const DocumentsPage = () => {
   const [projectsData, setProjectsData] = useState<Project[]>();
@@ -25,12 +26,17 @@ const DocumentsPage = () => {
         const projectsData = await getProjects();
         const documentsData = await getDocuments();
 
-        if (projectsData.success) {
+        if (projectsData.success && documentsData.success) {
           setProjectsData(projectsData.data);
-        }
-
-        if (documentsData.success) {
-          setDocumentsData(documentsData.data);
+          setDocumentsData(
+            documentsData.data.filter(
+              (document) =>
+                document.title !== 'Master_file.xlsx' &&
+                document.title !== 'Project.xml'
+            )
+          );
+        } else {
+          signOut();
         }
 
         setLoading(false);
