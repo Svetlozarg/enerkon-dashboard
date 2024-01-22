@@ -17,13 +17,23 @@ import {
 } from '@mui/material';
 import PageTitleWrapper from '@/components/SmallComponents/PageTitleWrapper';
 import FavouriteProjects from '@/components/PageComponents/Dashboard/FavouriteProjects/FavouriteProjects';
-import { getProjects, getProjectsAnalytics } from '@/services/project';
-import { Document, Project } from '@/services/apiTypes';
 import TotalAnalytics from '@/components/PageComponents/Dashboard/TotalAnalytics/TotalAnalytics';
-import { getDocuments } from '@/services/document';
 import ProjectAnalytics from '@/components/PageComponents/Dashboard/ProjectAnalytics/ProjectAnalytics';
 import ProjectSearch from '@/components/PageComponents/Dashboard/ProjectSearch/ProjectSearch';
 import { signOut } from '@/services/auth';
+import { callApi } from '@/services/callApi';
+import {
+  getAllProjects,
+  getProjectsAnalytics
+} from '@/services/Projects/apiProjects';
+import { getAllDocuments } from '@/services/Documents/apiDocuments';
+import { Document } from '@/services/Documents/apiDocumentsTypes';
+import {
+  GetAllProjectsSnippet,
+  GetProjectsAnalyticsSnippet
+} from '@/services/Projects/apiProjectsSnippets';
+import { Project } from '@/services/Projects/apiProjectsTypes';
+import { GetAllDocumentsSnippet } from '@/services/Documents/apiDocumentsSnippets';
 
 const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
@@ -129,45 +139,43 @@ const DashboardPage = () => {
   useEffect(() => {
     (async () => {
       try {
-        const [projectsResponse, documentsResponse, projectsAnalyticsResponse] =
-          await Promise.all([
-            getProjects(),
-            getDocuments(),
-            getProjectsAnalytics()
-          ]);
-
-        const [projectsData, documentsData, projectsAnalyticsData] = [
-          projectsResponse.data,
-          documentsResponse.data,
-          projectsAnalyticsResponse.data
-        ];
+        const projectsData = await callApi<GetAllProjectsSnippet>({
+          query: getAllProjects()
+        });
+        const documentsData = await callApi<GetAllDocumentsSnippet>({
+          query: getAllDocuments()
+        });
+        const projectsAnalyticsData =
+          await callApi<GetProjectsAnalyticsSnippet>({
+            query: getProjectsAnalytics()
+          });
 
         if (
-          !projectsResponse.success ||
-          !documentsResponse.success ||
-          !projectsAnalyticsResponse.success
+          !projectsData.success ||
+          !documentsData.success ||
+          !projectsAnalyticsData.success
         ) {
           signOut();
           return;
         }
 
-        const favoriteProjects = projectsData.filter(
+        const favoriteProjects = projectsData.data.filter(
           (project: Project) => project.favourite === true
         );
 
         const filteredProjectsAnalyticsData: Object[] = [
           {
             name: 'Платени проекти',
-            data: projectsAnalyticsData.paid
+            data: projectsAnalyticsData.data.paid
           },
           {
             name: 'Неплатени проекти',
-            data: projectsAnalyticsData.unpaid
+            data: projectsAnalyticsData.data.unpaid
           }
         ];
 
-        setProjectsData(projectsData);
-        setDocumentsData(documentsData);
+        setProjectsData(projectsData.data);
+        setDocumentsData(documentsData.data);
         setFavouriteProjectsData(favoriteProjects);
         setProjectsAnalyticsData(filteredProjectsAnalyticsData);
       } catch (error) {

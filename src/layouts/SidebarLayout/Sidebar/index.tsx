@@ -28,7 +28,7 @@ const SidebarWrapper = styled(Box)(
 `
 );
 
-function Sidebar() {
+const Sidebar = () => {
   const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
   const closeSidebar = () => toggleSidebar();
   const theme = useTheme();
@@ -120,6 +120,6 @@ function Sidebar() {
       </Drawer>
     </>
   );
-}
+};
 
 export default Sidebar;

@@ -1,14 +1,8 @@
-import { Box, Container, Link, Typography, styled } from '@mui/material';
+import { Box, Container, Link, Typography } from '@mui/material';
 
-const FooterWrapper = styled(Container)(
-  ({ theme }) => `
-        margin-top: ${theme.spacing(4)};
-`
-);
-
-function Footer() {
+const Footer = () => {
   return (
-    <FooterWrapper className="footer-wrapper">
+    <Container sx={{ mt: 4 }}>
       <Box
         pb={4}
         display={{ xs: 'block', md: 'flex' }}
@@ -37,8 +31,8 @@ function Footer() {
           </Link>
         </Typography>
       </Box>
-    </FooterWrapper>
+    </Container>
   );
-}
+};
 
 export default Footer;

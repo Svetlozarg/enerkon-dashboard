@@ -10,7 +10,7 @@ import {
 import DoneTwoToneIcon from '@mui/icons-material/DoneTwoTone';
 import Text from '@/components/SmallComponents/Text';
 import Label from '@/components/SmallComponents/Label';
-import { userEmail } from '@/helpers/GetUser';
+import { USER_EMAIL } from '@/helpers/userHelpers';
 
 function EditProfileTab() {
   return (
@@ -43,7 +43,7 @@ function EditProfileTab() {
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
                   <Text color="black">
-                    <b>{userEmail}</b>
+                    <b>{USER_EMAIL}</b>
                   </Text>
                 </Grid>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
@@ -53,7 +53,7 @@ function EditProfileTab() {
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
                   <Text color="black">
-                    <b>{userEmail}</b>
+                    <b>{USER_EMAIL}</b>
                   </Text>
                 </Grid>
               </Grid>

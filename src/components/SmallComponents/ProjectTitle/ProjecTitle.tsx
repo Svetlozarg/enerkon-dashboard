@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Box, Skeleton } from '@mui/material';
-import { getProjectId } from '@/services/project';
-import { Project } from '@/services/apiTypes';
+import { Project } from '@/services/Projects/apiProjectsTypes';
+import { callApi } from '@/services/callApi';
+import { getProjectById } from '@/services/Projects/apiProjects';
+import { GetProjectSnippet } from '@/services/Projects/apiProjectsSnippets';
 
 interface ProjectTitleProps {
   projectId: string;
@@ -14,7 +16,9 @@ const ProjectTitle: React.FC<ProjectTitleProps> = ({ projectId }) => {
     (async () => {
       if (projectId) {
         try {
-          const project = await getProjectId(projectId);
+          const project = await callApi<GetProjectSnippet>({
+            query: getProjectById(projectId)
+          });
 
           if (project.success) {
             setProject(project.data);

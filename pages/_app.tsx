@@ -15,7 +15,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { parse } from 'cookie';
 import { store } from '@/store/store';
 import { Provider } from 'react-redux';
-import { userID } from '@/helpers/GetUser';
+import { USER_ID } from '@/helpers/userHelpers';
 import { signOut } from '@/services/auth';
 
 const clientSideEmotionCache = createEmotionCache();
@@ -39,7 +39,7 @@ export default function EnerkonApp(props: EnerkonAppProps) {
   Router.events.on('routeChangeComplete', nProgress.done);
 
   useEffect(() => {
-    if (!userID) {
+    if (!USER_ID) {
       if (
         router.pathname !== '/auth/register' &&
         router.pathname !== '/auth/login'

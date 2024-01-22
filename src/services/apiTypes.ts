@@ -1,24 +1,16 @@
-export type Project = {
-  _id: string;
-  title: string;
-  owner: string;
-  favourite: boolean;
-  status: 'unpaid' | 'paid';
-  createdAt: Date;
-  updatedAt: Date;
-  __v: number;
+export type ResponseError = {
+  detail: string;
 };
 
-export type Document = {
-  _id: string;
-  title: string;
-  owner: string;
-  project: string;
-  size: number;
-  type: string;
-  status: 'In process' | 'Finished' | 'Cancelled';
-  default: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  __v: number;
+export type Query = {
+  endpoint: string;
+  method: 'GET' | 'POST' | 'DELETE' | 'PUT';
+  variables?: { [key: string]: any };
+  input?: string;
+  multipart?: boolean;
+  blob?: boolean;
+};
+
+export type CallApiParams = {
+  query: Query;
 };

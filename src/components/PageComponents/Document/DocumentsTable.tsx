@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react';
 import MUITable from '@/components/MuiComponents/MUITable';
 import { formatDate } from '@/helpers/helpers';
-import {
-  deleteDocument,
-  downloadDocument,
-  previewDocument
-} from '@/services/document';
 import { IconButton, Tooltip } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import UpdateDocumentModal from './UpdateDocumentModal';
@@ -15,8 +10,14 @@ import { useDispatch } from 'react-redux';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Document } from '@/services/apiTypes';
 import ProjectTitle from '@/components/SmallComponents/ProjectTitle/ProjecTitle';
+import { callApi } from '@/services/callApi';
+import {
+  deleteDocument,
+  downloadDocument,
+  previewDocument
+} from '@/services/Documents/apiDocuments';
+import { Document } from '@/services/Documents/apiDocumentsTypes';
 
 interface DocumentsTableProps {
   loading: boolean;
@@ -114,8 +115,20 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
               <IconButton
                 onClick={async () => {
                   setLoading(true);
-                  await downloadDocument(params.row.title);
-                  setLoading(false);
+                  await callApi<any>({
+                    query: downloadDocument(params.row.title)
+                  }).then((response) => {
+                    const url = window.URL.createObjectURL(
+                      new Blob([response])
+                    );
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', params.row.title);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.parentNode.removeChild(link);
+                    setLoading(false);
+                  });
                 }}
               >
                 <DownloadIcon sx={{ color: '#0096FF' }} />
@@ -127,7 +140,9 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
               <IconButton
                 onClick={async () => {
                   setLoading(true);
-                  const previewURL = await previewDocument(params.row.title);
+                  const previewURL = await callApi<any>({
+                    query: previewDocument(params.row.title)
+                  });
                   window.open(previewURL.data, '_blank');
                   setLoading(false);
                 }}
@@ -172,12 +187,12 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({
     try {
       setLoading(true);
 
-      const body: Object = {
+      const body: { id: string; fileName: string } = {
         id: id,
         fileName: fileName
       };
 
-      deleteDocument(body).then((res) => {
+      await callApi<any>({ query: deleteDocument(body) }).then((res) => {
         if (res.success) {
           setProjectDocumentsData((prevDcoumentsData) => {
             const updatedData = prevDcoumentsData.filter(

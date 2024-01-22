@@ -5,18 +5,28 @@ import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import PageTitleWrapper from '@/components/SmallComponents/PageTitleWrapper';
 import PageHeader from '@/components/SmallComponents/PageHeader/PageHeader';
-import { Project } from '@/services/apiTypes';
-import {
-  getProjectDocuments,
-  getProjectId,
-  getProjectLog
-} from '@/services/project';
 import { Container, Grid, Stack, Typography } from '@mui/material';
 import DocumentsTable from '@/components/PageComponents/Document/DocumentsTable';
 import MUITable from '@/components/MuiComponents/MUITable';
 import { GridColDef } from '@mui/x-data-grid';
 import { formatDate } from '@/helpers/helpers';
 import { signOut } from '@/services/auth';
+import { callApi } from '@/services/callApi';
+import {
+  GetProjectDocumentsDataSnippet,
+  GetProjectLogSnippet,
+  GetProjectSnippet
+} from '@/services/Projects/apiProjectsSnippets';
+import {
+  getProjectById,
+  getProjectDocuments,
+  getProjectLog
+} from '@/services/Projects/apiProjects';
+import {
+  Project,
+  ProjectAnalytics
+} from '@/services/Projects/apiProjectsTypes';
+import { Document } from '@/services/Documents/apiDocumentsTypes';
 
 const projectLogColumns: GridColDef[] = [
   {
@@ -55,8 +65,9 @@ export default function ProjectPage() {
   const router = useRouter();
   const { id } = router.query;
   const [projectData, setProjectData] = useState<Project>();
-  const [projectDocumentsData, setProjectDocumentsData] = useState<any>();
-  const [projectLogData, setProjectLogData] = useState<any>();
+  const [projectDocumentsData, setProjectDocumentsData] =
+    useState<Document[]>();
+  const [projectLogData, setProjectLogData] = useState<ProjectAnalytics>();
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -65,14 +76,21 @@ export default function ProjectPage() {
       try {
         if (!id) return;
 
-        const projectData = await getProjectId(id as string);
+        const projectData = await callApi<GetProjectSnippet>({
+          query: getProjectById(id.toString())
+        });
+
+        const projectDocumentsData =
+          await callApi<GetProjectDocumentsDataSnippet>({
+            query: getProjectDocuments(id.toString())
+          });
+
+        const projectLogData = await callApi<GetProjectLogSnippet>({
+          query: getProjectLog(id.toString())
+        });
 
         if (projectData.success) {
           setProjectData(projectData.data);
-
-          const projectDocumentsData = await getProjectDocuments(id as string);
-
-          const projectLogData = await getProjectLog(id as string);
 
           if (projectDocumentsData.success) {
             setProjectDocumentsData(projectDocumentsData.data);
@@ -126,7 +144,7 @@ export default function ProjectPage() {
             </Typography>
 
             <MUITable
-              rows={projectLogData}
+              rows={projectLogData as any}
               columns={projectLogColumns}
               loading={loading}
             />

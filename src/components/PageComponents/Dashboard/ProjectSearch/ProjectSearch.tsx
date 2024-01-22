@@ -24,11 +24,13 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { updateProject } from '@/services/project';
 import { store } from '@/store/store';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import Link from 'next/link';
-import { Document, Project } from '@/services/apiTypes';
+import { Project } from '@/services/Projects/apiProjectsTypes';
+import { Document } from '@/services/Documents/apiDocumentsTypes';
+import { callApi } from '@/services/callApi';
+import { updateProject } from '@/services/Projects/apiProjects';
 
 const OutlinedInputWrapper = styled(OutlinedInput)(
   ({ theme }) => `
@@ -114,13 +116,13 @@ const ProjectSearch: React.FC<ProjectSearchProps> = ({
     indexOfLastProject
   );
 
-  const handleProjectFavourite = (id: string, favourite: boolean) => {
+  const handleProjectFavourite = async (id: string, favourite: boolean) => {
     if (favourite) {
       const body: Object = {
         favourite: false
       };
 
-      updateProject(body, id).then((res) => {
+      await callApi<any>({ query: updateProject(body, id) }).then((res) => {
         if (res.success) {
           store.dispatch(
             openNotification({
@@ -138,7 +140,7 @@ const ProjectSearch: React.FC<ProjectSearchProps> = ({
         favourite: true
       };
 
-      updateProject(body, id).then((res) => {
+      await callApi<any>({ query: updateProject(body, id) }).then((res) => {
         if (res.success) {
           store.dispatch(
             openNotification({

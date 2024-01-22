@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Project } from '@/services/apiTypes';
 import {
   Button,
   Grid,
@@ -10,6 +9,7 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import FavouriteProjectCard from './FavouriteProjectCard';
+import { Project } from '@/services/Projects/apiProjectsTypes';
 
 interface FavouriteProjectsProps {
   favouriteProjectsData: Project[];

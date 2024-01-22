@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Document, Project } from '@/services/apiTypes';
 import {
   Button,
   CircularProgress,
@@ -14,8 +13,11 @@ import {
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
-import { createDocument } from '@/services/document';
 import { useDispatch } from 'react-redux';
+import { Project } from '@/services/Projects/apiProjectsTypes';
+import { Document } from '@/services/Documents/apiDocumentsTypes';
+import { callApi } from '@/services/callApi';
+import { createDocument } from '@/services/Documents/apiDocuments';
 
 interface AddDocumentModalContentProps {
   projectsData: Project[];
@@ -58,7 +60,9 @@ const AddDocumentModalContent: React.FC<AddDocumentModalContentProps> = ({
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      createDocument(selectedProject, formData).then((res) => {
+      await callApi<any>({
+        query: createDocument(selectedProject, formData)
+      }).then((res) => {
         if (res.success) {
           setDocumentsData((prev) => [...prev, res.data]);
           dispatch(

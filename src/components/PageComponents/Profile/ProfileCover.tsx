@@ -10,7 +10,7 @@ import {
   Link
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { userEmail } from '@/helpers/GetUser';
+import { USER_EMAIL } from '@/helpers/userHelpers';
 
 import ArrowBackTwoToneIcon from '@mui/icons-material/ArrowBackTwoTone';
 
@@ -79,11 +79,11 @@ const ProfileCover = ({ user }) => {
         </CardCoverAction>
       </CardCover>
       <AvatarWrapper>
-        <Avatar variant="rounded" alt={userEmail} />
+        <Avatar variant="rounded" alt={USER_EMAIL} />
       </AvatarWrapper>
       <Box py={2} pl={2} mb={3}>
         <Typography gutterBottom variant="h4">
-          {userEmail}
+          {USER_EMAIL}
         </Typography>
         <Typography sx={{ py: 2 }} variant="subtitle2" color="text.primary">
           {user.jobtitle} | {user.location}

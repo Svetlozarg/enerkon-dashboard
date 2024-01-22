@@ -17,7 +17,7 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { userName } from '@/helpers/GetUser';
+import { USERNAME } from '@/helpers/userHelpers';
 import { signOut } from '@/services/auth';
 
 const UserBoxButton = styled(Button)(
@@ -57,7 +57,7 @@ const UserBoxDescription = styled(Typography)(
 
 function HeaderUserbox() {
   const user = {
-    name: userName,
+    name: USERNAME,
     avatar: '/static/images/avatars/1.jpg',
     role: 'Собственик'
   };

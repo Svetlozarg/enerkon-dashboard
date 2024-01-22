@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Project } from '@/services/apiTypes';
 import {
   Box,
   IconButton,
@@ -15,9 +14,15 @@ import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import StarIcon from '@mui/icons-material/Star';
 import Link from 'next/link';
-import { getProjectDocuments, updateProject } from '@/services/project';
 import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
+import { Project } from '@/services/Projects/apiProjectsTypes';
+import { callApi } from '@/services/callApi';
+import {
+  getProjectDocuments,
+  updateProject
+} from '@/services/Projects/apiProjects';
+import { GetProjectDocumentsDataSnippet } from '@/services/Projects/apiProjectsSnippets';
 
 const LinearProgressWrapper = styled(LinearProgress)(
   ({ theme }) => `
@@ -54,7 +59,10 @@ const FavouriteProjectCard: React.FC<FavouriteProjectCardProps> = ({
   useEffect(() => {
     (async () => {
       try {
-        const totalProjectDocuments = await getProjectDocuments(project._id);
+        const totalProjectDocuments =
+          await callApi<GetProjectDocumentsDataSnippet>({
+            query: getProjectDocuments(project._id)
+          });
 
         if (totalProjectDocuments.success) {
           setTotalProjectDocuments(totalProjectDocuments.data.length);
@@ -67,7 +75,9 @@ const FavouriteProjectCard: React.FC<FavouriteProjectCardProps> = ({
 
   const handleRemoveFromFavourites = async () => {
     try {
-      await updateProject({ favourite: false }, project._id).then((res) => {
+      await callApi<any>({
+        query: updateProject({ favourite: false }, project._id)
+      }).then((res) => {
         if (res.success) {
           setCurrentPage(currentPage - 1);
           setFavouriteProjectsData((prevProjects) =>

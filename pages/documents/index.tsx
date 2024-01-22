@@ -1,17 +1,21 @@
 import { useEffect, useState } from 'react';
+import { Container, Grid } from '@mui/material';
 import PageHeader from '@/components/SmallComponents/PageHeader/PageHeader';
 import PageTitleWrapper from '@/components/SmallComponents/PageTitleWrapper';
 import Footer from '@/layouts/Footer';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { Container, Grid } from '@mui/material';
 import Head from 'next/head';
-import { getDocuments } from '@/services/document';
-import { Document, Project } from '@/services/apiTypes';
 import DocumentsTable from '@/components/PageComponents/Document/DocumentsTable';
 import AddDocumentModalContent from '@/components/PageComponents/Document/AddDocumentModalContent';
 import Modal from '@/components/MuiComponents/Modal';
-import { getProjects } from '@/services/project';
 import { signOut } from '@/services/auth';
+import { Project } from '@/services/Projects/apiProjectsTypes';
+import { Document } from '@/services/Documents/apiDocumentsTypes';
+import { callApi } from '@/services/callApi';
+import { GetAllProjectsSnippet } from '@/services/Projects/apiProjectsSnippets';
+import { getAllProjects } from '@/services/Projects/apiProjects';
+import { getAllDocuments } from '@/services/Documents/apiDocuments';
+import { GetAllDocumentsSnippet } from '@/services/Documents/apiDocumentsSnippets';
 
 const DocumentsPage = () => {
   const [projectsData, setProjectsData] = useState<Project[]>();
@@ -23,8 +27,12 @@ const DocumentsPage = () => {
     (async () => {
       setLoading(true);
       try {
-        const projectsData = await getProjects();
-        const documentsData = await getDocuments();
+        const projectsData = await callApi<GetAllProjectsSnippet>({
+          query: getAllProjects()
+        });
+        const documentsData = await callApi<GetAllDocumentsSnippet>({
+          query: getAllDocuments()
+        });
 
         if (projectsData.success && documentsData.success) {
           setProjectsData(projectsData.data);

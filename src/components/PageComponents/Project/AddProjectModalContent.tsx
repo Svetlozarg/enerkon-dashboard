@@ -9,13 +9,17 @@ import {
 } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import { createProject } from '@/services/project';
 import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
-import { userEmail } from '@/helpers/GetUser';
-import { Project } from '@/services/apiTypes';
-import { createDocument, generateKCCDocument } from '@/services/document';
+import { USER_EMAIL } from '@/helpers/userHelpers';
 import LoadingProgress from '@/components/MuiComponents/LoadingProgress';
+import { callApi } from '@/services/callApi';
+import { createProject } from '@/services/Projects/apiProjects';
+import { Project } from '@/services/Projects/apiProjectsTypes';
+import {
+  createDocument,
+  generateKCCDocument
+} from '@/services/Documents/apiDocuments';
 
 interface AddProjectModalContentProps {
   setProjectsData: React.Dispatch<React.SetStateAction<Project[]>>;
@@ -29,12 +33,12 @@ const AddProjectModalContent: React.FC<AddProjectModalContentProps> = ({
   setOpenProjectModal
 }) => {
   const dispatch = useDispatch();
-  const [projectTitle, setProjectTitle] = useState('');
+  const [projectTitle, setProjectTitle] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileTwo, setSelectedFileTwo] = useState<File | null>(null);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState<number>(0);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProjectTitle(event.target.value);
@@ -58,7 +62,7 @@ const AddProjectModalContent: React.FC<AddProjectModalContentProps> = ({
     setSelectedFileTwo(null);
   };
 
-  const handleCreateProject = () => {
+  const handleCreateProject = async () => {
     setError('');
     if (
       projectTitle === '' ||
@@ -76,68 +80,71 @@ const AddProjectModalContent: React.FC<AddProjectModalContentProps> = ({
     } else {
       setLoading(true);
       setProgress(10);
-      createProject({ title: projectTitle, owner: userEmail }).then(
-        async (res) => {
-          if (res.success) {
-            const { _id } = res.data;
 
+      await callApi<any>({
+        query: createProject({ title: projectTitle, owner: USER_EMAIL })
+      }).then(async (res) => {
+        if (res.success) {
+          const { _id } = res.data;
+
+          setTimeout(() => {
+            setProgress(20);
+          }, 1000);
+          setTimeout(() => {
+            setProgress(30);
+          }, 2000);
+
+          const projectXMLDocument = {
+            file: selectedFile
+          };
+
+          const masterXLSXDocument = {
+            file: selectedFileTwo
+          };
+
+          await Promise.all([
+            await callApi<any>({
+              query: createDocument(_id, projectXMLDocument)
+            }),
+            await callApi<any>({
+              query: createDocument(_id, masterXLSXDocument)
+            })
+          ]).then(async () => {
             setTimeout(() => {
-              setProgress(20);
-            }, 1000);
+              setProgress(50);
+            }, 3000);
             setTimeout(() => {
-              setProgress(30);
-            }, 2000);
+              setProgress(70);
+            }, 4000);
+            setTimeout(() => {
+              setProgress(80);
+            }, 6000);
 
-            const projectXMLDocument = {
-              file: selectedFile
-            };
-
-            const masterXLSXDocument = {
-              file: selectedFileTwo
-            };
-
-            await Promise.all([
-              createDocument(_id, projectXMLDocument),
-              createDocument(_id, masterXLSXDocument)
-            ]).then(async () => {
-              setTimeout(() => {
-                setProgress(50);
-              }, 3000);
-              setTimeout(() => {
-                setProgress(70);
-              }, 4000);
-              setTimeout(() => {
-                setProgress(80);
-              }, 6000);
-
-              const kccDocument = await generateKCCDocument(
-                projectTitle,
-                _id,
-                userEmail
-              );
-
-              setTimeout(() => {
-                setProgress(100);
-              }, 7000);
-
-              if (kccDocument.success) {
-                setProjectsData((prev) => [...prev, res.data]);
-                dispatch(
-                  openNotification({
-                    isOpen: true,
-                    text: 'Проекта е успешно създаден',
-                    severity: 'success'
-                  })
-                );
-                setLoading(false);
-                setOpenProjectModal(!openProjectModal);
-              }
+            const kccDocument = await callApi<any>({
+              query: generateKCCDocument(projectTitle, _id, USER_EMAIL)
             });
-          } else if (!res.success) {
-            console.log('Problem');
-          }
+
+            setTimeout(() => {
+              setProgress(100);
+            }, 7000);
+
+            if (kccDocument.success) {
+              setProjectsData((prev) => [...prev, res.data]);
+              dispatch(
+                openNotification({
+                  isOpen: true,
+                  text: 'Проекта е успешно създаден',
+                  severity: 'success'
+                })
+              );
+              setLoading(false);
+              setOpenProjectModal(!openProjectModal);
+            }
+          });
+        } else if (!res.success) {
+          console.log('Problem');
         }
-      );
+      });
     }
   };
 

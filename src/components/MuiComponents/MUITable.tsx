@@ -2,7 +2,8 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { DataGridLocale } from '@/helpers/DataGridLocale';
 import LinearProgress from '@mui/material/LinearProgress';
-import { Document, Project } from '@/services/apiTypes';
+import { Project } from '@/services/Projects/apiProjectsTypes';
+import { Document } from '@/services/Documents/apiDocumentsTypes';
 
 interface MUITableProps {
   rows: Project[] | Document[];

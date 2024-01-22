@@ -13,11 +13,12 @@ import {
   Modal,
   IconButton
 } from '@mui/material';
-import { updateProject } from '@/services/project';
 import { useDispatch } from 'react-redux';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
-import { Project } from '@/services/apiTypes';
 import EditIcon from '@mui/icons-material/Edit';
+import { callApi } from '@/services/callApi';
+import { updateProject } from '@/services/Projects/apiProjects';
+import { Project } from '@/services/Projects/apiProjectsTypes';
 
 const style = {
   position: 'absolute',
@@ -86,14 +87,15 @@ const UpdateProjectModal: React.FC<UpdateProjectModalProps> = ({
 
       setLoading(true);
 
-      const body: Object = {
+      const body: { title: string; status: string } = {
         title: newProjectTitle,
         status: newProjectStatus
       };
 
-      updateProject(body, projectId).then((res) => {
+      await callApi<any>({
+        query: updateProject(body, projectId)
+      }).then((res) => {
         if (res.success) {
-          // Update projectsData with new project title and status
           setProjectsData((prevProjectsData) =>
             prevProjectsData.map((project) =>
               project._id === projectId

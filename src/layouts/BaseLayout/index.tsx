@@ -1,22 +1,15 @@
-import { FC, ReactNode } from 'react';
+import { Stack } from '@mui/material';
 import PropTypes from 'prop-types';
-import { Box } from '@mui/material';
 
 interface BaseLayoutProps {
-  children?: ReactNode;
+  children?: React.ReactNode;
 }
 
-const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
+const BaseLayout: React.FC<BaseLayoutProps> = ({ children }) => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flex: 1,
-        height: '100%'
-      }}
-    >
+    <Stack height="100%" flex={1}>
       {children}
-    </Box>
+    </Stack>
   );
 };
 

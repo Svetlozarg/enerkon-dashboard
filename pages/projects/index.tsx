@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import PageTitleWrapper from '@/components/SmallComponents/PageTitleWrapper';
@@ -9,9 +10,6 @@ import {
   Tooltip
 } from '@mui/material';
 import Footer from '@/layouts/Footer';
-import { useEffect, useState } from 'react';
-import { deleteProject, getProjects, updateProject } from '@/services/project';
-import { Project } from '@/services/apiTypes';
 import MUITable from '@/components/MuiComponents/MUITable';
 import { GridColDef } from '@mui/x-data-grid';
 import { formatDate } from '@/helpers/helpers';
@@ -30,6 +28,14 @@ import Link from 'next/link';
 // import RefreshIcon from '@mui/icons-material/Refresh';
 // import ConstructionIcon from '@mui/icons-material/Construction';
 import { signOut } from '@/services/auth';
+import { callApi } from '@/services/callApi';
+import { GetAllProjectsSnippet } from '@/services/Projects/apiProjectsSnippets';
+import {
+  deleteProject,
+  getAllProjects,
+  updateProject
+} from '@/services/Projects/apiProjects';
+import { Project } from '@/services/Projects/apiProjectsTypes';
 
 function ProjectsPage() {
   const dispatch = useDispatch();
@@ -163,7 +169,9 @@ function ProjectsPage() {
     (async () => {
       setLoading(true);
       try {
-        const projectsData = await getProjects();
+        const projectsData = await callApi<GetAllProjectsSnippet>({
+          query: getAllProjects()
+        });
 
         if (projectsData.success) {
           setProjectsData(projectsData.data);
@@ -187,7 +195,9 @@ function ProjectsPage() {
         favourite: !favourite
       };
 
-      updateProject(body, id).then((res) => {
+      await callApi<any>({
+        query: updateProject(body, id)
+      }).then((res) => {
         if (res.success) {
           setProjectsData((prevProjectsData) => {
             const updatedData = prevProjectsData.map((project) => {
@@ -224,34 +234,32 @@ function ProjectsPage() {
   const handleDeleteProject = async (id: string) => {
     try {
       setLoading(true);
-      const body: Object = {
+      const body: { id: string } = {
         id: id
       };
 
-      deleteProject(body)
-        .then((res) => {
-          if (res.success) {
-            setProjectsData((prevProjectsData) => {
-              const updatedData = prevProjectsData.filter(
-                (project) => project._id !== id
-              );
-              return updatedData;
-            });
-            dispatch(
-              openNotification({
-                isOpen: true,
-                text: 'Проекта е успешно изтрит',
-                severity: 'success'
-              })
+      await callApi<any>({
+        query: deleteProject(body)
+      }).then((res) => {
+        if (res.success) {
+          setProjectsData((prevProjectsData) => {
+            const updatedData = prevProjectsData.filter(
+              (project) => project._id !== id
             );
-            setLoading(false);
-          } else if (!res.success) {
-            console.log('Problem');
-          }
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
+            return updatedData;
+          });
+          dispatch(
+            openNotification({
+              isOpen: true,
+              text: 'Проекта е успешно изтрит',
+              severity: 'success'
+            })
+          );
+          setLoading(false);
+        } else if (!res.success) {
+          console.log('Problem');
+        }
+      });
     } catch (error) {
       console.log(error);
     }

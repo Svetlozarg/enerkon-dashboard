@@ -13,10 +13,11 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import { updateDocument } from '@/services/document';
 import { openNotification } from '@/store/slices/notifications/notificationSlice';
 import { useDispatch } from 'react-redux';
 import EditIcon from '@mui/icons-material/Edit';
+import { callApi } from '@/services/callApi';
+import { updateDocument } from '@/services/Documents/apiDocuments';
 
 const style = {
   position: 'absolute',
@@ -86,36 +87,38 @@ const UpdateDocumentModal: React.FC<UpdateDocumentModalProps> = ({
         status: newDocumentStatus
       };
 
-      updateDocument(body, documentId).then((res) => {
-        if (res.success) {
-          setProjectDocumentsData((prevProjectsData) =>
-            prevProjectsData.map((project) =>
-              project._id === documentId
-                ? {
-                    ...project,
-                    title: newDocumentTitle,
-                    status: newDocumentStatus as
-                      | 'In Process'
-                      | 'Canceled'
-                      | 'Finished'
-                  }
-                : project
-            )
-          );
+      await callApi<any>({ query: updateDocument(body, documentId) }).then(
+        (res) => {
+          if (res.success) {
+            setProjectDocumentsData((prevProjectsData) =>
+              prevProjectsData.map((project) =>
+                project._id === documentId
+                  ? {
+                      ...project,
+                      title: newDocumentTitle,
+                      status: newDocumentStatus as
+                        | 'In Process'
+                        | 'Canceled'
+                        | 'Finished'
+                    }
+                  : project
+              )
+            );
 
-          dispatch(
-            openNotification({
-              isOpen: true,
-              text: 'Проектът е успешно променен',
-              severity: 'success'
-            })
-          );
-          setLoading(false);
-          handleClose();
-        } else if (!res.success) {
-          console.log('Problem');
+            dispatch(
+              openNotification({
+                isOpen: true,
+                text: 'Проектът е успешно променен',
+                severity: 'success'
+              })
+            );
+            setLoading(false);
+            handleClose();
+          } else if (!res.success) {
+            console.log('Problem');
+          }
         }
-      });
+      );
     } catch (error) {
       console.log(error);
     }
